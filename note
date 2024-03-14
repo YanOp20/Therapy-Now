@@ -1,0 +1,88 @@
+There are many different types of therapy and specializations within the field of mental health. Here are some examples:
+
+1. **Cognitive-behavioral therapy (CBT)**: A type of therapy that focuses on changing negative thought patterns and behaviors to improve mental health.
+
+2. **Dialectical behavior therapy (DBT)**: A type of therapy that combines cognitive-behavioral techniques with mindfulness practices to help individuals regulate their emotions and improve interpersonal relationships.
+
+3. **Psychodynamic therapy**: A type of therapy that focuses on exploring unconscious thoughts and feelings to gain insight into current behavior patterns.
+
+4. **Family therapy**: A type of therapy that involves working with families to improve communication and resolve conflicts.
+
+5. **Art therapy**: A type of therapy that uses creative expression to help individuals explore their emotions and improve mental health.
+
+6. **Music therapy**: A type of therapy that uses music to help individuals improve their physical, emotional, cognitive, or social functioning.
+
+7. **Play therapy**: A type of therapy that uses play to help children express themselves and work through emotional or behavioral issues.
+
+8. **Marriage and family counseling**: A type of counseling that focuses on improving communication and resolving conflicts within couples and families.
+
+These are just a few examples of the many different types of therapy and specializations within the field of mental health. If you are interested in learning more, you can check out this article from **Psychology Today** .
+
+I hope this helps!
+
+
+
+
+
+
+i have problems in doctor in the chat hight
+1. i have to do in dr_patents added search are it cames from chat and the patianet names are come from users table and if i click one user show user spacification list appointment history
+- i have to must add table in table user date of birth, gender phone
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            /* width: 200px; */
+            height: 100vh;
+            width: clamp(200px, 50%, 600px);
+        }
+
+        * {
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        #bottom {
+            background-color: darkblue;
+        }
+
+        #top {
+            background-color: rgb(0, 130, 139);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            font-size: larger;
+            color: lightslategrey;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="top"><a href="#bottom">bottom</a></div>
+
+    <div id="bottom"><a href="#top">top</a></div>
+</body>
+
+</html>
+<!-- clamp
+smooth
+Scroll Snap
+inset
+order
+inline, block
+min, max
+line-clamp
+has (pseudo-class)
+is (pseudo-class) -->
