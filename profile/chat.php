@@ -26,11 +26,21 @@ if (mysqli_num_rows($sqlU) > 0) {
                 $b = 'b'; ?>
                 <!-- <a href="./javascript/video-calling-app-example-master/public/index.html" target="popup" onclick="window.open('./javascript/video-calling-app-example-master/public/index.html','name','width=600,height=400')"><i class="fas fa-duotone fa-video fa-2xl "></i></a> -->
                 <!-- <a href="https://172.22.181.60:8181" target="popup" class="fas fa-duotone fa-video fa-2xl "></i></a> -->
-                <a href="https://172.22.181.60:8181" target="_blank"  onclick="window.open('https://172.22.181.60:8181', 'popup', 'width=600,height=400'); return false;">   <i class="fas fa-duotone fa-video fa-2xl "></i> </a>
+
+                <!-- addef for video calling -->
+                <form action="#" class="formV">
+                    <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
+                    <input type="text" class="b" name="b" value="<?php echo $b; ?>" hidden>
+                    <input id="input-field" type="text" name="message" class="input-field" value="<?php echo "calling" ?>" hidden>
+                    <button id="Vbtn">
+                        <a href="https://172.22.181.203:8181" target="_blank" onclick="window.open('https://172.22.181.203:8181', 'popup', 'width=600,height=400'); return false;"> <i class="fas fa-duotone fa-video fa-2xl "></i> </a>
+                    </button>
+                </form>
 
             <?php   } ?>
         </header>
         <div class="chat-box">
+
 
         </div>
         <form action="#" class="typing-area">

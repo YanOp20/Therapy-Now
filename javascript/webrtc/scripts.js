@@ -3,7 +3,8 @@ const password = "x";
 document.querySelector('#user-name').innerHTML = userName;
 
 //if trying it on a phone, use this instead...
-const socket = io.connect('https://172.22.181.60:8181/',{
+
+const socket = io.connect('https://172.22.181.203:8181/',{
 // const socket = io.connect('https://localhost:8181/',{
     auth: {
         userName,password
@@ -153,5 +154,5 @@ const addNewIceCandidate = iceCandidate=>{
 }
 
 
-// document.querySelector('#call').addEventListener('click',call)
+document.querySelector('#call').addEventListener('click',call)
 // call()

@@ -20,7 +20,8 @@ const expressServer = https.createServer({key, cert}, app);
 const io = socketio(expressServer,{
     cors: {
         origin: [
-            "https://localhost",
+            // "https://localhost",
+            "https://172.22.181.203",
             // 'https://LOCAL-DEV-IP-HERE' //if using a phone or another computer
         ],
         methods: ["GET", "POST"]

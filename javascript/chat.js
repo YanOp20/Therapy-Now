@@ -1,5 +1,4 @@
 const form = document.querySelector(".typing-area"),
-  incoming_id = form.querySelector(".incoming_id").value,
   b = form.querySelector(".b").value,
   inputField = form.querySelector(".input-field"),
   sendBtn = form.querySelector("#sendBtn"),
@@ -10,7 +9,10 @@ const form = document.querySelector(".typing-area"),
   audioElement = document.getElementById("audioElement"),
   timeSpan = document.getElementById("time"),
   isRecording = document.getElementById("isRecording"),
-  cRec = document.getElementById("cRec");
+  cRec = document.getElementById("cRec"),
+  incoming_id = form.querySelector(".incoming_id").value,
+  formV = document.querySelector(".formV"), //new added for video
+  Vbtn = formV.querySelector("#Vbtn");
 
 inputField.addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
@@ -193,7 +195,6 @@ sendMic.onclick = () => {
   cRec.style.display = "none";
 };
 
-
 cRec.onclick = () => {
   stopButton.style.display = "none";
   micButton.style.display = "block";
@@ -225,3 +226,22 @@ setInterval(() => {
   xhr.send("incoming_id=" + incoming_id);
 }, 500);
 
+
+
+// new added for video call
+
+Vbtn.onclick = () => {
+  console.log("video call button clicked");
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", "php/insert-chat-video-call.php", true);
+  xhr.onload = () => {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        inputField.value = "";
+        scrollToBottom();
+      }
+    }
+  };
+  let formData = new FormData(formV);
+  xhr.send(formData);
+};
