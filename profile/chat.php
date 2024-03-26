@@ -29,6 +29,8 @@ if (mysqli_num_rows($sqlU) > 0) {
 
                 <!-- addef for video calling -->
                 <form action="#" class="formV">
+                    <!-- new added for getting user id -->
+                    <input type="text" class="outgoing_id" name="outgoing_id" value="<?php echo $_SESSION['unique_id']; ?>" hidden>
                     <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
                     <input type="text" class="b" name="b" value="<?php echo $b; ?>" hidden>
                     <input id="input-field" type="text" name="message" class="input-field" value="<?php echo "calling" ?>" hidden>
@@ -61,4 +63,51 @@ if (mysqli_num_rows($sqlU) > 0) {
         </form>
     </section>
 </div>
-<script src="javascript/chat.js"></script>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+const socket = io('http://localhost:3000');
+
+socket.on('connect', () => {
+  console.log('Connected to server');
+});
+    // const ogi = document.querySelector('.outgoing_id').value;
+    // const ici = document.querySelector('.incoming_id').value;
+    // console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+    // console.log("outgoing id: " + outgoing_id, "incoming id: " + incoming_id)
+
+    // const socket = io('http://localhost:3000'); // Replace with your server's URL and port
+    // // console.log("this is socket sssssssssss", socket)
+    // socket.emit('get messages by user IDs', { outgoing_id, incoming_id });
+
+    // socket.on('load older messages', (messages) => {
+    //     messages.forEach((message) => {
+    //         // Append older messages to the chat box
+    //         chatBox.innerHTML += `
+    //                                 <img alt="">
+
+    //                                     ${message.msg}
+
+    //                             `;
+    //     });
+    // });
+
+    // socket.on('chat message', (msg) => {
+    //     console.log('Received message: ' + msg);
+    //     // Append new message to the chat box
+    //     chatBox.innerHTML += `                              
+    //                                 ${msg}
+    //                         `;
+    // });
+
+
+    // const socket = io('http://localhost:3000'); // Replace with your server's URL and port
+
+    // socket.on('connect', () => {
+    //     console.log('Connected to Socket.IO server');
+    // });
+
+    // socket.on('disconnect', () => {
+    //     console.log('Disconnected from Socket.IO server');
+    // });
+</script>
+<script src="javascript/chat.js"> </script>

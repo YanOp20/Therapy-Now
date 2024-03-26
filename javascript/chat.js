@@ -228,6 +228,31 @@ setInterval(() => {
 
 
 
+// const socket = io('http://localhost:80'); // Replace with your server URL
+
+// socket.on('connect', () => {
+//   console.log('Connected to server');
+
+//   // Emit an event to the server to request initial chat data
+//   socket.emit('get-chat', incoming_id);
+// });
+
+// socket.on('chat-data', (data) => {
+//   chatBox.innerHTML = data;
+//   if (!chatBox.classList.contains("active")) {
+//     scrollToBottom();
+//   }
+// });
+
+
+
+
+
+
+
+
+
+
 // new added for video call
 
 Vbtn.onclick = () => {
