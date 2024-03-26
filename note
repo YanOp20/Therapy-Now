@@ -86,3 +86,24 @@ min, max
 line-clamp
 has (pseudo-class)
 is (pseudo-class) -->
+
+
+
+i have to change
+all gate to post 
+If you want to pass the parameters without showing them in the URL, you can use a form with the POST method. Here's how you can modify your code:
+
+```php
+$output .= '<form method="POST" action="profile.php">
+<input type="hidden" name="user_id" value="' . $row['unique_id'] . '">
+<input type="hidden" name="link" value="chat">
+<input type="hidden" name="b" value="b">
+<button type="submit">Go to profile</button>
+</form>';
+```
+
+In this code, we're creating a form that sends a POST request to `profile.php` when the button is clicked. The parameters `user_id`, `link`, and `b` are included in the form as hidden fields, so they're sent with the POST request but not shown in the URL¹.
+
+On the `profile.php` page, you can access these parameters using `$_POST['user_id']`, `$_POST['link']`, and `$_POST['b']`.
+
+Please note that this will change the behavior of your page. Instead of being a simple link that the user can open in a new tab or window, it's now a form that the user must submit. If you want to keep the link behavior, you might need to use JavaScript to submit the form¹. 😊
