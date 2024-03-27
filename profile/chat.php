@@ -36,7 +36,7 @@ if (mysqli_num_rows($sqlU) > 0) {
                     <input type="text" class="outgoing_id" name="outgoing_id" value="<?php echo $_SESSION['unique_id']; ?>" hidden>
                     <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
                     <input type="text" class="b" name="b" value="<?php echo $b; ?>" hidden>
-                    <input id="input-field" type="text" name="message" class="input-field" value="<?php echo "calling" ?>" hidden>
+                    <input id="c-input-field" type="text" name="message" class="input-field" value="<?php echo "calling" ?>" hidden>
                     <button id="Vbtn">
                         <a href="https://172.22.181.203:8181" target="_blank" onclick="window.open('https://172.22.181.203:8181', 'popup', 'width=600,height=400'); return false;"> <i class="fas fa-duotone fa-video fa-2xl "></i> </a>
                     </button>
@@ -86,16 +86,17 @@ socket.emit('get messages by user IDs', { ogi, ici });
 
 // ... other code
 
+
 socket.on('load messages', (messages) => {
     messages.forEach((message) => {
         // Create HTML elements based on message data
         const chatElement = document.createElement('div');
         chatElement.classList.add('chat');
-
+        
         if (message.outgoing_msg_id === ogi) {
             chatElement.classList.add('outgoing');
         } else {
-            chatElement.classList.add('ici');
+            chatElement.classList.add('incoming');
         }
 
         const detailsElement = document.createElement('div');
@@ -117,21 +118,27 @@ socket.on('load messages', (messages) => {
         
         // Append the chat element to the chat box
         chatBox.appendChild(chatElement);
-                if (!chatBox.classList.contains("active")) {
-          scrollToBottom();
+        if (!chatBox.classList.contains("active")) {
+            scrollToBottom();
         }
     });
-    document.querySelector('#mes').innerHTML = messages[0].msg
-        console.log(messages[0].msg)
+    // document.querySelector('#mes').innerHTML = messages[0].msg
 });
-
+socket.on('new messages', d => {
+    chatBox.innerHTML += `<div class="chat outgoing">
+                                <div class="details">
+                                    <p> ${d.data.message}</p>
+                                </div>
+                            </div>`
+    console.log("message", chatBox)
+})
 
 
 // socket.on('chat message', (data) => {
-//     console.log('Received message:', data);
-
-//     // Check if the message is an audio message
-//     if (data.audio) {
+    //     console.log('Received message:', data);
+    
+    //     // Check if the message is an audio message
+    //     if (data.audio) {
 //         // Create an audio element and play the audio
 //         const audioElement = document.createElement('audio');
 //         audioElement.src = data.audio; // Assuming the audio data is in a playable format

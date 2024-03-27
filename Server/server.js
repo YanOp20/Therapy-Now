@@ -60,21 +60,35 @@ io.on('connection', (socket) => {
           });
 
           socket.emit('load messages', messages); // Send messages back to the client
-          console.log(messages);
+          // console.log(messages);
       });
   });
 
-socket.on('chat message', (data) => {
-    console.log('message:', data);
+// socket.on('chat message', (data) => {
+//     console.log('message:', data);
 
-    // Check if the message is an audio message
-    if (data.audio) {
-        // Handle audio message (e.g., store audio data)
-        socket.emit('chat message', data); // Send the audio message to the sender
-    } else {
-        // Handle text message (e.g., store in database)
-        socket.emit('chat message', data.msg); // Send the text message to the sender
-    }
+//     // Check if the message is an audio message
+//     if (data.audio) {
+//         // Handle audio message (e.g., store audio data)
+//         socket.emit('chat message', data); // Send the audio message to the sender
+//     } else {
+//         // Handle text message (e.g., store in database)
+//         socket.emit('chat message', data.msg); // Send the text message to the sender
+//     }
+// });
+
+
+// ... (rest of the server-side code)
+socket.on('formSubmission', (data) => {
+  console.log('Received form data:', data);
+
+  // Extract the audio data URL and message
+  const audioDataUrl = data.audioDataUrl;
+  const message = data.message;
+
+  // Process the audio data URL and message on the server-side
+  // ... (e.g., convert audio to binary buffer, store in file/database, process message)
+  socket.emit('new messages', {data})
 });
   
 
