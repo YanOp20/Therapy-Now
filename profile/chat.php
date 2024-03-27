@@ -12,6 +12,9 @@ if (mysqli_num_rows($sqlU) > 0) {
     // header("location: profile.php");
 }
 ?>
+<style>
+    /* div{border: solid 1px pink;} */
+</style>
 <div class="wrapper chatt">
     <section class="chat-area">
         <header>
@@ -43,7 +46,7 @@ if (mysqli_num_rows($sqlU) > 0) {
         </header>
         <div class="chat-box">
 
-
+                <div id="mes"></div>
         </div>
         <form action="#" class="typing-area">
 
@@ -64,50 +67,90 @@ if (mysqli_num_rows($sqlU) > 0) {
     </section>
 </div>
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<!-- <script src="./Server/socket.io.min.js"></script> -->
 <script>
-const socket = io('http://localhost:3000');
+    const ogi = document.querySelector('.outgoing_id').value;
+    const ici = document.querySelector('.incoming_id').value;
+const socket = io('http://localhost:4000'); // Replace with your server's URL and port
 
 socket.on('connect', () => {
-  console.log('Connected to server');
+    console.log('Connected to Socket.IO server');
 });
-    // const ogi = document.querySelector('.outgoing_id').value;
-    // const ici = document.querySelector('.incoming_id').value;
-    // console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhh")
-    // console.log("outgoing id: " + outgoing_id, "incoming id: " + incoming_id)
-
-    // const socket = io('http://localhost:3000'); // Replace with your server's URL and port
-    // // console.log("this is socket sssssssssss", socket)
-    // socket.emit('get messages by user IDs', { outgoing_id, incoming_id });
-
-    // socket.on('load older messages', (messages) => {
-    //     messages.forEach((message) => {
-    //         // Append older messages to the chat box
-    //         chatBox.innerHTML += `
-    //                                 <img alt="">
-
-    //                                     ${message.msg}
-
-    //                             `;
-    //     });
-    // });
-
-    // socket.on('chat message', (msg) => {
-    //     console.log('Received message: ' + msg);
-    //     // Append new message to the chat box
-    //     chatBox.innerHTML += `                              
-    //                                 ${msg}
-    //                         `;
-    // });
 
 
-    // const socket = io('http://localhost:3000'); // Replace with your server's URL and port
+socket.emit('get messages by user IDs', { ogi, ici });
 
-    // socket.on('connect', () => {
-    //     console.log('Connected to Socket.IO server');
-    // });
 
-    // socket.on('disconnect', () => {
-    //     console.log('Disconnected from Socket.IO server');
-    // });
+
+
+
+// ... other code
+
+socket.on('load messages', (messages) => {
+    messages.forEach((message) => {
+        // Create HTML elements based on message data
+        const chatElement = document.createElement('div');
+        chatElement.classList.add('chat');
+
+        if (message.outgoing_msg_id === ogi) {
+            chatElement.classList.add('outgoing');
+        } else {
+            chatElement.classList.add('ici');
+        }
+
+        const detailsElement = document.createElement('div');
+        detailsElement.classList.add('details');
+        
+        if (message.audio) {
+            const audioElement = document.createElement('audio');
+            audioElement.src = `php/uploads/${message.audio}`;
+            audioElement.type = 'audio/mp3';
+            audioElement.controls = true;
+            detailsElement.appendChild(audioElement);
+        } else {
+            const messageElement = document.createElement('p');
+            messageElement.textContent = message.msg;
+            detailsElement.appendChild(messageElement);
+        }
+        
+        chatElement.appendChild(detailsElement);
+        
+        // Append the chat element to the chat box
+        chatBox.appendChild(chatElement);
+                if (!chatBox.classList.contains("active")) {
+          scrollToBottom();
+        }
+    });
+    document.querySelector('#mes').innerHTML = messages[0].msg
+        console.log(messages[0].msg)
+});
+
+
+
+// socket.on('chat message', (data) => {
+//     console.log('Received message:', data);
+
+//     // Check if the message is an audio message
+//     if (data.audio) {
+//         // Create an audio element and play the audio
+//         const audioElement = document.createElement('audio');
+//         audioElement.src = data.audio; // Assuming the audio data is in a playable format
+//         audioElement.controls = true;
+//         chatBox.appendChild(audioElement);
+//         audioElement.play();
+//     } else {
+//         // Append the text message to the chat box
+//         chatBox.innerHTML += `
+                            
+//                                 ${data}
+                            
+//                         `;
+//     }
+// });
+
+socket.on('disconnect', () => {
+    console.log('Disconnected from Socket.IO server');
+});
+
 </script>
 <script src="javascript/chat.js"> </script>
