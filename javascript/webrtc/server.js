@@ -20,8 +20,8 @@ const expressServer = https.createServer({key, cert}, app);
 const io = socketio(expressServer,{
     cors: {
         origin: [
-            // "https://localhost",
-            "https://192.168.100.7",
+            "https://localhost",
+            // "https://192.168.100.7",
             // 'https://LOCAL-DEV-IP-HERE' //if using a phone or another computer
         ],
         methods: ["GET", "POST"]
@@ -118,7 +118,7 @@ io.on('connection',(socket)=>{
                     if(socketToSendTo){
                         socket.to(socketToSendTo.socketId).emit('receivedIceCandidateFromServer',iceCandidate)
                     }else{
-                        console.log("Ice candidate recieved but could not find answere")
+                        console.log("Ice candidate received but could not find answer")
                     }
                 }
             }
@@ -140,22 +140,22 @@ io.on('connection',(socket)=>{
 
 // neeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaaaa
 
-const mysql = require('mysql');
+// const mysql = require('mysql');
 
-const connection = mysql.createConnection({
-    host: 'localhost', // Replace with your hostname if different
-    user: 'root',
-    password: '',
-    database: 'therapy'
-});
+// const connection = mysql.createConnection({
+//     host: 'localhost', // Replace with your hostname if different
+//     user: 'root',
+//     password: '',
+//     database: 'therapy'
+// });
 
-connection.connect(err => {
-    if (err) {
-        console.error('Error connecting to database:', err);
-        return;
-    }
-    console.log('Connected to database successfully.');
-});
+// connection.connect(err => {
+//     if (err) {
+//         console.error('Error connecting to database:', err);
+//         return;
+//     }
+//     console.log('Connected to database successfully.');
+// });
 
 // app.post('/offers', (req, res) => {
 //     const offer = req.body.offer;

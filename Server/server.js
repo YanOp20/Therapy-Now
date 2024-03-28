@@ -24,6 +24,7 @@ app.use(cors());
 const io = new Server(server, {
   cors: {
     origin: 'http://localhost', // Replace with your client's origin if different
+    // origin: 'http://192.168.100.7', // Replace with your client's origin if different
     // origin: 'http://172.22.181.211', // Replace with your client's origin if different
     methods: ['GET', 'POST'],
   },
@@ -75,10 +76,10 @@ io.on('connection', (socket) => {
   
   
   socket.on('formSubmission', (data) => {
-    
+    // console.log(data)
     const roomId = data.roomId;
     // Broadcast the new message to all clients in the room
-    io.to(roomId).emit('new messages', { data });
+    io.to(roomId).emit('new messages', data);
   });
   
   socket.on('disconnect', () => {

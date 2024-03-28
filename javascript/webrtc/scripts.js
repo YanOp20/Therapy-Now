@@ -4,8 +4,8 @@ document.querySelector('#user-name').innerHTML = userName;
 
 //if trying it on a phone, use this instead...
 
-const socket = io.connect('https://192.168.100.7:8181/',{
-// const socket = io.connect('https://localhost:8181/',{
+// const socket = io.connect('https://192.168.100.7:8181/',{
+const socket = io.connect('https://localhost:8181/',{
     auth: {
         userName,password
     }
@@ -45,11 +45,6 @@ const call = async e=>{
         peerConnection.setLocalDescription(offer);
         didIOffer = true;
         socket.emit('newOffer',offer); //send offer to signalingServer
-
-
-
-
-
 
     }catch(err){
         console.log(err)
@@ -113,7 +108,7 @@ const createPeerConnection = (offerObj)=>{
 
 
         localStream.getTracks().forEach(track=>{
-            //add localtracks so that they can be sent once the connection is established
+            //add local tracks so that they can be sent once the connection is established
             peerConnection.addTrack(track,localStream);
         })
 
@@ -135,7 +130,7 @@ const createPeerConnection = (offerObj)=>{
         })
         
         peerConnection.addEventListener('track',e=>{
-            console.log("Got a track from the other peer!! How excting")
+            console.log("Got a track from the other peer!! How exiting")
             console.log(e)
             e.streams[0].getTracks().forEach(track=>{
                 remoteStream.addTrack(track,remoteStream);

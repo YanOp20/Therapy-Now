@@ -13,7 +13,7 @@ const form = document.querySelector(".typing-area"),
   incoming_id = form.querySelector(".incoming_id").value,
   outgoing_id = form.querySelector(".outgoing_id").value,
   formV = document.querySelector(".formV"), //new added for video
-  Vbtn = formV.querySelector("#Vbtn");
+  videoCallingBtn = formV.querySelector("#videoCallingBtn");
 
 inputField.addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
@@ -42,6 +42,7 @@ inputField.onkeyup = () => {
     micButton.style.display = "block";
   }
 };
+
 sendBtn.onclick = () => {
   console.log("sendBtn clicked");
   let xhr = new XMLHttpRequest();
@@ -62,7 +63,7 @@ sendBtn.onclick = () => {
   // Get the message from the input field
   const message = document.getElementById("input-field").value;
 
-  // Emit a Socket.IO event with the audio and message data
+  // Emit a Socket.IO event with the message data
   socket.emit("formSubmission", {
     incomingId: incoming_id,
     outgoingId: outgoing_id,
@@ -72,6 +73,7 @@ sendBtn.onclick = () => {
     roomId: [outgoing_id, incoming_id].sort().join('-')
   });
 };
+
 chatBox.onmouseenter = () => {
   chatBox.classList.add("active");
 };
@@ -86,7 +88,7 @@ function scrollToBottom() {
 
 micButton.addEventListener("click", initFunction);
 let intervalId;
-//start recording
+
 function initFunction() {
   audioChunks = [];
   async function getUserMedia(constraints) {
@@ -211,7 +213,7 @@ sendMic.onclick = () => {
     outgoingId: outgoing_id,
     b: b,
     message: '',
-    audioDataUrl: 'audio_${timestamp}.mp3',
+    audioDataUrl: `audio_${timestamp}.mp3`,
     roomId: [outgoing_id, incoming_id].sort().join('-')
   });
   // ######################################
@@ -260,7 +262,7 @@ cRec.onclick = () => {
 
 // new added for video call
 
-Vbtn.onclick = () => {
+videoCallingBtn.onclick = () => {
   console.log("video call button clicked");
   let xhr = new XMLHttpRequest();
   xhr.open("POST", "php/insert-chat-video-call.php", true);
