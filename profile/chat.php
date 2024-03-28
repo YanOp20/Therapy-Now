@@ -46,18 +46,19 @@ if (mysqli_num_rows($sqlU) > 0) {
         </header>
         <div class="chat-box">
 
-                <div id="mes"></div>
+            <div id="mes"></div>
         </div>
         <form action="#" class="typing-area">
-
+            
             <button id="cRec" class="active" style="display:none"><i class="active fas fas fa-times"></i></button>
             <button id="mic" class="active"><i class="active fas fa-microphone  microphone-icon"></i></button>
             <button id="stop" class="active" style="display:none;"><i class=" recording-icon fas fa-stop"></i></button>
-
+            
             <audio src="" id="audioElement" controls style="display: none;"></audio>
-
+            
             <p id="isRecording"></p>
             <span id="time"></span>
+            <input type="text" class="outgoing_id" name="outgoing_id" value="<?php echo $_SESSION['unique_id']; ?>" hidden>
             <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
             <input type="text" class="b" name="b" value="<?php echo $b; ?>" hidden>
             <input id="input-field" type="text" name="message" class="input-field" placeholder="Type a message here..." autocomplete="off">
@@ -79,8 +80,8 @@ socket.on('connect', () => {
 
 
 socket.emit('get messages by user IDs', { ogi, ici });
-
-
+const roomId = [ogi, ici].sort().join('-');
+socket.emit('join room', roomId);
 
 
 
@@ -92,11 +93,13 @@ socket.on('load messages', (messages) => {
         // Create HTML elements based on message data
         const chatElement = document.createElement('div');
         chatElement.classList.add('chat');
+        console.log('outgoing id', ogi)
+        console.log('incoming' , ici)
         
         if (message.outgoing_msg_id === ogi) {
-            chatElement.classList.add('outgoing');
-        } else {
             chatElement.classList.add('incoming');
+        } else {
+            chatElement.classList.add('outgoing');
         }
 
         const detailsElement = document.createElement('div');
@@ -118,19 +121,29 @@ socket.on('load messages', (messages) => {
         
         // Append the chat element to the chat box
         chatBox.appendChild(chatElement);
+        console.log(chatBox)
         if (!chatBox.classList.contains("active")) {
             scrollToBottom();
         }
     });
     // document.querySelector('#mes').innerHTML = messages[0].msg
 });
+
 socket.on('new messages', d => {
+    console.log(d.data)
+    const ddata = d.data.message && !d.data.audioDataUrl ? 
+                `<p> ${d.data.message}</p>`:            
+                `<audio src="php/uploads/${d.data.audioDataUrl}type="audio/mp3" controls></audio>`
     chatBox.innerHTML += `<div class="chat outgoing">
                                 <div class="details">
-                                    <p> ${d.data.message}</p>
+                                    ${ddata}
                                 </div>
                             </div>`
-    console.log("message", chatBox)
+
+    if (!chatBox.classList.contains("active")) {
+        scrollToBottom();
+    }
+    
 })
 
 

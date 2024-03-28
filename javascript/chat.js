@@ -11,6 +11,7 @@ const form = document.querySelector(".typing-area"),
   isRecording = document.getElementById("isRecording"),
   cRec = document.getElementById("cRec"),
   incoming_id = form.querySelector(".incoming_id").value,
+  outgoing_id = form.querySelector(".outgoing_id").value,
   formV = document.querySelector(".formV"), //new added for video
   Vbtn = formV.querySelector("#Vbtn");
 
@@ -58,18 +59,17 @@ sendBtn.onclick = () => {
   micButton.style.display = "block";
   cRec.style.display = "none";
   sendBtn.classList.remove("active");
-
-  const audioDataUrl = "";
-
   // Get the message from the input field
   const message = document.getElementById("input-field").value;
 
   // Emit a Socket.IO event with the audio and message data
   socket.emit("formSubmission", {
     incomingId: incoming_id,
+    outgoingId: outgoing_id,
     b: b,
     message: message,
-    audioDataUrl: audioDataUrl,
+    audioDataUrl: '',
+    roomId: [outgoing_id, incoming_id].sort().join('-')
   });
 };
 chatBox.onmouseenter = () => {
@@ -86,7 +86,7 @@ function scrollToBottom() {
 
 micButton.addEventListener("click", initFunction);
 let intervalId;
-
+//start recording
 function initFunction() {
   audioChunks = [];
   async function getUserMedia(constraints) {
@@ -135,7 +135,6 @@ function initFunction() {
     rec.ondataavailable = (e) => {
       audioChunks.push(e.data);
       if (rec.state == "inactive") {
-        // let blob = new Blob(audioChunks, { type: "audio/mp3" });
         let blob = new Blob(audioChunks, { type: "audio/mp3" });
         console.log(blob);
         audioElement.src = URL.createObjectURL(blob);
@@ -167,6 +166,11 @@ function initFunction() {
   });
 }
 
+
+
+
+
+
 sendMic.onclick = () => {
    console.log("sendMic clicked");
   
@@ -175,12 +179,17 @@ sendMic.onclick = () => {
     rec.stop();
   }
   // let audioBlob = new Blob(audioChunks, { type: "audio/mp3" });
-  let audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+    let audioBlob = new Blob(audioChunks, { type: "audio/wav" });
 
   let formData = new FormData();
-  formData.append("audio", audioBlob, "audio.mp3");
+
+  const timestamp = Date.now();
+  formData.append("audio", audioBlob, `audio_${timestamp}.mp3`);
+  // formData.append("audio", audioBlob, "audio.mp3");
   formData.append("incoming_id", incoming_id);
   formData.append("b", b);
+
+  console.log(formData.audio)
   
   let xhr = new XMLHttpRequest();
   xhr.open("POST", "php/insert-chat.php", true);
@@ -197,7 +206,14 @@ sendMic.onclick = () => {
   xhr.send(formData);
   
   // ######################################
-  
+  socket.emit("formSubmission", {
+    incomingId: incoming_id,
+    outgoingId: outgoing_id,
+    b: b,
+    message: '',
+    audioDataUrl: 'audio_${timestamp}.mp3',
+    roomId: [outgoing_id, incoming_id].sort().join('-')
+  });
   // ######################################
   stopButton.style.display = "none";
   micButton.style.display = "block";
@@ -242,53 +258,20 @@ cRec.onclick = () => {
 //   xhr.send("incoming_id=" + incoming_id);
 // }, 500);
 
-// ... (rest of your code)
-
-// sendMic.onclick = () => {
-//   console.log("sendMic clicked");
-//   if (rec) {
-//     clearInterval(intervalId);
-//     rec.stop();
-//   }
-
-//   // Assuming you have the audio data in 'audioBlob'
-
-//   // Read the audioBlob as a data URL
-//   const reader = new FileReader();
-//   reader.readAsDataURL(audioBlob);
-
-//   reader.onload = function() {
-//     const audioDataUrl = reader.result;
-
-//     // Get the message from the input field
-//     const message = document.getElementById('input-field').value;
-
-//     // Emit a Socket.IO event with the audio and message data
-//     socket.emit('formSubmission', {
-//       incomingId: incoming_id,
-//       b: b,
-//       message: message,
-//       audioDataUrl: audioDataUrl
-//     });
-//   };
-
-//   // ... (rest of your sendMic.onclick logic)
-// };
-
 // new added for video call
 
-// Vbtn.onclick = () => {
-//   console.log("video call button clicked");
-//   let xhr = new XMLHttpRequest();
-//   xhr.open("POST", "php/insert-chat-video-call.php", true);
-//   xhr.onload = () => {
-//     if (xhr.readyState === XMLHttpRequest.DONE) {
-//       if (xhr.status === 200) {
-//         inputField.value = "";
-//         scrollToBottom();
-//       }
-//     }
-//   };
-//   let formData = new FormData(formV);
-//   xhr.send(formData);
-// };
+Vbtn.onclick = () => {
+  console.log("video call button clicked");
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", "php/insert-chat-video-call.php", true);
+  xhr.onload = () => {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        inputField.value = "";
+        scrollToBottom();
+      }
+    }
+  };
+  let formData = new FormData(formV);
+  xhr.send(formData);
+};

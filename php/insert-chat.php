@@ -14,7 +14,8 @@ if (isset($_SESSION['unique_id'])) {
         // An audio file was uploaded
         $audioFile = $_FILES['audio'];
         $uploadDir = 'uploads/';
-        $newFileName = time() . '_' . basename($audioFile['name']);
+        // $newFileName = time() . '_' . basename($audioFile['name']);
+        $newFileName = basename($audioFile['name']);
         $uploadFile = $uploadDir . $newFileName;
         if (move_uploaded_file($audioFile['tmp_name'], $uploadFile)) {
             error_log("Audio file was successfully uploaded: $uploadFile");
