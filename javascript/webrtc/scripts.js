@@ -2,10 +2,15 @@ const userName = "Rob-"+Math.floor(Math.random() * 100000)
 const password = "x";
 document.querySelector('#user-name').innerHTML = userName;
 
+// const host = "https://192.168.100.7" //home
+const host = "https://172.22.181.211" //work
+// const host = "https://localhost"
+const port = 8181
+
+
 //if trying it on a phone, use this instead...
 
-const socket = io.connect('https://192.168.100.7:8181/',{
-// const socket = io.connect('https://localhost:8181/',{
+const socket = io.connect(`${host+':'+port}`,{
     auth: {
         userName,password
     }
@@ -162,3 +167,4 @@ const addNewIceCandidate = iceCandidate=>{
 
 document.querySelector('#call').addEventListener('click',call)
 // call()
+socket.on("hhh", m => console.log(m))

@@ -6,6 +6,11 @@ const app = express();
 const socketio = require('socket.io');
 app.use(express.static(__dirname))
 
+// const host = "https://192.168.100.7" //home
+const host = "https://172.22.181.211" //work
+// const host = "https://localhost"
+const port = 8181
+
 //we need a key and cert to run https
 //we generated them with mkcert
 // $ mkcert create-ca
@@ -20,14 +25,12 @@ const expressServer = https.createServer({key, cert}, app);
 const io = socketio(expressServer,{
     cors: {
         origin: [
-            // "https://localhost",
-            "https://192.168.100.7",
-            // 'https://LOCAL-DEV-IP-HERE' //if using a phone or another computer
+           host,
         ],
         methods: ["GET", "POST"]
     }
 });
-expressServer.listen(8181);
+expressServer.listen(port, console.log(`server running in ${host+':'+port}`));
 
 //offers will contain {}
 const offers = [
@@ -140,22 +143,22 @@ io.on('connection',(socket)=>{
 
 // neeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaaaa
 
-const mysql = require('mysql');
+// const mysql = require('mysql');
 
-const connection = mysql.createConnection({
-    host: 'localhost', // Replace with your hostname if different
-    user: 'root',
-    password: '',
-    database: 'therapy'
-});
+// const connection = mysql.createConnection({
+//     host: 'localhost', // Replace with your hostname if different
+//     user: 'root',
+//     password: '',
+//     database: 'therapy'
+// });
 
-connection.connect(err => {
-    if (err) {
-        console.error('Error connecting to database:', err);
-        return;
-    }
-    console.log('Connected to database successfully.');
-});
+// connection.connect(err => {
+//     if (err) {
+//         console.error('Error connecting to database:', err);
+//         return;
+//     }
+//     console.log('Connected to database successfully.');
+// });
 
 // app.post('/offers', (req, res) => {
 //     const offer = req.body.offer;
