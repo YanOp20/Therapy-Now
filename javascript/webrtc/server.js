@@ -6,9 +6,26 @@ const app = express();
 const socketio = require('socket.io');
 app.use(express.static(__dirname))
 
+const os = require('os');
+const networkInterfaces = os.networkInterfaces();
+let ipAddresses = [];
+
+for (const name of Object.keys(networkInterfaces)) {
+    for (const net of networkInterfaces[name]) {
+        // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+        if (net.family === 'IPv4' && !net.internal) {
+            ipAddresses.push(net.address);
+        }
+    }
+}
+
+// Now, ipAddresses is an array that contains all the IPv4 addresses
+console.log(ipAddresses[0]);
+
 // const host = "https://192.168.100.7" //home
-const host = "https://172.22.181.211" //work
+// const host = "https://172.22.181.211" //work
 // const host = "https://localhost"
+const host = `https://${ipAddresses[0]}` 
 const port = 8181
 
 //we need a key and cert to run https

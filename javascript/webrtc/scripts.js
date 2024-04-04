@@ -2,12 +2,26 @@ const userName = "Rob-"+Math.floor(Math.random() * 100000)
 const password = "x";
 document.querySelector('#user-name').innerHTML = userName;
 
+const os = require('os');
+const networkInterfaces = os.networkInterfaces();
+let ipAddresses = [];
+
+for (const name of Object.keys(networkInterfaces)) {
+    for (const net of networkInterfaces[name]) {
+        // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+        if (net.family === 'IPv4' && !net.internal) {
+            ipAddresses.push(net.address);
+        }
+    }
+}
+
+// Now, ipAddresses is an array that contains all the IPv4 addresses
+console.log(ipAddresses[0]);
 // const host = "https://192.168.100.7" //home
-const host = "https://172.22.181.211" //work
+// const host = "https://172.22.181.211" //work
 // const host = "https://localhost"
+const host = `https://${ipAddresses[0]}`
 const port = 8181
-
-
 //if trying it on a phone, use this instead...
 
 const socket = io.connect(`${host+':'+port}`,{
