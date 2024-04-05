@@ -83,10 +83,7 @@ if (mysqli_num_rows($sqlU) > 0) {
     });
     
     
-    socket.emit('get messages by user IDs', {
-        ogi,
-        ici
-    });
+    socket.emit('get messages by user IDs', { ogi, ici});
     const roomId = [ogi, ici].sort().join('-');
     socket.emit('join room', roomId);
     
@@ -134,22 +131,21 @@ if (mysqli_num_rows($sqlU) > 0) {
     });
     
     socket.on('new messages', d => {
-        console.log("ssssssssssssssssssssssssssssssssssss",d.data)
+        console.log("New message received:", d.data);
         const ddata = d.data.message && !d.data.audioDataUrl ?
-        `<p> ${d.data.message}</p>` :
-        `<audio src="php/uploads/${d.data.audioDataUrl}type="audio/mp3" controls></audio>`
+                `<p> ${d.data.message}</p>` :
+                `<audio src="php/uploads/${d.data.audioDataUrl} type="audio/mp3" controls></audio>`;
         chatBox.innerHTML += `<div class="chat outgoing">
-        <div class="details">
-        ${ddata}
-        </div>
-        </div>`
+                                    <div class="details">
+                                        ${ddata}
+                                    </div>
+                                </div>`
         
         if (!chatBox.classList.contains("active")) {
             scrollToBottom();
         }
         
-    })
-    
+    })    
     
     
     socket.on('disconnect', () => {

@@ -71,6 +71,7 @@ sendBtn.onclick = () => {
     audioDataUrl: '',
     roomId: [outgoing_id, incoming_id].sort().join('-')
   });
+
 };
 chatBox.onmouseenter = () => {
   chatBox.classList.add("active");
@@ -166,11 +167,6 @@ function initFunction() {
   });
 }
 
-
-
-
-
-
 sendMic.onclick = () => {
    console.log("sendMic clicked");
   
@@ -179,7 +175,7 @@ sendMic.onclick = () => {
     rec.stop();
   }
   // let audioBlob = new Blob(audioChunks, { type: "audio/mp3" });
-    let audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+  let audioBlob = new Blob(audioChunks, { type: "audio/wav" });
 
   let formData = new FormData();
 
@@ -239,39 +235,20 @@ cRec.onclick = () => {
   sendBtn.style.display = "block";
   sendMic.style.display = "none";
 };
+// new added for video call
 
-// setInterval(() => {
+// Vbtn.onclick = () => {
+//   console.log("video call button clicked");
 //   let xhr = new XMLHttpRequest();
-//   xhr.open("POST", "php/get-chat.php", true);
+//   xhr.open("POST", "php/insert-chat-video-call.php", true);
 //   xhr.onload = () => {
-  //     if (xhr.readyState === XMLHttpRequest.DONE) {
-    //       if (xhr.status === 200) {
-      //         let data = xhr.response;
-//         chatBox.innerHTML = data;
-//         if (!chatBox.classList.contains("active")) {
-//           scrollToBottom();
-//         }
+//     if (xhr.readyState === XMLHttpRequest.DONE) {
+//       if (xhr.status === 200) {
+//         inputField.value = "";
+//         scrollToBottom();
 //       }
 //     }
 //   };
-//   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//   xhr.send("incoming_id=" + incoming_id);
-// }, 500);
-
-// new added for video call
-
-Vbtn.onclick = () => {
-  console.log("video call button clicked");
-  let xhr = new XMLHttpRequest();
-  xhr.open("POST", "php/insert-chat-video-call.php", true);
-  xhr.onload = () => {
-    if (xhr.readyState === XMLHttpRequest.DONE) {
-      if (xhr.status === 200) {
-        inputField.value = "";
-        scrollToBottom();
-      }
-    }
-  };
-  let formData = new FormData(formV);
-  xhr.send(formData);
-};
+//   let formData = new FormData(formV);
+//   xhr.send(formData);
+// };

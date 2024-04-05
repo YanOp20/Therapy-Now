@@ -26,7 +26,7 @@ for (const name of Object.keys(networkInterfaces)) {
     }
 }
 // const host = "https://localhost"
-const host = `https://${ipAddresses[0]}` 
+const host = `https://${ipAddresses[0]}`
 const port = 4000
 // Load HTTPS key and certificate
 //we need a key and cert to run https
@@ -221,8 +221,9 @@ chatNamespace.on('connection', (socket) => {
       const roomId = data.roomId;
       // Broadcast the new message to all clients in the room
       io.to(roomId).emit("new messages", { data });
-      console.log(data)
+      console.log("formSubmission: ",data)
     });
+ 
   
     socket.on("disconnect", () => {
       console.log("user disconnected in chatNamespace");
