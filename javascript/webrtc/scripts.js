@@ -2,10 +2,18 @@ const userName = "Rob-"+Math.floor(Math.random() * 100000)
 const password = "x";
 document.querySelector('#user-name').innerHTML = userName;
 
-//if trying it on a phone, use this instead...
+const hostname = window.location.hostname; 
 
+<<<<<<< HEAD
 // const socket = io.connect('https://192.168.100.7:8181/',{
 const socket = io.connect('https://localhost:8181/',{
+=======
+// Construct the host URL using the hostname
+const host = `https://${hostname}`;
+const port = 4000
+
+const socket = io.connect(`${host+':'+port}/webrtc`,{
+>>>>>>> d1d6b10307105e30a9741699d626cedd131c85aa
     auth: {
         userName,password
     }
@@ -45,7 +53,10 @@ const call = async e=>{
         peerConnection.setLocalDescription(offer);
         didIOffer = true;
         socket.emit('newOffer',offer); //send offer to signalingServer
+<<<<<<< HEAD
 
+=======
+>>>>>>> d1d6b10307105e30a9741699d626cedd131c85aa
     }catch(err){
         console.log(err)
     }
@@ -156,4 +167,8 @@ const addNewIceCandidate = iceCandidate=>{
 
 
 document.querySelector('#call').addEventListener('click',call)
-// call()
+
+socket.on('connect', () => {
+    console.log('Connected to Socket.io server');
+    // ... Now you can use 'socket' for emitting and listening to events ...
+  });

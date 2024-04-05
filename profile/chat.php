@@ -72,6 +72,7 @@ if (mysqli_num_rows($sqlU) > 0) {
 <script>
     const ogi = document.querySelector('.outgoing_id').value;
     const ici = document.querySelector('.incoming_id').value;
+<<<<<<< HEAD
     const socket = io('http://localhost:4000'); // Replace with your server's URL and port
 
     socket.on('connect', () => {
@@ -175,5 +176,86 @@ if (mysqli_num_rows($sqlU) > 0) {
     socket.on('disconnect', () => {
         console.log('Disconnected from Socket.IO server');
     });
+=======
+    const host = `https://172.22.181.211`;
+    const port = 4000
+    
+    const socket = io.connect(`${host+':'+port}/chat`);
+    
+    
+    socket.on('connect', () => {
+        console.log('Connected to Socket.IO server');
+    });
+    
+    
+    socket.emit('get messages by user IDs', { ogi, ici});
+    const roomId = [ogi, ici].sort().join('-');
+    socket.emit('join room', roomId);
+    
+
+    // ... other code
+    socket.on('load messages', (messages) => {
+        messages.forEach((message) => {
+            // Create HTML elements based on message data
+            const chatElement = document.createElement('div');
+            chatElement.classList.add('chat');
+            // console.log('outgoing id', ogi)
+            // console.log('incoming' , ici)
+            
+            if (message.outgoing_msg_id === ogi) {
+                chatElement.classList.add('incoming');
+            } else {
+                chatElement.classList.add('outgoing');
+            }
+            
+            const detailsElement = document.createElement('div');
+            detailsElement.classList.add('details');
+            
+            if (message.audio) {
+                const audioElement = document.createElement('audio');
+                audioElement.src = `php/uploads/${message.audio}`;
+                audioElement.type = 'audio/mp3';
+                audioElement.controls = true;
+                detailsElement.appendChild(audioElement);
+            } else {
+                const messageElement = document.createElement('p');
+                messageElement.textContent = message.msg;
+                detailsElement.appendChild(messageElement);
+            }
+            
+            chatElement.appendChild(detailsElement);
+            
+            // Append the chat element to the chat box
+            chatBox.appendChild(chatElement);
+            // console.log(chatBox)
+            if (!chatBox.classList.contains("active")) {
+                scrollToBottom();
+            }
+        });
+        // document.querySelector('#mes').innerHTML = messages[0].msg
+    });
+    
+    socket.on('new messages', d => {
+        console.log("New message received:", d.data);
+        const ddata = d.data.message && !d.data.audioDataUrl ?
+                `<p> ${d.data.message}</p>` :
+                `<audio src="php/uploads/${d.data.audioDataUrl} type="audio/mp3" controls></audio>`;
+        chatBox.innerHTML += `<div class="chat outgoing">
+                                    <div class="details">
+                                        ${ddata}
+                                    </div>
+                                </div>`
+        
+        if (!chatBox.classList.contains("active")) {
+            scrollToBottom();
+        }
+        
+    })    
+    
+    
+    socket.on('disconnect', () => {
+        console.log('Disconnected from Socket.IO server');
+    });
+>>>>>>> d1d6b10307105e30a9741699d626cedd131c85aa
 </script>
 <script src="javascript/chat.js"> </script>

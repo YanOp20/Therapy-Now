@@ -1,11 +1,11 @@
-const form = document.querySelector(".app-form"),
-  continueBtn = form.querySelector(".submit"),
-  app_s = form.querySelector(".appointment-success"),
-  errorText = form.querySelector(".error-text"),
-  dateInput = form.querySelector("#date"),
-  timeInput = form.querySelector("#time");
+const Apointmentform = document.querySelector(".app-form"),
+  continueBtn = Apointmentform.querySelector(".submit"),
+  app_s = Apointmentform.querySelector(".appointment-success"),
+  errorText = Apointmentform.querySelector(".error-text"),
+  dateInput = Apointmentform.querySelector("#date"),
+  timeInput = Apointmentform.querySelector("#time");
 
-form.onsubmit = (e) => {
+Apointmentform.onsubmit = (e) => {
   e.preventDefault();
 };
 
@@ -49,6 +49,6 @@ continueBtn.onclick = () => {
       }
     }
   };
-  let formData = new FormData(form);
+  let formData = new FormData(Apointmentform);
   xhr.send(formData);
 };
