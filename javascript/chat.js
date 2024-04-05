@@ -62,6 +62,7 @@ sendBtn.onclick = () => {
   // Get the message from the input field
   const message = document.getElementById("input-field").value;
 
+  console.log(`after send button cliecled to emit   socket.emit("formSubmission"` )
   // Emit a Socket.IO event with the audio and message data
   socket.emit("formSubmission", {
     incomingId: incoming_id,

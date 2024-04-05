@@ -2,29 +2,13 @@ const userName = "Rob-"+Math.floor(Math.random() * 100000)
 const password = "x";
 document.querySelector('#user-name').innerHTML = userName;
 
-const os = require('os');
-const networkInterfaces = os.networkInterfaces();
-let ipAddresses = [];
+const hostname = window.location.hostname; 
 
-for (const name of Object.keys(networkInterfaces)) {
-    for (const net of networkInterfaces[name]) {
-        // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
-        if (net.family === 'IPv4' && !net.internal) {
-            ipAddresses.push(net.address);
-        }
-    }
-}
+// Construct the host URL using the hostname
+const host = `https://${hostname}`;
+const port = 4000
 
-// Now, ipAddresses is an array that contains all the IPv4 addresses
-console.log(ipAddresses[0]);
-// const host = "https://192.168.100.7" //home
-// const host = "https://172.22.181.211" //work
-// const host = "https://localhost"
-const host = `https://${ipAddresses[0]}`
-const port = 8181
-//if trying it on a phone, use this instead...
-
-const socket = io.connect(`${host+':'+port}`,{
+const socket = io.connect(`${host+':'+port}/webrtc`,{
     auth: {
         userName,password
     }
@@ -64,12 +48,6 @@ const call = async e=>{
         peerConnection.setLocalDescription(offer);
         didIOffer = true;
         socket.emit('newOffer',offer); //send offer to signalingServer
-
-
-
-
-
-
     }catch(err){
         console.log(err)
     }
@@ -180,5 +158,8 @@ const addNewIceCandidate = iceCandidate=>{
 
 
 document.querySelector('#call').addEventListener('click',call)
-// call()
-socket.on("hhh", m => console.log(m))
+
+socket.on('connect', () => {
+    console.log('Connected to Socket.io server');
+    // ... Now you can use 'socket' for emitting and listening to events ...
+  });
