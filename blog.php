@@ -47,32 +47,6 @@
             /* float: right;  */
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         #form-container {
             display: none;
             /* hide the form container by default */
@@ -161,19 +135,6 @@
         nav div button.cancel-form-btn:hover {
             background-color: #da190b;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -306,7 +267,7 @@
         .blog a:hover {
             text-decoration: underline;
         }
-    </style> 
+    </style>
 
     <div class="blog">
         <?php
@@ -326,7 +287,7 @@
                                                 <p> ' . $row['text'] . '</p>                    
                                                 </div>';
                     } else {
- 
+
                         $output .= '<div class="detail">
                                     <h1>' . $row['title'] . '</h1>
                                     <p> ' . $row['text'] . '</p>
@@ -345,46 +306,45 @@
         }
         ?>
 
-<nav>
+        <nav>
 
-<?php
-include_once "php/config.php";
-if(isset($_SESSION['unique_id'])){
-            $sql =mysqli_query($conn, "SELECT * FROM therapist WHERE unique_id = {$_SESSION['unique_id']}");
-        }
-        if (isset($_SESSION['unique_id']) and mysqli_num_rows($sql) > 0) {
+            <?php
+            include_once "php/config.php";
+            if (isset($_SESSION['unique_id'])) {
+                $sql = mysqli_query($conn, "SELECT * FROM therapist WHERE unique_id = {$_SESSION['unique_id']}");
+            }
+            if (isset($_SESSION['unique_id']) and mysqli_num_rows($sql) > 0) {
             ?>
-            <!-- <div class="content" style="  display: flex;  align-items: center;"> -->
-    
+                <!-- <div class="content" style="  display: flex;  align-items: center;"> -->
+
                 <div><button class="create-form-btn" id="create-form-btn">Create a post</button></div>
                 <div id="form-container" style="margin: 0;">
-                <div class="fdf">
+                    <div class="fdf">
 
-                    <form class="blogForm" action="#" method="POST" enctype="multipart/form-data" autocomplete="off">
-                        <div class="error-text"></div>
-                        <input type="text" name="_id" value="<?php echo $_SESSION['unique_id']; ?>" hidden>
-                        <input name="title" class="m" type="text" placeholder="Title" required>
-                        <input class="m" type="file" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg">
-                        <textarea class="m" name="text" rows="4" cols="50" placeholder="write a text..." required></textarea>
-                        <input class="submit m" type="submit" name="submit" value="post">
-                    </form>
+                        <form class="blogForm" action="#" method="POST" enctype="multipart/form-data" autocomplete="off">
+                            <div class="error-text"></div>
+                            <input type="text" name="_id" value="<?php echo $_SESSION['unique_id']; ?>" hidden>
+                            <input name="title" class="m" type="text" placeholder="Title" required>
+                            <input class="m" type="file" name="image" accept="image/x-png,image/gif,image/jpeg,image/jpg">
+                            <textarea class="m" name="text" rows="4" cols="50" placeholder="write a text..." required></textarea>
+                            <input class="submit m" type="submit" name="submit" value="post">
+                        </form>
+                    </div>
                 </div>
-            </div>
             <?php
-        }
-            
-    else{
-        ?>
-        <div style="display: none;"><button class="create-form-btn" id="create-form-btn">Create a post</button></div>
+            } else {
+            ?>
+                <div style="display: none;"><button class="create-form-btn" id="create-form-btn">Create a post</button>
+                </div>
 
-<?php 
-    } 
-
+            <?php
+            }
 
 
 
 
-        
+
+
             include_once "php/get-blog-nav.php";  ?>
         </nav>
     </div>

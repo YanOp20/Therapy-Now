@@ -13,7 +13,7 @@ if (mysqli_num_rows($sqlU) > 0) {
 }
 ?>
 <style>
-/* div{border: solid 1px pink;} */
+    /* div{border: solid 1px pink;} */
 </style>
 <div class="wrapper chatt">
     <section class="chat-area">
@@ -27,25 +27,22 @@ if (mysqli_num_rows($sqlU) > 0) {
             </div>
             <?php if (isset($_GET['b'])) {
                 $b = 'b'; ?>
-            <!-- <a href="./javascript/video-calling-app-example-master/public/index.html" target="popup" onclick="window.open('./javascript/video-calling-app-example-master/public/index.html','name','width=600,height=400')"><i class="fas fa-duotone fa-video fa-2xl "></i></a> -->
-            <!-- <a href="https://172.22.181.60:8181" target="popup" class="fas fa-duotone fa-video fa-2xl "></i></a> -->
+                <!-- <a href="./javascript/video-calling-app-example-master/public/index.html" target="popup" onclick="window.open('./javascript/video-calling-app-example-master/public/index.html','name','width=600,height=400')"><i class="fas fa-duotone fa-video fa-2xl "></i></a> -->
+                <!-- <a href="https://172.22.181.60:8181" target="popup" class="fas fa-duotone fa-video fa-2xl "></i></a> -->
 
-            <!-- addef for video calling -->
-            <form action="#" class="formV">
-                <!-- new added for getting user id -->
-                <input type="text" class="outgoing_id" name="outgoing_id" value="<?php echo $_SESSION['unique_id']; ?>"
-                    hidden>
-                <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
-                <input type="text" class="b" name="b" value="<?php echo $b; ?>" hidden>
-                <input id="c-input-field" type="text" name="message" class="input-field" value="<?php echo "calling" ?>"
-                    hidden>
-                <button id="videoCallingBtn">
-                    <!-- <a href="localhost:8181" target="_blank" onclick="window.open('https://172.22.181.203:8181', 'popup', 'width=600,height=400'); return false;"> <i class="fas fa-duotone fa-video fa-2xl "></i> </a> -->
-                    <a href="192.168.0.65:4000" target="_blank"
-                        onclick="window.open('https://192.168.0.65:4000', 'popup', 'width=600,height=400'); return false;">
-                        <i class="fas fa-duotone fa-video fa-2xl "></i> </a>
-                </button>
-            </form>
+                <!-- addef for video calling -->
+                <form action="#" class="formV">
+                    <!-- new added for getting user id -->
+                    <input type="text" class="outgoing_id" name="outgoing_id" value="<?php echo $_SESSION['unique_id']; ?>" hidden>
+                    <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
+                    <input type="text" class="b" name="b" value="<?php echo $b; ?>" hidden>
+                    <input id="c-input-field" type="text" name="message" class="input-field" value="<?php echo "calling" ?>" hidden>
+                    <button id="videoCallingBtn">
+                        <!-- <a href="localhost:8181" target="_blank" onclick="window.open('https://172.22.181.203:8181', 'popup', 'width=600,height=400'); return false;"> <i class="fas fa-duotone fa-video fa-2xl "></i> </a> -->
+                        <a href="192.168.0.65:4000" target="_blank" onclick="window.open('https://192.168.0.65:4000', 'popup', 'width=600,height=400'); return false;">
+                            <i class="fas fa-duotone fa-video fa-2xl "></i> </a>
+                    </button>
+                </form>
 
             <?php   } ?>
         </header>
@@ -62,12 +59,10 @@ if (mysqli_num_rows($sqlU) > 0) {
 
             <p id="isRecording"></p>
             <span id="time"></span>
-            <input type="text" class="outgoing_id" name="outgoing_id" value="<?php echo $_SESSION['unique_id']; ?>"
-                hidden>
+            <input type="text" class="outgoing_id" name="outgoing_id" value="<?php echo $_SESSION['unique_id']; ?>" hidden>
             <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
             <input type="text" class="b" name="b" value="<?php echo $b; ?>" hidden>
-            <input id="input-field" type="text" name="message" class="input-field" placeholder="Type a message here..."
-                autocomplete="off">
+            <input id="input-field" type="text" name="message" class="input-field" placeholder="Type a message here..." autocomplete="off">
             <button id="sendBtn"><i class="fab fa-telegram-plane "></i></button>
             <button id="sendMic" style="display:none"><i class="active fas fa-paper-plane "></i></button>
         </form>
@@ -76,98 +71,98 @@ if (mysqli_num_rows($sqlU) > 0) {
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 <!-- <script src="./Server/socket.io.min.js"></script> -->
 <script>
-const ogi = document.querySelector('.outgoing_id').value;
-const ici = document.querySelector('.incoming_id').value;
+    const ogi = document.querySelector('.outgoing_id').value;
+    const ici = document.querySelector('.incoming_id').value;
 
-// const hostname = window.location.hostname;
+    // const hostname = window.location.hostname;
 
-// Construct the host URL using the hostname
-const host = `https://${window.location.hostname}`;
-const port = 4000
+    // Construct the host URL using the hostname
+    const host = `https://${window.location.hostname}`;
+    const port = 4000
 
-const socket = io.connect(`${host+':'+port}/chat`);
+    const socket = io.connect(`${host+':'+port}/chat`);
 
-socket.on('connect', () => {
-    console.log('Connected to Socket.IO server');
-});
-
-
-socket.emit('get messages by user IDs', {
-    ogi,
-    ici
-});
-const roomId = [ogi, ici].sort().join('-');
-socket.emit('join room', roomId);
+    socket.on('connect', () => {
+        console.log('Connected to Socket.IO server');
+    });
 
 
-// ... other code
-socket.on('load messages', (messages) => {
-    messages.forEach((message) => {
-        // console.log('Loaded messages', messages)
-        // Create HTML elements based on message data
-        const chatElement = document.createElement('div');
-        chatElement.classList.add('chat');
+    socket.emit('get messages by user IDs', {
+        ogi,
+        ici
+    });
+    const roomId = [ogi, ici].sort().join('-');
+    socket.emit('join room', roomId);
 
-        if (message.outgoing_msg_id == ogi) {
-            chatElement.classList.add('outgoing');
+
+    // ... other code
+    socket.on('load messages', (messages) => {
+        messages.forEach((message) => {
+            // console.log('Loaded messages', messages)
+            // Create HTML elements based on message data
+            const chatElement = document.createElement('div');
+            chatElement.classList.add('chat');
+
+            if (message.outgoing_msg_id == ogi) {
+                chatElement.classList.add('outgoing');
+            } else {
+                chatElement.classList.add('incoming');
+                if (message.img) {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = `php/images/` + message.img;
+                    imgElement.alt = "Profile picture";
+                    chatElement.appendChild(imgElement);
+                }
+            }
+
+
+            const detailsElement = document.createElement('div');
+            detailsElement.classList.add('details');
+
+            if (message.audio) {
+                const audioElement = document.createElement('audio');
+                audioElement.src = `php/uploads/${message.audio}`;
+                audioElement.type = 'audio/mp3';
+                audioElement.controls = true;
+                detailsElement.appendChild(audioElement);
+            } else {
+                const messageElement = document.createElement('p');
+                messageElement.textContent = message.msg;
+                detailsElement.appendChild(messageElement);
+            }
+
+            chatElement.appendChild(detailsElement);
+
+            // Append the chat element to the chat box
+            chatBox.appendChild(chatElement);
+            // console.log(chatBox)
+            if (!chatBox.classList.contains("active")) {
+                scrollToBottom();
+            }
+        });
+        chatBox.scrollTop = chatBox.scrollHeight;
+        // document.querySelector('#mes').innerHTML = messages[0].msg
+    });
+
+    socket.on('new messages', (data) => {
+        let class_name = "";
+        let image = "";
+
+        if (data.outgoingId === ogi) {
+            class_name = 'outgoing';
         } else {
-            chatElement.classList.add('incoming');
-            if (message.img) {
-                const imgElement = document.createElement('img');
-                imgElement.src = `php/images/` + message.img;
-                imgElement.alt = "Profile picture";
-                chatElement.appendChild(imgElement);
+            class_name = 'incoming';
+            if (data.img) {
+                image = `<img src="php/images/${data.img}" alt="">`;
             }
         }
 
-
-        const detailsElement = document.createElement('div');
-        detailsElement.classList.add('details');
-
-        if (message.audio) {
-            const audioElement = document.createElement('audio');
-            audioElement.src = `php/uploads/${message.audio}`;
-            audioElement.type = 'audio/mp3';
-            audioElement.controls = true;
-            detailsElement.appendChild(audioElement);
-        } else {
-            const messageElement = document.createElement('p');
-            messageElement.textContent = message.msg;
-            detailsElement.appendChild(messageElement);
-        }
-
-        chatElement.appendChild(detailsElement);
-
-        // Append the chat element to the chat box
-        chatBox.appendChild(chatElement);
-        // console.log(chatBox)
-        if (!chatBox.classList.contains("active")) {
-            scrollToBottom();
-        }
-    });
-    chatBox.scrollTop = chatBox.scrollHeight;
-    // document.querySelector('#mes').innerHTML = messages[0].msg
-});
-
-socket.on('new messages', (data) => {
-    let class_name = "";
-    let image = "";
-
-    if (data.outgoingId === ogi) {
-        class_name = 'outgoing';
-    } else {
-        class_name = 'incoming';
-        if (data.img) {
-            image = `<img src="php/images/${data.img}" alt="">`;
-        }
-    }
-
-    const whatData = data.message && !data.audioDataUrl ?
-        `<p>${data.message}</p>` :
-        `<audio src="php/uploads/${data.audioDataUrl}" type="audio/mp3" controls></audio>`;
+        const whatData = data.message && !data.audioDataUrl ?
+            `<p>${data.message}</p>` :
+            `<audio src="php/uploads/${data.audioDataUrl}" type="audio/mp3" controls></audio>`;
 
 
-    chatBox.innerHTML += `
+        chatBox.innerHTML += `
                 <div class="chat ${class_name}">
                     ${image}
                     <div class="details">
@@ -175,13 +170,13 @@ socket.on('new messages', (data) => {
                     </div>
                 </div>
             `;
-    if (!chatBox.classList.contains("active")) {
-        scrollToBottom();
-    }
-});
+        if (!chatBox.classList.contains("active")) {
+            scrollToBottom();
+        }
+    });
 
-socket.on('disconnect', () => {
-    console.log('Disconnected from Socket.IO server');
-});
+    socket.on('disconnect', () => {
+        console.log('Disconnected from Socket.IO server');
+    });
 </script>
 <script src="javascript/chat.js"> </script>

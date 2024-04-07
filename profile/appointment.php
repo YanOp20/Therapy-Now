@@ -78,14 +78,19 @@
                         <option value="">select...</option>
                         <option value="I've been felling depressed">I've been felling depressed</option>
                         <option value="I feel anxious or overwhelmed">I feel anxious or overwhelmed</option>
-                        <option value="My mood is interfering with my job/school performance">My mood is interfering with my job/school performance</option>
-                        <option value="I struggle with building or maintaining relationships">I struggle with building or maintaining relationships</option>
-                        <option value="I can't find purpose and meaning in my life">I can't find purpose and meaning in my life</option>
+                        <option value="My mood is interfering with my job/school performance">My mood is interfering
+                            with my job/school performance</option>
+                        <option value="I struggle with building or maintaining relationships">I struggle with building
+                            or maintaining relationships</option>
+                        <option value="I can't find purpose and meaning in my life">I can't find purpose and meaning in
+                            my life</option>
                         <option value="I am grieving">I am grieving</option>
                         <option value="I have experienced trauma">I have experienced trauma</option>
-                        <option value="I need to talk through a specific challenge">I need to talk through a specific challenge</option>
+                        <option value="I need to talk through a specific challenge">I need to talk through a specific
+                            challenge</option>
                         <option value="I want to gain self confidence">I want to gain self confidence</option>
-                        <option value="I want to improve myself but i don't know where to start">I want to improve myself but i don't know where to start</option>
+                        <option value="I want to improve myself but i don't know where to start">I want to improve
+                            myself but i don't know where to start</option>
                         <option value="Just Exploring">Just Exploring</option>
                         <option value="Other">Other</option>
                     </select>

@@ -6,32 +6,32 @@
     if (mysqli_num_rows($sql) > 0) {
         // echo "this is doctor";
     ?>
-        <a href="profile.php?link=profile">
-            <img src="php/images/<?php echo $row['img']; ?>" alt="">
-            <span class="icon-name">profile</span>
-            <p><?= $row['fname'] . " " . $row['lname'] ?></p>
-        </a>
+    <a href="profile.php?link=profile">
+        <img src="php/images/<?php echo $row['img']; ?>" alt="">
+        <span class="icon-name">profile</span>
+        <p><?= $row['fname'] . " " . $row['lname'] ?></p>
+    </a>
 
-        <a href="profile.php?link=patient">
-            <span><i class="fas fa-solid fa-users"></i></span>
-            <span class="icon-name" Patients></span>
-            <p>Patients</p>
-        </a>
+    <a href="profile.php?link=patient">
+        <span><i class="fas fa-solid fa-users"></i></span>
+        <span class="icon-name" Patients></span>
+        <p>Patients</p>
+    </a>
 
     <?php
     } else {
     ?>
-        <a href="profile.php?link=profile">
-            <img src="php/images/<?php echo $row['img']; ?>" alt="">
-            <span class="icon-name">profile</span>
-            <p><?= $row['fname'] . " " . $row['lname'] ?></p>
-        </a>
+    <a href="profile.php?link=profile">
+        <img src="php/images/<?php echo $row['img']; ?>" alt="">
+        <span class="icon-name">profile</span>
+        <p><?= $row['fname'] . " " . $row['lname'] ?></p>
+    </a>
 
-        <a href="profile.php?link=appointment">
-            <span><i class="fas fa-calendar-plus"></i></span>
-            <!-- <span class="icon-name">Dr</span> -->
-            <p>Add appointment</p>
-        </a>
+    <a href="profile.php?link=appointment">
+        <span><i class="fas fa-calendar-plus"></i></span>
+        <!-- <span class="icon-name">Dr</span> -->
+        <p>Add appointment</p>
+    </a>
     <?php
     }
     ?>
