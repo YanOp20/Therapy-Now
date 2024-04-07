@@ -1,19 +1,13 @@
-const userName = "Rob-"+Math.floor(Math.random() * 100000)
+const userName = "bo-"+Math.floor(Math.random() * 100000)
 const password = "x";
 document.querySelector('#user-name').innerHTML = userName;
 
-const hostname = window.location.hostname; 
 
-<<<<<<< HEAD
-// const socket = io.connect('https://192.168.100.7:8181/',{
-const socket = io.connect('https://localhost:8181/',{
-=======
 // Construct the host URL using the hostname
-const host = `https://${hostname}`;
+const host = `https://${window.location.hostname}`;
 const port = 4000
 
-const socket = io.connect(`${host+':'+port}/webrtc`,{
->>>>>>> d1d6b10307105e30a9741699d626cedd131c85aa
+const socket = io.connect(`${host+':'+port}/webRtc`,{
     auth: {
         userName,password
     }
@@ -53,10 +47,6 @@ const call = async e=>{
         peerConnection.setLocalDescription(offer);
         didIOffer = true;
         socket.emit('newOffer',offer); //send offer to signalingServer
-<<<<<<< HEAD
-
-=======
->>>>>>> d1d6b10307105e30a9741699d626cedd131c85aa
     }catch(err){
         console.log(err)
     }

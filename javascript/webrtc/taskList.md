@@ -1,10 +1,11 @@
 # Setup https:
+npm install
 1. npm install mkcert -g
 2. mkcert create-ca
 3. mkcert create-cert
 4. OPTIONAL: to run it locally, update the files with your local IP
 
-# Steps in a WebRTC app
+# Steps in a webRtc app
 1. getUserMedia() is run - CLIENT1/Init/Caller/Offerer
 2. CLIENT1 creates an RTCPeerConnection object called peerConnection
 3. the new peerConnection needs STUN servers so other clients can find

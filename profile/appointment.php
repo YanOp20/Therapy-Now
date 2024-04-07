@@ -106,3 +106,4 @@
             </form>
         </div>
     </div>
+    <script src="javascript/appointment.js"></script>

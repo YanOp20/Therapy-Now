@@ -1,11 +1,11 @@
-const Apointmentform = document.querySelector(".app-form"),
-  continueBtn = Apointmentform.querySelector(".submit"),
-  app_s = Apointmentform.querySelector(".appointment-success"),
-  errorText = Apointmentform.querySelector(".error-text"),
-  dateInput = Apointmentform.querySelector("#date"),
-  timeInput = Apointmentform.querySelector("#time");
+const appointmentForm = document.querySelector(".app-form"),
+  continueBtn = appointmentForm.querySelector(".submit"),
+  appointmentSuccessMessage = appointmentForm.querySelector(".appointment-success"),
+  errorText = appointmentForm.querySelector(".error-text"),
+  dateInput = appointmentForm.querySelector("#date"),
+  timeInput = appointmentForm.querySelector("#time");
 
-Apointmentform.onsubmit = (e) => {
+appointmentForm.onsubmit = (e) => {
   e.preventDefault();
 };
 
@@ -40,7 +40,7 @@ continueBtn.onclick = () => {
       if (xhr.status === 200) {
         let data = xhr.response;
         if (data === "success") {
-          app_s.innerHTML = "Success appointment";
+          appointmentSuccessMessage.innerHTML = "Success appointment";
           location.href = "profile.php?link=appointment";
         } else {
           errorText.style.display = "block";
@@ -49,6 +49,6 @@ continueBtn.onclick = () => {
       }
     }
   };
-  let formData = new FormData(Apointmentform);
+  let formData = new FormData(appointmentForm);
   xhr.send(formData);
 };

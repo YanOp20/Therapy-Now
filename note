@@ -107,3 +107,6 @@ In this code, we're creating a form that sends a POST request to `profile.php` w
 On the `profile.php` page, you can access these parameters using `$_POST['user_id']`, `$_POST['link']`, and `$_POST['b']`.
 
 Please note that this will change the behavior of your page. Instead of being a simple link that the user can open in a new tab or window, it's now a form that the user must submit. If you want to keep the link behavior, you might need to use JavaScript to submit the form¹. 😊
+
+
+in signup  i have to  edit the name must be 
