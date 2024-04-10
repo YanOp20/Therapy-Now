@@ -48,7 +48,7 @@ if (isset($_SESSION['unique_id'])) {
                 if ($row['audio']) {
                     $output .= '<div class="chat outgoing">
                                         <div class="details">
-                                        <audio src="php/uploads/' . $row['audio'] . '" type="audio/mp3" controls></audio>
+                                        <audio src="php/uploads/' . $row['audio'] . '" type="audio/wav" controls></audio>
                                         </div>
                                         </div>';
                 } else {
@@ -65,7 +65,7 @@ if (isset($_SESSION['unique_id'])) {
                         <img src="php/images/' . $row['img'] . '" alt="">
 
                         <div class="details">
-                        <audio src="php/uploads/' . $row['audio'] . '" type="audio/mp3" controls></audio>
+                        <audio src="php/uploads/' . $row['audio'] . '" type="audio/wav" controls></audio>
                         </div>
                         </div>';
                 } else {

@@ -2,14 +2,14 @@ const form = document.querySelector(".typing-area"),
   b = form.querySelector(".b").value,
   inputField = form.querySelector(".input-field"),
   chatBox = document.querySelector(".chat-box"),
-  sendBtn = form.querySelector("#sendBtn"),
-  sendMic = form.querySelector("#sendMic"),
-  micButton = document.getElementById("mic"),
-  stopButton = document.getElementById("stop"),
+  sendTextButton = form.querySelector("#sendBtn"),
+  sendAudioButton = form.querySelector("#sendMic"),
+  recordButton = document.getElementById("mic"),
+  stopRecordingButton = document.getElementById("stop"),
   audioElement = document.getElementById("audioElement"),
   timeSpan = document.getElementById("time"),
   isRecording = document.getElementById("isRecording"),
-  cRec = document.getElementById("cRec"),
+  cancelRecordingButton = document.getElementById("cRec"),
   incoming_id = form.querySelector(".incoming_id").value,
   outgoing_id = form.querySelector(".outgoing_id").value,
   formV = document.querySelector(".formV"), //new added for video
@@ -17,11 +17,9 @@ const form = document.querySelector(".typing-area"),
 
 inputField.addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
-    sendBtn.click();
+    sendTextButton.click();
   }
 });
-
-cRec.onclick = () => {};
 
 form.onsubmit = (e) => {
   e.preventDefault();
@@ -41,20 +39,19 @@ function scrollToBottom() {
 
 inputField.focus();
 
-sendMic.classList.add("active");
+sendAudioButton.classList.add("active");
 
 inputField.onkeyup = () => {
   if (inputField.value != "") {
-    sendBtn.classList.add("active");
-    micButton.style.display = "none";
+    sendTextButton.classList.add("active");
+    recordButton.style.display = "none";
   } else {
-    sendBtn.classList.remove("active");
-    micButton.style.display = "block";
+    sendTextButton.classList.remove("active");
+    recordButton.style.display = "block";
   }
 };
 
-sendBtn.onclick = () => {
-  console.log("sendBtn clicked");
+sendTextButton.onclick = () => {
   let xhr = new XMLHttpRequest();
   xhr.open("POST", "php/insert-chat.php", true);
   xhr.onload = () => {
@@ -67,9 +64,7 @@ sendBtn.onclick = () => {
   };
   let formData = new FormData(form);
   xhr.send(formData);
-  micButton.style.display = "block";
-  cRec.style.display = "none";
-  sendBtn.classList.remove("active");
+  manageUI("send text");
   // Get the message from the input field
   const message = document.getElementById("input-field").value;
 
@@ -84,22 +79,19 @@ sendBtn.onclick = () => {
   });
 };
 
-// micButton.addEventListener("click", initFunction);
-micButton.addEventListener("click", initializeRecorder);
+recordButton.addEventListener("click", initializeRecorder);
 
 let rec;
 let audioChunks = [];
 let internal;
 
 // Function to initialize the audio recorder
-function initializeRecorder() {
+async function initializeRecorder() {
   audioChunks = []; // Reset audio chunks
 
   try {
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then(handleAudioStream)
-      .catch(handleGetUserMediaError);
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    handleAudioStream(stream);
   } catch (error) {
     console.error("Error accessing microphone:", error);
   }
@@ -110,16 +102,8 @@ function handleAudioStream(stream) {
   rec.ondataavailable = handleAudioDataAvailable;
   rec.start();
 
-  // Update UI for recording state
-  sendMic.style.display = "block";
-  stopButton.style.display = "block";
-  micButton.style.display = "none";
-  timeSpan.style.display = "block";
-  isRecording.style.display = "block";
-  inputField.style.display = "none";
-  isRecording.textContent = "Recording...";
-  sendBtn.style.display = "none";
-
+  // Update UI for recording state recordButton
+  manageUI("start recording");
   // Start the recording timer
   startTimer();
 }
@@ -148,44 +132,23 @@ function startTimer() {
     totalSeconds++;
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-    timeSpan.innerHTML = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    timeSpan.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   }, 1000);
 }
 
-// Function to display an error message to the user (implementation depends on your UI)
-function displayErrorMessage(message) {
-  console.log(message);
+// Function to initialize the audio recorder
+async function initializeRecorder() {
+  audioChunks = []; // Reset audio chunks
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    handleAudioStream(stream);
+  } catch (error) {
+    console.error("Error accessing microphone:", error);
+  }
 }
 
-// Event listener for the stop button
-stopButton.addEventListener("click", () => {
-  console.log("stopButton clicked");
-  clearInterval(intervalId); // Stop the timer
-  rec.stop(); // Stop the recording
-
-  // Update UI elements
-  stopButton.style.display = "none";
-  micButton.style.display = "none"; // Keep mic button hidden
-  audioElement.style.display = "block"; // Show audio playback element
-  timeSpan.innerHTML = "";
-  isRecording.style.display = "none";
-  cRec.style.display = "block"; // Show cancel recording button
-  sendMic.style.display = "block"; // Show send
-});
-
-// Sending audio data logic within sendMic.onclick
-sendMic.onclick = () => {
-  console.log("sendMic clicked");
-  handleRecordingStop();
-  if (rec) {
-    if (rec.state !== "inactive") {
-      clearInterval(intervalId);
-      rec.stop();
-    }
-  }
-};
-// function to handle recording stop and send audio data
-function handleRecordingStop() {
+async function handleRecordingStop() {
   if (rec.state === "inactive") {
     const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
     const timestamp = Date.now();
@@ -194,31 +157,23 @@ function handleRecordingStop() {
     formData.append("incoming_id", incoming_id);
     formData.append("b", b);
 
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "php/insert-chat.php", true);
-    xhr.onload = () => {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          inputField.value = "";
-          scrollToBottom();
-        } else {
-          console.error("Error sending audio:", xhr.statusText);
-        }
-      }
-    };
-    xhr.send(formData);
+    try {
+      const response = await fetch("php/insert-chat.php", {
+        method: "POST",
+        body: formData,
+      });
 
-    // Reset UI elements
-    stopButton.style.display = "none";
-    micButton.style.display = "block";
-    audioElement.style.display = "none";
-    timeSpan.innerHTML = "";
-    isRecording.style.display = "none";
-    isRecording.textContent = "";
-    inputField.style.display = "block";
-    sendBtn.style.display = "block";
-    sendMic.style.display = "none";
-    cRec.style.display = "none";
+      if (response.ok) {
+        inputField.value = "";
+        scrollToBottom();
+      } else {
+        console.error("Error sending audio:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error sending audio:", error);
+    }
+
+    manageUI("send recording");
 
     socket.emit("formSubmission", {
       incomingId: incoming_id,
@@ -233,18 +188,149 @@ function handleRecordingStop() {
   }
 }
 
-cRec.onclick = () => {
-  stopButton.style.display = "none";
-  micButton.style.display = "block";
-  audioElement.style.display = "none";
-  timeSpan.innerHTML = "";
-  isRecording.style.display = "none";
-  inputField.style.display = "block";
-  cRec.style.display = "none";
-  sendBtn.classList.remove("active");
-  sendBtn.style.display = "block";
-  sendMic.style.display = "none";
-};
+// Function to display an error message to the user (implementation depends on your UI)
+function displayErrorMessage(message) {
+  console.log(message);
+}
+
+// Event listener for the stop button
+stopRecordingButton.addEventListener("click", () => {
+  console.log("stopRecordingButton clicked");
+  clearInterval(intervalId); // Stop the timer
+  rec.stop(); // Stop the recording
+
+  // Update UI elements stopRecordingButton
+  manageUI("stop recording");
+});
+
+// Sending audio data logic within sendAudioButton.onclick
+sendAudioButton.addEventListener("click", () => {
+  console.log("sendAudioButton clicked");
+  handleRecordingStop();
+  if (rec) {
+    if (rec.state !== "inactive") {
+      clearInterval(intervalId);
+      rec.stop();
+    }
+  }
+});
+
+// * Handles the stop of recording and sends the recorded audio data to the server.
+// function handleRecordingStop() {
+//   if (rec.state === "inactive") {
+//     const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+//     const timestamp = Date.now();
+//     const formData = new FormData();
+//     formData.append("audio", audioBlob, `audio_${timestamp}.mp3`);
+//     formData.append("incoming_id", incoming_id);
+//     formData.append("b", b);
+
+//     const xhr = new XMLHttpRequest();
+//     xhr.open("POST", "php/insert-chat.php", true);
+//     xhr.onload = () => {
+//       if (xhr.readyState === XMLHttpRequest.DONE) {
+//         if (xhr.status === 200) {
+//           inputField.value = "";
+//           scrollToBottom();
+//         } else {
+//           console.error("Error sending audio:", xhr.statusText);
+//         }
+//       }
+//     };
+//     xhr.send(formData);
+
+//     manageUI("send recording");
+
+//     socket.emit("formSubmission", {
+//       incomingId: incoming_id,
+//       outgoingId: outgoing_id,
+//       b: b,
+//       message: "",
+//       audioDataUrl: `audio_${timestamp}.mp3`,
+//       roomId: [outgoing_id, incoming_id].sort().join("-"),
+//     });
+
+//     audioChunks = [];
+//   }
+// }
+
+/**
+ * Updates the user interface based on different states.
+ * @param {string} state - The current state of the UI.
+ */
+function manageUI(state) {
+  const show = (element) => (element.style.display = "block");
+  const hide = (element) => (element.style.display = "none");
+
+  switch (state) {
+    case "send text":
+      show(recordButton);
+      hide(cancelRecordingButton);
+      sendTextButton.classList.remove("active");
+      break;
+    case "start recording":
+      show(sendAudioButton);
+      show(stopRecordingButton);
+      hide(recordButton);
+      show(timeSpan);
+      show(isRecording);
+      hide(inputField);
+      isRecording.textContent = "Recording...";
+      hide(sendTextButton);
+      break;
+    case "stop recording":
+      hide(stopRecordingButton);
+      hide(recordButton);
+      show(audioElement);
+      timeSpan.textContent = "";
+      hide(isRecording);
+      show(cancelRecordingButton);
+      show(sendAudioButton);
+      break;
+    case "send recording":
+      hide(stopRecordingButton);
+      show(recordButton);
+      hide(audioElement);
+      timeSpan.textContent = "";
+      hide(isRecording);
+      isRecording.textContent = "";
+      show(inputField);
+      show(sendTextButton);
+      hide(sendAudioButton);
+      hide(cancelRecordingButton);
+      break;
+    case "Cancel recording":
+      hide(stopRecordingButton);
+      show(recordButton);
+      hide(audioElement);
+      timeSpan.textContent = "";
+      hide(isRecording);
+      show(inputField);
+      hide(cancelRecordingButton);
+      sendTextButton.classList.remove("active");
+      show(sendTextButton);
+      hide(sendAudioButton);
+      break;
+    default:
+      console.error("Invalid UI state:", state);
+  }
+}
+
+// Function to display an error message (update as needed for your UI)
+function displayErrorMessage(message) {
+  // Example: Display error message in a designated area on the page
+  const errorContainer = document.getElementById("error-message");
+  errorContainer.textContent = message;
+  errorContainer.style.display = "block";
+
+  // Optionally, you can hide the error message after a timeout
+  setTimeout(() => {
+    errorContainer.style.display = "none";
+  }, 5000); // Adjust timeout as needed
+}
+
+cancelRecordingButton.onclick = () => manageUI("Cancel recording");
+
 // new added for video call
 
 // Vbtn.onclick = () => {
@@ -262,3 +348,8 @@ cRec.onclick = () => {
 //   let formData = new FormData(formV);
 //   xhr.send(formData);
 // }
+
+// @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!
+// @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!
+// @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!
+// @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!

@@ -14,10 +14,28 @@ if (mysqli_num_rows($sqlU) > 0) {
 ?>
 <style>
     /* div{border: solid 1px pink;} */
+    #error-message {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 5px;
+        border-radius: 5px;
+        position: fixed;
+        /* Position relative to the viewport */
+        top: 15%;
+        /* Adjust position as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        /* Center horizontally */
+        z-index: 1000;
+        /* Ensure it's above other elements */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        /* Add a shadow effect */
+    }
 </style>
 <div class="wrapper chatt">
     <section class="chat-area">
         <header>
+
             <div class="details">
                 <img src="php/images/<?php echo $row['img']; ?>" alt="">
                 <div>
@@ -43,9 +61,10 @@ if (mysqli_num_rows($sqlU) > 0) {
                             <i class="fas fa-duotone fa-video fa-2xl "></i> </a>
                     </button>
                 </form>
-
             <?php   } ?>
         </header>
+
+        <div id="error-message" style="display: none;">this was errer message</div>
         <div class="chat-box">
 
         </div>
@@ -122,7 +141,7 @@ if (mysqli_num_rows($sqlU) > 0) {
             if (message.audio) {
                 const audioElement = document.createElement('audio');
                 audioElement.src = `php/uploads/${message.audio}`;
-                audioElement.type = 'audio/mp3';
+                audioElement.type = 'audio/wav';
                 audioElement.controls = true;
                 detailsElement.appendChild(audioElement);
             } else {
@@ -159,7 +178,7 @@ if (mysqli_num_rows($sqlU) > 0) {
 
         const whatData = data.message && !data.audioDataUrl ?
             `<p>${data.message}</p>` :
-            `<audio src="php/uploads/${data.audioDataUrl}" type="audio/mp3" controls></audio>`;
+            `<audio src="php/uploads/${data.audioDataUrl}" type="audio/wav" controls></audio>`;
 
 
         chatBox.innerHTML += `
