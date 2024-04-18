@@ -4,12 +4,14 @@
 
 <body>
     <?php include_once "header.php"; ?>
-    <p>- Have question and need to talk to us? Please complete this form and we will get in touch as soon as possible.
-</p>
     <div class="wrapper contact">
         <section class="form signup">
-            <!-- <header> Therapy</header> -->
-            <form action="#" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <header class="cotact"> Have question and need to talk to us? Please complete this form and we will get in
+                touch as
+                soon
+                as
+                possible.</header>
+            <form action=" #" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <div class="field input">
                     <input type="text" name="fname" placeholder="Name" required>
                 </div>
@@ -30,4 +32,4 @@
 
 </body>
 
-</html
+</html>

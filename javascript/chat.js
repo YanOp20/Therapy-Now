@@ -12,8 +12,8 @@ const form = document.querySelector(".typing-area"),
   cRec = document.getElementById("cRec"),
   incoming_id = form.querySelector(".incoming_id").value,
   outgoing_id = form.querySelector(".outgoing_id").value,
-  formV = document.querySelector(".formV"), //new added for video
-  videoCallingBtn = formV.querySelector("#videoCallingBtn");
+  // formV = document.querySelector(".formV"), //new added for video
+  videoCallingBtn = document.getElementById("videoCallingBtn");
 
 inputField.addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
@@ -262,3 +262,6 @@ cRec.onclick = () => {
 //   let formData = new FormData(formV);
 //   xhr.send(formData);
 // }
+
+
+

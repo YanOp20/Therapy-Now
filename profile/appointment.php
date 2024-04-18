@@ -1,5 +1,5 @@
     <style>
-        .doctor .right .appointment {
+        .profile-container .right .appointment {
             width: 50vw;
             margin: 0 auto;
         }

@@ -31,18 +31,24 @@ if (mysqli_num_rows($sqlU) > 0) {
                 <!-- <a href="https://172.22.181.60:8181" target="popup" class="fas fa-duotone fa-video fa-2xl "></i></a> -->
 
                 <!-- addef for video calling -->
-                <form action="#" class="formV">
-                    <!-- new added for getting user id -->
-                    <input type="text" class="outgoing_id" name="outgoing_id" value="<?php echo $_SESSION['unique_id']; ?>" hidden>
-                    <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
-                    <input type="text" class="b" name="b" value="<?php echo $b; ?>" hidden>
-                    <input id="c-input-field" type="text" name="message" class="input-field" value="<?php echo "calling" ?>" hidden>
-                    <button id="videoCallingBtn">
-                        <!-- <a href="localhost:8181" target="_blank" onclick="window.open('https://172.22.181.203:8181', 'popup', 'width=600,height=400'); return false;"> <i class="fas fa-duotone fa-video fa-2xl "></i> </a> -->
-                        <a href="192.168.0.65:4000" target="_blank" onclick="window.open('https://192.168.0.65:4000', 'popup', 'width=600,height=400'); return false;">
-                            <i class="fas fa-duotone fa-video fa-2xl "></i> </a>
-                    </button>
-                </form>
+                <!-- <form action="#" class="formV"> -->
+                <!-- new added for getting user id -->
+                <!-- <input type="text" class="outgoing_id" name="outgoing_id" value="<?php echo $_SESSION['unique_id']; ?>"
+                hidden>
+            <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
+            <input type="text" class="b" name="b" value="<?php echo $b; ?>" hidden>
+            <input id="c-input-field" type="text" name="message" class="input-field" value="<?php echo "calling" ?>"
+                hidden>
+            <button id="videoCallingBtn">
+                <!-- <a href="localhost:8181" target="_blank" onclick="window.open('https://172.22.181.203:8181', 'popup', 'width=600,height=400'); return false;"> <i class="fas fa-duotone fa-video fa-2xl "></i> </a> -->
+                <!-- <a href="192.168.0.65:4000" target="_blank"
+                onclick="window.open('https://192.168.0.65:4000', 'popup', 'width=600,height=400'); return false;">
+                <i class="fas fa-duotone fa-video fa-2xl "></i> </a>
+            </button>
+            <button id="btnsssss"> sssssssssss</button>
+            <!-- ############################################################################### -->
+                <!-- ############################################################################### -->
+                <!-- ############################################################################### -->
 
             <?php   } ?>
         </header>
@@ -68,11 +74,15 @@ if (mysqli_num_rows($sqlU) > 0) {
         </form>
     </section>
 </div>
+
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 <!-- <script src="./Server/socket.io.min.js"></script> -->
 <script>
     const ogi = document.querySelector('.outgoing_id').value;
     const ici = document.querySelector('.incoming_id').value;
+
+
+
 
     // const hostname = window.location.hostname;
 
@@ -81,7 +91,6 @@ if (mysqli_num_rows($sqlU) > 0) {
     const port = 4000
 
     const socket = io.connect(`${host+':'+port}/chat`);
-
     socket.on('connect', () => {
         console.log('Connected to Socket.IO server');
     });
