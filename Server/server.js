@@ -260,6 +260,24 @@ chatNamespace.on("connection", (socket) => {
       chatNamespace.to(roomId).emit("new messages", data);
     });
   });
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+socket.on("callRequest", (data) => {
+  const roomId = data.roomId;
+  const callerId = data.callerId;
+  const recipientId = data.recipientId;
+
+  // Notify the recipient about the incoming call
+  socket.to(recipientId).emit("incomingCall", { callerId });
+  console.log("incomingCall",data)
+});
+
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
 
   socket.on("disconnect", () => {
     console.log("user disconnected in chatNamespace");
@@ -270,3 +288,4 @@ httpsServer.listen(port, () => {
   console.log(`server running on - ${host + ":" + port}`);
   console.log(`server running on - ${host}/therapy-now`);
 });
+

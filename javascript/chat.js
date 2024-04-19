@@ -12,8 +12,8 @@ const form = document.querySelector(".typing-area"),
   cancelRecordingButton = document.getElementById("cRec"),
   incoming_id = form.querySelector(".incoming_id").value,
   outgoing_id = form.querySelector(".outgoing_id").value,
-  formV = document.querySelector(".formV"), //new added for video
-  videoCallingBtn = formV.querySelector("#videoCallingBtn");
+  // formV = document.querySelector(".formV"), //new added for video
+  videoCallingBtn = document.getElementById("videoCallingBtn");
 
 inputField.addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
@@ -215,49 +215,7 @@ sendAudioButton.addEventListener("click", () => {
   }
 });
 
-// * Handles the stop of recording and sends the recorded audio data to the server.
-// function handleRecordingStop() {
-//   if (rec.state === "inactive") {
-//     const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
-//     const timestamp = Date.now();
-//     const formData = new FormData();
-//     formData.append("audio", audioBlob, `audio_${timestamp}.mp3`);
-//     formData.append("incoming_id", incoming_id);
-//     formData.append("b", b);
 
-//     const xhr = new XMLHttpRequest();
-//     xhr.open("POST", "php/insert-chat.php", true);
-//     xhr.onload = () => {
-//       if (xhr.readyState === XMLHttpRequest.DONE) {
-//         if (xhr.status === 200) {
-//           inputField.value = "";
-//           scrollToBottom();
-//         } else {
-//           console.error("Error sending audio:", xhr.statusText);
-//         }
-//       }
-//     };
-//     xhr.send(formData);
-
-//     manageUI("send recording");
-
-//     socket.emit("formSubmission", {
-//       incomingId: incoming_id,
-//       outgoingId: outgoing_id,
-//       b: b,
-//       message: "",
-//       audioDataUrl: `audio_${timestamp}.mp3`,
-//       roomId: [outgoing_id, incoming_id].sort().join("-"),
-//     });
-
-//     audioChunks = [];
-//   }
-// }
-
-/**
- * Updates the user interface based on different states.
- * @param {string} state - The current state of the UI.
- */
 function manageUI(state) {
   const show = (element) => (element.style.display = "block");
   const hide = (element) => (element.style.display = "none");
@@ -353,3 +311,15 @@ cancelRecordingButton.onclick = () => manageUI("Cancel recording");
 // @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!
 // @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!
 // @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!
+console.log("whoiydfaosdf")
+
+// const videoCallingBtn = document.getElementById("videoCallingBtn");
+videoCallingBtn.addEventListener("click", () => {
+  console.log("videoCallingBtn clicked", videoCallingBtn)
+    const roomId = [ogi, ici].sort().join('-');
+    socket.emit("callRequest", { roomId, callerId: ogi, recipientId: ici });
+    // You can optionally display a "Calling..." message here
+    console.log(roomId)
+    console.log({ roomId, callerId: ogi, recipientId: ici })
+    videoCallingBtn.textContent ="Calling...";
+});
