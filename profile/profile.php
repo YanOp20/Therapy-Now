@@ -77,13 +77,13 @@ if ($_doc and !$user_profile) {
 
             .profile-container .right .righright {
                 /* border: red solid 1px; */
-                flex-basis: 60%;
+                /* flex-basis: 60%; */
                 /* max-width: 50%; */
                 /* width: 100px; */
             }
 
             .profile-container .right .rightleft {
-                flex-basis: 40%;
+                /* flex-basis: 40%; */
             }
 
             .right .buttons {
@@ -129,8 +129,9 @@ if ($_doc and !$user_profile) {
             </ul>
         </div>
 
-        <div class="righright">
-            <?php if (mysqli_num_rows($sql_d) > 0) {
+        <?php if (mysqli_num_rows($sql_d) > 0) { ?>
+                <div class="righright">
+                    <?php
                 $o = "";
                 $his_query = mysqli_query($conn, "SELECT * FROM history WHERE user_id = {$user_id} ORDER BY date ");
                 if (mysqli_num_rows($his_query) > 0) {
@@ -155,8 +156,8 @@ if ($_doc and !$user_profile) {
                     <input class="submit m" type="submit" name="submit" value="ADD to History">
                 </form>
 
+            </div>
             <?php    } ?>
-        </div>
     </div>
     <?php
     if (isset($_POST['submit'])) {

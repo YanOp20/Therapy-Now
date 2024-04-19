@@ -72,7 +72,7 @@ if (mysqli_num_rows($sqlU) > 0) {
             <button id="sendBtn"><i class="fab fa-telegram-plane "></i></button>
             <button id="sendMic" style="display:none"><i class="active fas fa-paper-plane "></i></button>
         </form>
-    </section>
+            </section>
 </div>
 
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
@@ -187,5 +187,6 @@ if (mysqli_num_rows($sqlU) > 0) {
     socket.on('disconnect', () => {
         console.log('Disconnected from Socket.IO server');
     });
+    
 </script>
 <script src="javascript/chat.js"> </script>

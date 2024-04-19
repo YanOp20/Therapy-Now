@@ -1552,40 +1552,6 @@ a:hover .icon-name {
   }
 }
 
-@media (max-width: 800px) {
-  .profile .left a p {
-    display: none;
-  }
-
-  .profile .user .users .search input {
-    width: 100px;
-  }
-
-  .profile .user .users .search span,
-  .profile .user .users .search input {
-    font-size: .75em;
-    /* width: 10%; */
-  }
-
-  .profile .user .users .search {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .profile .user .users .users-list a .content .details {
-    display: none;
-  }
-
-  .users .search button.active {
-    background: none;
-    color: black;
-  }
-}
-
-
-
-
-
 /* Responive media query */
 @media screen and (max-width: 450px) {
 
@@ -1682,16 +1648,20 @@ a:hover .icon-name {
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Poppins', sans-serif;
-  justify-content: space-between;
+  justify-content: space-around;
   /* flex-wrap: wrap;
   overflow: hidden; */
 }
 
 .profile-container .left {
 
+  max-width: 350px;
+  flex-grow: 1;
   /* flex-basis: 20%; */
+  /* width: 90%; */
   height: 86vh;
-  margin: 1em 0em 1em 0em;
+  /* margin: 1em 0em 1em 0em; */
+  margin: 5px;
   padding: 1em;
   display: flex;
   flex-direction: column;
@@ -1741,10 +1711,11 @@ a:hover .icon-name {
 
 
 .profile-container .right {
-
+  /* width: 90%; */
+  flex-grow: 2;
   /* border: solid darkblue 1px;  */
-  flex-basis: 75%;
-  margin: 1em 1em 1em 0em;
+  /* flex-basis: 75%; */
+  /* margin: 1em 1em 1em 1em; */
   padding: 2em;
   display: flex;
   flex-direction: column;
@@ -1775,15 +1746,18 @@ a:hover .icon-name {
   height: 86vh;
   margin-top: 1em;
   border-radius: 25px;
-  max-width: 500px;
+  max-width: 600px;
+  width: 100%;
+  flex-grow: 2;
 }
 
 .profile-container .chatt {
   height: 86vh;
   margin: 1em;
   min-width: 300px;
-  max-width: 700px;
-  flex-grow: 1;
+  /* max-width: 700px; */
+  /* width: 100%; */
+  flex-grow: 4;
 }
 
 .profile-container .chatt header a i {
@@ -1821,15 +1795,20 @@ a:hover .icon-name {
   text-align: left;
 }
 
+.profile-container .schedule table td.name,
+.profile-container .schedule table td{
+  /* background-color: pink; */
+  min-width: 150px;
+}
+
 .profile-container .patient table th,
 .profile-container .schedule table th {
   background-color: lightblue;
 }
 
 .profile-container .table-container {
-  /* height: 85vh; Set the height as per your requirement */
-  overflow: auto;
-  /* background:  red; */
+  max-height: 86vh;
+  overflow: scroll;
 }
 
 .profile-container .right span {
@@ -1846,12 +1825,12 @@ a:hover .icon-name {
     }
     
     .profile-container .user .users .search input {
-      width: 100px;
+      /* width: 100%; */
     }
     
     .profile-container .user .users .search span,
     .profile-container .user .users .search input {
-      font-size: .75em;
+      /* font-size: .75em; */
       /* width: 10%; */
     }
     
@@ -1861,7 +1840,7 @@ a:hover .icon-name {
     }
     
     .profile-container .user .users .users-list a .content .details {
-      display: none;
+      /* display: none; */
     }
     
     .users .search button.active {
@@ -1869,10 +1848,12 @@ a:hover .icon-name {
       color: black;
     }
   }
-
-
-
+  
   @media screen and (max-width: 600px) {
+  
+    .profile-container .left a p {
+  display: none;
+  }
     .profile-container{
       /* background-color: #1a044d; */
       flex-direction: column;
@@ -1890,6 +1871,8 @@ a:hover .icon-name {
       width: fit-content;
     }
     .profile-container .left{
+      max-width: 100%;
+
       flex-direction: row;
       justify-content: space-around;
       align-items: center;
@@ -1903,27 +1886,128 @@ a:hover .icon-name {
     .profile-container .left *{
       /* margin: 0; */
     }
-    .profile-container .right .appointment .app-form{
-      width: 100vw;
-      border: solid 2px purple;
-      margin-left: -130px;
-    }
+
+   
+
+
+
+
     .profile-container .right *{
       /* border: solid 2px greenyellow; */
     }
-    .profile-container .right{
+    /* .profile-container .right{
       border: solid 2px red;
       padding: 0;
       margin: 0;
+    } */
+    .profile-container .showw {
+      display: block;
+    }
+    .profile-container .hidee {
+      display: none;
     }
     
   }
   /* .profile-container .user {
     display: block;
   } */
-  .profile-container .showw {
-    display: block;
+ 
+  @media screen and (max-width: 766px) {
+    .profile-container .left a p {
+      display: none;
+    }
+    
+    }
+
+   
+   @media screen and (max-width: 729px) {
+     .profile-container .users .search span,
+    .profile-container .users .users-list a div.status-dot,
+    .profile-container .users .users-list a .content div
+    /* .profile-container .users .users-list */
+    {
+      /* display: none; */
+    }
+    
   }
-  .profile-container .hidee {
-    display: none;
-  }
+/*   
+  *{
+    border: solid rgb(137, 223, 239) 0.0089px !important;
+  } */
+
+  
+
+   /* appointment */
+
+    /* .profile-container .appointment .app-form{
+      width: 100vw;
+      border: solid 2px purple;
+      margin-left: -130px;
+    } */
+        /* .profile-container .appointment {
+            width: 50vw;
+            margin: 0 auto;
+        } */
+        h1{color: green;}
+                    .profile-container .appointment h1 {
+                  text-align: center;
+              }
+        
+              .profile-container .appointment form {
+                  /* border: 1px solid black; */
+                  border-radius: 16px;
+                  padding: 5em;
+                  padding-top: 2em;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: space-around;
+        
+                  gap: 1em;
+                  box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
+                      0 32px 64px -48px rgba(0, 0, 0, 0.5);
+              }
+        
+              .profile-container .appointment .form-group {
+                  margin-bottom: 10px;
+              }
+        
+              .profile-container .appointment label {
+                  font-weight: 450;
+                  font-size: large;
+                  margin-bottom: 0.23em;
+                  /* font-style:italic; */
+              }
+        
+              .profile-container .appointment input,
+              .profile-container .appointment textarea,
+              .profile-container .appointment select,
+              .profile-container .appointment option {
+                  display: block;
+                  margin-top: 0.5em;
+                  width: 100%;
+                  height: 40px;
+                  /* background-color: #fff; */
+                  padding-right: 0.3em;
+                  font-size: 1em;
+                  font-weight: thing;
+              }
+        
+              .profile-container .appointment input[type="submit"] {
+                  background-color: green;
+                  padding: 0.5em;
+                  color: white;
+                  font-weight: 500;
+                  font-size: 1em;
+                  /* font-weight: bold; */
+              }
+        
+              .profile-container .appointment .appointment-success {
+                  font-size: medium;
+                  color: green;
+              }
+        
+              .profile-container .appointment .error-text {
+                  color: red;
+              }
+        
+        
