@@ -241,20 +241,23 @@ else // header("location: profile.php");
 <script src="./Server/socket.io.min.js"></script>
 <!--  this was for chat -->
 <script>
+        const host = `https://${window.location.hostname}`;
+    const port = 4000;
+   // const socket = io.connect(`${host}:${port}`);
+</script>
+<script>
     const outgoingID = document.querySelector('.outgoing_id').value;
     const incomingID = document.querySelector('.incoming_id').value;
 
-    const host = `https://${window.location.hostname}`;
-    const port = 4000;
-    const socket = io.connect(`${host}:${port}`);
-
     const chatNamespace = io(`${host}:${port}/chat`);
 
+    
     chatNamespace.on('connect', () => {
         console.log('Connected to Socket.IO server chatNamespace');
     });
 
-    chatNamespace.emit('get messages by user IDs', { outgoingID, incomingID });
+    
+    chatNamespace.emit('get messages by user IDs', {outgoingID, incomingID});
 
     const roomId = [outgoingID, incomingID].sort().join('-');
 
@@ -306,6 +309,8 @@ else // header("location: profile.php");
         // document.querySelector('#mes').innerHTML = messages[0].msg
     });
 
+
+
     chatNamespace.on('new messages', (data) => {
         console.log("new message", data);
         let class_name = "";
@@ -313,10 +318,10 @@ else // header("location: profile.php");
 
         if (data.outgoingId != outgoingID) {
             class_name = 'incoming';
-            
-                        if (data.img) {
-                            image = `<img src="php/images/${data.img}" alt="">`;
-                        }
+
+            if (data.img) {
+                image = `<img src="php/images/${data.img}" alt="">`;
+            }
         } else {
             class_name = 'outgoing';
         }
@@ -328,41 +333,45 @@ else // header("location: profile.php");
 
         chatBox.innerHTML += `
             <div class="chat ${class_name}">
-            ${image}
-            <div class="details">
-                        ${whatData}
-                    </div>
+                ${image}
+                <div class="details">
+                ${whatData}
                 </div>
-                `;
+            </div>
+            `;
         if (!chatBox.classList.contains("active")) {
             scrollToBottom();
         }
     });
 
-
-
     chatNamespace.on('disconnect', () => {
-        console.log('Disconnected from Socket.IO server');
+        console.log('Disconnected from Socket.IO server chatnamespace');
     });
 </script>
 
 <!-- this was for video calling  -->
-<!-- <script>
-    // ########################################################################
-
+<script>
+    const videoCallingBtn = document.getElementById("videoCallingBtn");
+    const localVideoEl = document.querySelector('#localVideo');
+    const remoteVideoEl = document.querySelector('#remoteVideo');
+    const callingMsg = document.querySelector('#callingMsg');
     const userName = document.getElementById("Fname").innerText
-    const password = "x";
+    const password = "p";
     // document.querySelector('#user-name').innerHTML = userName;
-
+    // const host = `https://${window.location.hostname}`;
+    // const port = 4000;
     const webRtcNamespace = io(`${host}:${port}/webRtc`, {
         auth: {
             userName,
             password
         }
     });
+    webRtcNamespace.on('connect', (socket) => {
+        console.log('Connected to Socket.io server on web rtc namespace');
+        // ... Now you can use 'socket' for emitting and listening to events ...
+    });
 
-    const localVideoEl = document.querySelector('#local-video');
-    const remoteVideoEl = document.querySelector('#remote-video');
+
 
     let localStream; //a var to hold the local video stream
     let remoteStream; //a var to hold the remote video stream
@@ -371,25 +380,25 @@ else // header("location: profile.php");
 
     let peerConfiguration = {
         iceServers: [{
-            urls: [
-                'stun:stun.l.google.com:19302',
-                'stun:stun1.l.google.com:19302'
-            ]
+            urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302']
         }]
     }
 
     //when a client initiates a call
     const call = async e => {
         await fetchUserMedia();
-
         //peerConnection is all set with our STUN servers sent over
         await createPeerConnection();
+
+        // #################################3
+        videoCallContainer.style.display = 'block';
+        inCalling();
 
         //create offer time!
         try {
             console.log("Creating offer...")
             const offer = await peerConnection.createOffer();
-            console.log(offer);
+            // console.log(offer);
             peerConnection.setLocalDescription(offer);
             didIOffer = true;
             webRtcNamespace.emit('newOffer', offer); //send offer to signalingServer
@@ -404,8 +413,8 @@ else // header("location: profile.php");
         await createPeerConnection(offerObj);
         const answer = await peerConnection.createAnswer({}); //just to make the docs happy
         await peerConnection.setLocalDescription(answer); //this is CLIENT2, and CLIENT2 uses the answer as the localDesc
-        console.log(offerObj)
-        console.log(answer)
+        // console.log(offerObj)
+        // console.log(answer)
         // console.log(peerConnection.signalingState) //should be have-local-pranswer because CLIENT2 has set its local desc to it's answer (but it won't be)
         //add the answer to the offerObj so the server knows which offer this is related to
         offerObj.answer = answer
@@ -416,7 +425,7 @@ else // header("location: profile.php");
             peerConnection.addIceCandidate(c);
             console.log("======Added Ice Candidate======")
         })
-        console.log(offerIceCandidates)
+        // console.log(offerIceCandidates)
     }
 
     const addAnswer = async (offerObj) => {
@@ -460,13 +469,13 @@ else // header("location: profile.php");
             })
 
             peerConnection.addEventListener("signalingstatechange", (event) => {
-                console.log(event);
-                console.log(peerConnection.signalingState)
+                // console.log(event);
+                // console.log(peerConnection.signalingState)
             });
 
             peerConnection.addEventListener('icecandidate', e => {
                 console.log('........Ice candidate found!......')
-                console.log(e)
+                // console.log(e)
                 if (e.candidate) {
                     webRtcNamespace.emit('sendIceCandidateToSignalingServer', {
                         iceCandidate: e.candidate,
@@ -478,7 +487,7 @@ else // header("location: profile.php");
 
             peerConnection.addEventListener('track', e => {
                 console.log("Got a track from the other peer!! How exiting")
-                console.log(e)
+                // console.log(e)
                 e.streams[0].getTracks().forEach(track => {
                     remoteStream.addTrack(track, remoteStream);
                     console.log("Here's an exciting moment... fingers cross")
@@ -502,45 +511,76 @@ else // header("location: profile.php");
     }
 
 
-    document.querySelector('#call').addEventListener('click', call)
-
-    webRtcNamespace.on('connect', () => {
-        console.log('Connected to Socket.io server');
-        // ... Now you can use 'socket' for emitting and listening to events ...
-    });
+    videoCallingBtn.addEventListener('click', call)
 
     // ########################################################################
-    const videoCallingBtn = document.getElementById("videoCallingBtn");
+    // ########################################################################
 
-    videoCallingBtn.addEventListener("click", () => {
+    webRtcNamespace.emit("createRoom", "myAwesomeRoom");
+    webRtcNamespace.on("roomCreated", a=>console.log(a))
 
-        console.log("videoCallingBtn clicked", videoCallingBtn)
 
-        const roomId = [outgoingID, incomingID].sort().join('-');
-
-        chatNamespace.emit("callRequest", {
+    function inCalling() {
+        
+        webRtcNamespace.emit("callRequest", {
             roomId,
             callerId: outgoingID,
             recipientId: incomingID
         });
-
-        // You can optionally display a "Calling..." message here
-        console.log({
-            roomId,
-            callerId: outgoingID,
-            recipientId: incomingID
+    
+    
+        webRtcNamespace.on("incomingCall", cid => {
+            console.log("ddddddddddddddd:",cid, "incomingid", incomingID);
+            if (recipientId == cid) {
+                const modalElement = document.getElementById("incomingCallModal");
+                modalElement.style.display = "block";
+                document.getElementById("callerName").textContent = document.getElementById("Fname").innerText; // Replace with actual caller name
+            }
         })
+        videoCallingBtn.style.display = "none";
+        callingMsg.style.display = "block";
+    }
+    
 
-        videoCallingBtn.textContent = "Calling...";
-    });
+    
+// ##################################################################
+// ##################################################################
+    
+//on connection get all available offers and call createOfferEls
+// webRtcNamespace.on('availableOffers',offers=>{
+//     // console.log(offers)
+//     createOfferEls(offers)
+// })
 
-    chatNamespace.on("incomingCall", cid => {
-        if (outgoingID != cid.callerId) {
-            const modalElement = document.getElementById("incomingCallModal");
-            modalElement.style.display = "block";
-            document.getElementById("callerName").textContent = document.getElementById("Fname").innerText; // Replace with actual caller name
-        }
-    })
-</script> -->
+// //someone just made a new offer and we're already here - call createOfferEls
+// webRtcNamespace.on('newOfferAwaiting',offers=>{
+//     createOfferEls(offers)
+// })
+
+// webRtcNamespace.on('answerResponse',offerObj=>{
+//     // console.log(offerObj)
+//     addAnswer(offerObj)
+// })
+
+// webRtcNamespace.on('receivedIceCandidateFromServer',iceCandidate=>{
+//     addNewIceCandidate(iceCandidate)
+//     // console.log(iceCandidate)
+// })
+
+// function createOfferEls(offers){
+//     //make green answer button for this new offer
+//     const answerEl = document.querySelector('#answer');
+//     offers.forEach(o=>{
+//         // console.log(o);
+//         const newOfferEl = document.createElement('div');
+//         newOfferEl.innerHTML = `<button class="btn btn-success col-1">Answer ${o.offererUserName}</button>`
+//         newOfferEl.addEventListener('click',()=>answerOffer(o))
+//         answerEl.appendChild(newOfferEl);
+//     })
+// }
+
+
+    webRtcNamespace.on('disconnect', () => console.log('Disconnected from Socket.IO server web RTC namespace'));
+</script>
 
 <script src="javascript/chat.js"> </script>

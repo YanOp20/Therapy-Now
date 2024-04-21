@@ -289,25 +289,3 @@ function displayErrorMessage(message) {
 
 cancelRecordingButton.onclick = () => manageUI("Cancel recording");
 
-// new added for video call
-
-// Vbtn.onclick = () => {
-//   console.log("video call button clicked");
-//   let xhr = new XMLHttpRequest();
-//   xhr.open("POST", "php/insert-chat-video-call.php", true);
-//   xhr.onload = () => {
-//     if (xhr.readyState === XMLHttpRequest.DONE) {
-//       if (xhr.status === 200) {
-//         inputField.value = "";
-//         scrollToBottom();
-//       }
-//     }
-//   };
-//   let formData = new FormData(formV);
-//   xhr.send(formData);
-// }
-
-// @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!
-// @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!
-// @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!
-// @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!

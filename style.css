@@ -16,8 +16,6 @@ body {
   min-height: 100vh;
   background: #f7f7f7;
   padding: 0 10px;
-  /* background-image: url(img/nature-walking-good-for-you-health-benefits-osmotherley-hiker.jpg); */
-  /* min-height: 200px; */
 }
 
 .wrapper,
@@ -43,7 +41,7 @@ footer {
     0 32px 64px -48px rgba(0, 0, 0, 0.5);
 }
 
-/* Login & Signup Form CSS Start */
+/* Login & SignUp Form CSS Start */
 .form {
   z-index: 1;
 
@@ -531,11 +529,11 @@ button#vBtn,
     box-shadow: 0 0 20px red;
   }
 
-  .microphone-icon {
-    width: 50px;
-    height: 50px;
-    position: relative;
-  }
+}
+.microphone-icon {
+  width: 50px;
+  height: 50px;
+  position: relative;
 }
 
 audio::-webkit-media-controls-panel {
@@ -548,7 +546,6 @@ audio::-webkit-media-controls-panel {
   max-width: 750px;
   width: 100%;
   /* font-size: 0.5em; */
-  font-weight: ;
   font-family: 'Octavio Pardo', sans-serif;
   border-radius: 16px;
   box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
@@ -1550,9 +1547,7 @@ a:hover .icon-name {
 
 }
 
-@media screen and (max-width: 582px) {
-  .profile-contaier {}
-}
+
 
 /* Responive media query */
 @media screen and (max-width: 450px) {
@@ -1828,23 +1823,9 @@ a:hover .icon-name {
     display: none;
   }
 
-  .profile-container .user .users .search input {
-    /* width: 100%; */
-  }
-
-  .profile-container .user .users .search span,
-  .profile-container .user .users .search input {
-    /* font-size: .75em; */
-    /* width: 10%; */
-  }
-
   .profile-container .user .users .search {
     display: flex;
     flex-direction: column;
-  }
-
-  .profile-container .user .users .users-list a .content .details {
-    /* display: none; */
   }
 
   .users .search button.active {
@@ -1864,18 +1845,10 @@ a:hover .icon-name {
     flex-direction: column;
   }
 
-  .profile-container .user {
-    /* display: none; */
-  }
-
-  /* .profile-container .left a *{
-      border: solid green 1px;
-      
-    } */
   .profile-container .left a {
     /* border: solid red 1px; */
     margin: -6px;
-    width: fit-content;
+    width: auto;
   }
 
   .profile-container .left {
@@ -1891,25 +1864,6 @@ a:hover .icon-name {
     max-height: 10%;
   }
 
-  .profile-container .left * {
-    /* margin: 0; */
-    
-  }
-
-
-
-
-
-
-  .profile-container .right * {
-    /* border: solid 2px greenyellow; */
-  }
-
-  /* .profile-container .right{
-      border: solid 2px red;
-      padding: 0;
-      margin: 0;
-    } */
   .profile-container .showw {
     display: block;
   }
@@ -1920,10 +1874,6 @@ a:hover .icon-name {
 
 }
 
-/* .profile-container .user {
-    display: block;
-  } */
-
 @media screen and (max-width: 766px) {
   .profile-container .left a p {
     display: none;
@@ -1932,18 +1882,6 @@ a:hover .icon-name {
 }
 
 
-@media screen and (max-width: 729px) {
-  .profile-container .users .search span,
-  .profile-container .users .users-list a div.status-dot,
-  .profile-container .users .users-list a .content div
-
-  /* .profile-container .users .users-list */
-    {
-    /* display: none; */
-  }
-
-
-}
 
 /*   
   *{

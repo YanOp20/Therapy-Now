@@ -1,3 +1,5 @@
+const { emit } = require("process");
+
 const fs = require("fs"),
   https = require("https"),
   express = require("express"),
@@ -11,9 +13,9 @@ const fs = require("fs"),
 const staticDirectory = path.join(__dirname, "../javascript/webRtc");
 
 // Tell Express to serve static files from the specified directory
-app.use(express.static(staticDirectory));
+// app.use(express.static(staticDirectory));
 
-//   geting hostname
+//   gating hostname
 const networkInterfaces = os.networkInterfaces();
 let ipAddresses = [];
 for (const name of Object.keys(networkInterfaces)) {
@@ -50,6 +52,7 @@ const io = socketIo(httpsServer, {
 const webRtcNamespace = io.of("/webRtc");
 const chatNamespace = io.of("/chat");
 
+
 // Database  connection
 const connection = mysql.createConnection({
   host: "localhost",
@@ -77,12 +80,40 @@ const connectedSockets = [
 
 //create our socket.io server... it will listen to our express port
 // webRtc signaling event handlers (in webRtcNamespace)
-webRtcNamespace.on("connection", (socket) => {
+webRtcNamespace.on('connection', (socket) => {
+
   console.log("Someone has connected in webRtcNamespace");
+  
   const userName = socket.handshake.auth.userName;
   const password = socket.handshake.auth.password;
+  
+  
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-  if (password !== "x") {
+  socket.on("createRoom", (roomName) => {
+    socket.join(roomName);
+    console.log(`Room created: ${roomName}`);
+        webRtcNamespace.to(roomName).emit("roomCreated", `Welcome to room ${roomName}!`);
+  });
+
+
+  socket.on("callRequest", (data) => {
+    const roomId = data.roomId;
+    const callerId = data.callerId;
+    const recipientId = data.recipientId;
+
+    socket.join(roomId);
+
+    console.log("incomingCall", data);
+
+    webRtcNamespace.to(roomId).emit("incomingCall", recipientId );
+  });
+  
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  
+  if (password !== "p") {
     socket.disconnect(true);
     return;
   }
@@ -90,13 +121,13 @@ webRtcNamespace.on("connection", (socket) => {
     socketId: socket.id,
     userName,
   });
-
+  
   //a new client has joined. If there are any offers available,
   //emit them out
   if (offers.length) {
     socket.emit("availableOffers", offers);
   }
-
+  
   socket.on("newOffer", (newOffer) => {
     offers.push({
       offererUserName: userName,
@@ -110,11 +141,11 @@ webRtcNamespace.on("connection", (socket) => {
     //send out to all connected sockets EXCEPT the caller
     socket.broadcast.emit("newOfferAwaiting", offers.slice(-1));
   });
-
+  
   socket.on("newAnswer", (offerObj, ackFunction) => {
     console.log(offerObj);
     //emit this answer (offerObj) back to CLIENT1
-    //in order to do that, we need CLIENT1's socketid
+    //in order to do that, we need CLIENT1's socket id
     const socketToAnswer = connectedSockets.find(
       (s) => s.userName === offerObj.offererUserName
     );
@@ -136,11 +167,11 @@ webRtcNamespace.on("connection", (socket) => {
     ackFunction(offerToUpdate.offerIceCandidates);
     offerToUpdate.answer = offerObj.answer;
     offerToUpdate.answererUserName = userName;
-    //socket has a .to() which allows emiting to a "room"
+    //socket has a .to() which allows emitting to a "room"
     //every socket has it's own room
     socket.to(socketIdToAnswer).emit("answerResponse", offerToUpdate);
   });
-
+  
   socket.on("sendIceCandidateToSignalingServer", (iceCandidateObj) => {
     const { didIOffer, iceUserName, iceCandidate } = iceCandidateObj;
     // console.log(iceCandidate);
@@ -163,7 +194,7 @@ webRtcNamespace.on("connection", (socket) => {
               .to(socketToSendTo.socketId)
               .emit("receivedIceCandidateFromServer", iceCandidate);
           } else {
-            console.log("Ice candidate recieved but could not find answere");
+            console.log("Ice candidate received but could not find answer");
           }
         }
       }
@@ -181,23 +212,26 @@ webRtcNamespace.on("connection", (socket) => {
           .to(socketToSendTo.socketId)
           .emit("receivedIceCandidateFromServer", iceCandidate);
       } else {
-        console.log("Ice candidate recieved but could not find offerer");
+        console.log("Ice candidate received but could not find offerer");
       }
     }
     // console.log(offers)
+  });
+  
+  socket.on('error', (error) => {
+      console.error('Error in WebRTC namespace:', error);
   });
 });
 
 // Chat event handlers (in chatNamespace)
 chatNamespace.on("connection", (socket) => {
   console.log("A user connected in chatNamespace");
-
+  
   socket.on("join room", (roomId) => {
     socket.join(roomId);
   });
-
+  
   socket.on("get messages by user IDs", (data) => {
-    
     const outgoing_id = data.outgoingID;
     const incoming_id = data.incomingID;
 
@@ -239,44 +273,25 @@ chatNamespace.on("connection", (socket) => {
   socket.on("formSubmission", (data) => {
     const roomId = data.roomId;
     const outgoingId = data.outgoingId;
- 
+
     const sql = `
     SELECT img FROM users WHERE unique_id = ?
     UNION
     SELECT img FROM therapist WHERE unique_id = ?;
 `;
 
-connection.query(sql,[outgoingId, outgoingId], (err, results) => {
-    if (err) {
+    connection.query(sql, [outgoingId, outgoingId], (err, results) => {
+      if (err) {
         console.error("Error fetching image:", err);
         return;
-    }
+      }
       if (results.length > 0) {
         data.img = results[0].img; // Add image URL to data
       }
 
-
       chatNamespace.to(roomId).emit("new messages", data);
     });
   });
-  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-  socket.on("callRequest", (data) => {
-    const roomId = data.roomId;
-    const callerId = data.callerId;
-    const recipientId = data.recipientId;
-
-    // Notify the recipient about the incoming call
-    socket.to(recipientId).emit("incomingCall", { callerId });
-    console.log("incomingCall", data);
-    chatNamespace.to(roomId).emit("incomingCall", { callerId });
-  });
-
-  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-
 
   socket.on("disconnect", () => {
     console.log("user disconnected in chatNamespace");
@@ -287,4 +302,3 @@ httpsServer.listen(port, () => {
   console.log(`server running on - ${host + ":" + port}`);
   console.log(`server running on - ${host}/therapy-now`);
 });
-
