@@ -89,8 +89,9 @@ if (mysqli_num_rows($sqlU) > 0) {
             <button id="sendBtn"><i class="fab fa-telegram-plane "></i></button>
             <button id="sendMic" style="display:none"><i class="active fas fa-paper-plane "></i></button>
         </form>
-    </section>
+            </section>
 </div>
+
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 <!-- <script src="./Server/socket.io.min.js"></script> -->
 <script>
@@ -110,8 +111,8 @@ socket.emit('get messages by user IDs', {
     ici
 });
 
-const roomId = [ogi, ici].sort().join('-');
-socket.emit('join room', roomId);
+    const roomId = [outgoingID, incomingID].sort().join('-');
+    chatNamespace.emit('join room', roomId);
 
 socket.on('load messages', (messages) => {
     messages.forEach((message) => {

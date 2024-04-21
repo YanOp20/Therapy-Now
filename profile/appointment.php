@@ -1,74 +1,4 @@
-    <style>
-        .doctor .right .appointment {
-            width: 50vw;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        form {
-            /* border: 1px solid black; */
-            border-radius: 16px;
-            padding: 5em;
-            padding-top: 2em;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-
-            gap: 1em;
-            box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
-                0 32px 64px -48px rgba(0, 0, 0, 0.5);
-        }
-
-        .form-group {
-            margin-bottom: 10px;
-        }
-
-        label {
-            font-weight: 450;
-            font-size: large;
-            margin-bottom: 0.23em;
-            /* font-style:italic; */
-        }
-
-        input,
-        textarea,
-        select,
-        option {
-            display: block;
-            margin-top: 0.5em;
-            width: 100%;
-            height: 40px;
-            /* background-color: #fff; */
-            padding-right: 0.3em;
-            font-size: 1em;
-            font-weight: thing;
-        }
-
-        input[type="submit"] {
-            background-color: green;
-            padding: 0.5em;
-            color: white;
-            font-weight: 500;
-            font-size: 1em;
-            /* font-weight: bold; */
-        }
-
-        .appointment-success {
-            font-size: medium;
-            color: green;
-        }
-
-        .error-text {
-            color: red;
-        }
-    </style>
-
-    <div class="right">
-        <div class="appointment">
-
+        <div class="right appointment">
             <form class="app-form" action="#" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <h1>Booking Appointment</h1>
                 <div class="error-text"></div>
@@ -109,6 +39,5 @@
                 <input class="submit" type="submit" name="submit" value="Book Appointment">
                 <div class="appointment-success"></div>
             </form>
-        </div>
     </div>
     <script src="javascript/appointment.js"></script>
