@@ -91,24 +91,39 @@ webRtcNamespace.on('connection', (socket) => {
   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-  socket.on("createRoom", (roomName) => {
-    socket.join(roomName);
-    console.log(`Room created: ${roomName}`);
-        webRtcNamespace.to(roomName).emit("roomCreated", `Welcome to room ${roomName}!`);
-  });
+  // socket.on("createRoom", (roomName) => {
+  //   socket.join(roomName);
+  //   console.log(`Room created: ${roomName}`);
+  //       webRtcNamespace.to(roomName).emit("roomCreated", `Welcome to room ${roomName}!`);
+  // });
 
+
+  // socket.on("callRequest", (data) => {
+  //   const roomId = data.roomId;
+  //   const callerId = data.callerId;
+  //   const recipientId = data.recipientId;
+
+  //   socket.join(roomId);
+
+  //   console.log("incomingCall", data);
+
+  //   webRtcNamespace.to(roomId).emit("incomingCall", recipientId );
+  // });
+
+  socket.on("joinRoom", (roomId) => {
+    socket.join(roomId);
+  });
 
   socket.on("callRequest", (data) => {
-    const roomId = data.roomId;
-    const callerId = data.callerId;
-    const recipientId = data.recipientId;
+    const { callerId, recipientId, roomId } = data;
+    console.log("Received call request:", data);
 
-    socket.join(roomId);
-
-    console.log("incomingCall", data);
-
-    webRtcNamespace.to(roomId).emit("incomingCall", recipientId );
+    // Emit 'logCallerId' event only to the recipient
+    // By using the roomId and targeting only the recipientId, you can avoid the caller receiving the event
+    webRtcNamespace.to(roomId).emit("logCallerId", { callerId, recipientId });
   });
+
+
   
   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

@@ -241,9 +241,9 @@ else // header("location: profile.php");
 <script src="./Server/socket.io.min.js"></script>
 <!--  this was for chat -->
 <script>
-        const host = `https://${window.location.hostname}`;
+    const host = `https://${window.location.hostname}`;
     const port = 4000;
-   // const socket = io.connect(`${host}:${port}`);
+    // const socket = io.connect(`${host}:${port}`);
 </script>
 <script>
     const outgoingID = document.querySelector('.outgoing_id').value;
@@ -251,13 +251,16 @@ else // header("location: profile.php");
 
     const chatNamespace = io(`${host}:${port}/chat`);
 
-    
+
     chatNamespace.on('connect', () => {
         console.log('Connected to Socket.IO server chatNamespace');
     });
 
-    
-    chatNamespace.emit('get messages by user IDs', {outgoingID, incomingID});
+
+    chatNamespace.emit('get messages by user IDs', {
+        outgoingID,
+        incomingID
+    });
 
     const roomId = [outgoingID, incomingID].sort().join('-');
 
@@ -308,8 +311,6 @@ else // header("location: profile.php");
         chatBox.scrollTop = chatBox.scrollHeight;
         // document.querySelector('#mes').innerHTML = messages[0].msg
     });
-
-
 
     chatNamespace.on('new messages', (data) => {
         console.log("new message", data);
@@ -371,6 +372,21 @@ else // header("location: profile.php");
         // ... Now you can use 'socket' for emitting and listening to events ...
     });
 
+    // webRtcNamespace.emit("callRequest", {
+    //     roomId,
+    //     callerId: outgoingID,
+    //     recipientId: incomingID
+    // });
+
+    // webRtcNamespace.on("incomingCall", (data) => {
+    //     const { callerId } = data;
+    //     console.log("Incoming call from:", callerId);
+    //     if (incomingID === callerId) {
+    //         const modalElement = document.getElementById("incomingCallModal");
+    //         modalElement.style.display = "block";
+    //         document.getElementById("callerName").textContent = document.getElementById("Fname").innerText; // Or any other way to get caller's name
+    //     }
+    // });
 
 
     let localStream; //a var to hold the local video stream
@@ -384,15 +400,22 @@ else // header("location: profile.php");
         }]
     }
 
+    webRtcNamespace.on("logCallerId", (data) => {
+    console.log("Received data:", data);
+    const { callerId } = data;
+    // Log the caller ID only if it doesn't match the outgoing ID
+    if (callerId !== outgoingID) {
+        console.log("Call request from:", callerId);
+    }
+});
+
+
     //when a client initiates a call
     const call = async e => {
         await fetchUserMedia();
         //peerConnection is all set with our STUN servers sent over
         await createPeerConnection();
 
-        // #################################3
-        videoCallContainer.style.display = 'block';
-        inCalling();
 
         //create offer time!
         try {
@@ -402,11 +425,25 @@ else // header("location: profile.php");
             peerConnection.setLocalDescription(offer);
             didIOffer = true;
             webRtcNamespace.emit('newOffer', offer); //send offer to signalingServer
-        } catch (err) {
-            console.log(err)
-        }
 
-    }
+
+            // Show the video call container
+            videoCallContainer.style.display = 'block';
+
+            // Emit the joinRoom event
+            webRtcNamespace.emit("joinRoom", roomId);
+
+            // Emit the callRequest event to initiate the call
+            webRtcNamespace.emit("callRequest", {
+                callerId: outgoingID,
+                recipientId: incomingID,
+                roomId
+            });
+        } catch (error) {
+            console.error("Error creating offer:", error);
+        }
+    };
+
 
     const answerOffer = async (offerObj) => {
         await fetchUserMedia()
@@ -516,68 +553,63 @@ else // header("location: profile.php");
     // ########################################################################
     // ########################################################################
 
-    webRtcNamespace.emit("createRoom", "myAwesomeRoom");
-    webRtcNamespace.on("roomCreated", a=>console.log(a))
+    // webRtcNamespace.emit("createRoom", "myAwesomeRoom");
+    // webRtcNamespace.on("roomCreated", a => console.log(a))
 
 
-    function inCalling() {
-        
-        webRtcNamespace.emit("callRequest", {
-            roomId,
-            callerId: outgoingID,
-            recipientId: incomingID
-        });
-    
-    
-        webRtcNamespace.on("incomingCall", cid => {
-            console.log("ddddddddddddddd:",cid, "incomingid", incomingID);
-            if (recipientId == cid) {
-                const modalElement = document.getElementById("incomingCallModal");
-                modalElement.style.display = "block";
-                document.getElementById("callerName").textContent = document.getElementById("Fname").innerText; // Replace with actual caller name
-            }
-        })
-        videoCallingBtn.style.display = "none";
-        callingMsg.style.display = "block";
-    }
-    
+    //     function inCalling() {
+    //        console.log("================================")
+    //  webRtcNamespace.on("incomingCall", cid => {
 
-    
-// ##################################################################
-// ##################################################################
-    
-//on connection get all available offers and call createOfferEls
-// webRtcNamespace.on('availableOffers',offers=>{
-//     // console.log(offers)
-//     createOfferEls(offers)
-// })
+    //             console.log("ddddddddddddddd:", cid, "incoming", incomingID);
 
-// //someone just made a new offer and we're already here - call createOfferEls
-// webRtcNamespace.on('newOfferAwaiting',offers=>{
-//     createOfferEls(offers)
-// })
+    //             if (incomingID == cid) {
+    //                 const modalElement = document.getElementById("incomingCallModal");
+    //                 modalElement.style.display = "block";
+    //                 document.getElementById("callerName").textContent = document.getElementById("Fname").innerText; // Replace with actual caller name
+    //             }
+    //         })
+    //         videoCallingBtn.style.display = "none";
+    //         callingMsg.style.display = "block";
+    //     }
 
-// webRtcNamespace.on('answerResponse',offerObj=>{
-//     // console.log(offerObj)
-//     addAnswer(offerObj)
-// })
 
-// webRtcNamespace.on('receivedIceCandidateFromServer',iceCandidate=>{
-//     addNewIceCandidate(iceCandidate)
-//     // console.log(iceCandidate)
-// })
 
-// function createOfferEls(offers){
-//     //make green answer button for this new offer
-//     const answerEl = document.querySelector('#answer');
-//     offers.forEach(o=>{
-//         // console.log(o);
-//         const newOfferEl = document.createElement('div');
-//         newOfferEl.innerHTML = `<button class="btn btn-success col-1">Answer ${o.offererUserName}</button>`
-//         newOfferEl.addEventListener('click',()=>answerOffer(o))
-//         answerEl.appendChild(newOfferEl);
-//     })
-// }
+    // ##################################################################
+    // ##################################################################
+
+    //on connection get all available offers and call createOfferEls
+    // webRtcNamespace.on('availableOffers',offers=>{
+    //     // console.log(offers)
+    //     createOfferEls(offers)
+    // })
+
+    // //someone just made a new offer and we're already here - call createOfferEls
+    // webRtcNamespace.on('newOfferAwaiting',offers=>{
+    //     createOfferEls(offers)
+    // })
+
+    // webRtcNamespace.on('answerResponse',offerObj=>{
+    //     // console.log(offerObj)
+    //     addAnswer(offerObj)
+    // })
+
+    // webRtcNamespace.on('receivedIceCandidateFromServer',iceCandidate=>{
+    //     addNewIceCandidate(iceCandidate)
+    //     // console.log(iceCandidate)
+    // })
+
+    // function createOfferEls(offers){
+    //     //make green answer button for this new offer
+    //     const answerEl = document.querySelector('#answer');
+    //     offers.forEach(o=>{
+    //         // console.log(o);
+    //         const newOfferEl = document.createElement('div');
+    //         newOfferEl.innerHTML = `<button class="btn btn-success col-1">Answer ${o.offererUserName}</button>`
+    //         newOfferEl.addEventListener('click',()=>answerOffer(o))
+    //         answerEl.appendChild(newOfferEl);
+    //     })
+    // }
 
 
     webRtcNamespace.on('disconnect', () => console.log('Disconnected from Socket.IO server web RTC namespace'));
