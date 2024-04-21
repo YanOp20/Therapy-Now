@@ -5,28 +5,24 @@ $user_id = mysqli_real_escape_string($conn, $_GET['user_id']);
 $sqlU = mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$user_id}");
 $sqlT = mysqli_query($conn, "SELECT * FROM therapist WHERE unique_id = {$user_id}");
 
-if (mysqli_num_rows($sqlU) > 0) {
-    $row = mysqli_fetch_assoc($sqlU);
-} elseif (mysqli_num_rows($sqlT) > 0) {
-    $row = mysqli_fetch_assoc($sqlT);
-} else {
-    // header("location: profile.php");
-}
+if (mysqli_num_rows($sqlU) > 0) $row = mysqli_fetch_assoc($sqlU);
+elseif (mysqli_num_rows($sqlT) > 0) $row = mysqli_fetch_assoc($sqlT);
+else // header("location: profile.php");
 ?>
 
 <style>
-#error-message {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 5px;
-    border-radius: 5px;
-    position: fixed;
-    top: 15%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+    #error-message {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 5px;
+        border-radius: 5px;
+        position: fixed;
+        top: 15%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 </style>
 
 <div class="wrapper chatt">
@@ -35,14 +31,14 @@ if (mysqli_num_rows($sqlU) > 0) {
             <div class="details">
                 <img src="php/images/<?php echo $row['img']; ?>" alt="">
                 <div>
-                    <span><?php echo $row['fname'] . " " . $row['lname'] ?></span>
+                    <span id="Fname"><?php echo $row['fname'] . " " . $row['lname'] ?></span>
                     <p><?php echo $row['status']; ?></p>
                 </div>
             </div>
             <?php if (isset($_GET['b'])) : ?>
-            <?php $b = 'b'; ?>
+                <?php $b = 'b'; ?>
 
-            <!-- <form action="#" class="formV"> -->
+                <!-- <form action="#" class="formV"> -->
                 <!-- new added for getting user id -->
                 <!-- <input type="text" class="outgoing_id" name="outgoing_id" value="<?php echo $_SESSION['unique_id']; ?>"
                     hidden>
@@ -51,22 +47,29 @@ if (mysqli_num_rows($sqlU) > 0) {
                 <input id="c-input-field" type="text" name="message" class="input-field" value="<?php echo "calling" ?>"
                     hidden>
                 <button id="videoCallingBtn"> -->
-                    <!-- <a href="localhost:8181" target="_blank" onclick="window.open('https://172.22.181.203:8181', 'popup', 'width=600,height=400'); return false;"> <i class="fas fa-duotone fa-video fa-2xl "></i> </a> -->
-                    <!-- <a href="192.168.0.65:4000" target="_blank"
+                <!-- <a href="localhost:8181" target="_blank" onclick="window.open('https://172.22.181.203:8181', 'popup', 'width=600,height=400'); return false;"> <i class="fas fa-duotone fa-video fa-2xl "></i> </a> -->
+                <!-- <a href="192.168.0.65:4000" target="_blank"
                         onclick="window.open('https://192.168.0.65:4000', 'popup', 'width=600,height=400'); return false;">
                         <i class="fas fa-duotone fa-video fa-2xl "></i> </a>
                 </button>
             </form> -->
-            <button id="videoCallingBtn">
-                <!-- <a href="localhost:8181" target="_blank" onclick="window.open('https://172.22.181.203:8181', 'popup', 'width=600,height=400'); return false;"> <i class="fas fa-duotone fa-video fa-2xl "></i> </a> -->
-                <!-- <a href="192.168.0.65:4000" target="_blank"
+                <button id="videoCallingBtn">
+                    <!-- <a href="localhost:8181" target="_blank" onclick="window.open('https://172.22.181.203:8181', 'popup', 'width=600,height=400'); return false;"> <i class="fas fa-duotone fa-video fa-2xl "></i> </a> -->
+                    <!-- <a href="192.168.0.65:4000" target="_blank"
                     onclick="window.open('https://192.168.0.65:4000', 'popup', 'width=600,height=400'); return false;"> -->
-                    <i class="fas fa-duotone fa-video fa-2xl "></i> 
-                <!-- </a> -->b
-            </button>
+                    <i class="fas fa-duotone fa-video fa-2xl "></i>
+                    <!-- </a> -->b
+                </button>
 
 
             <?php endif; ?>
+            <div id="incomingCallModal" class="modal">
+                <div class="modal-content">
+                    <span id="callerName"></span>
+                    <button id="acceptCallBtn">Accept</button>
+                    <button id="declineCallBtn">Decline</button>
+                </div>
+            </div>
         </header>
         <div id="error-message" style="display: none;">this was error message</div>
         <div class="chat-box"></div>
@@ -80,120 +83,464 @@ if (mysqli_num_rows($sqlU) > 0) {
 
             <p id="isRecording"></p>
             <span id="time"></span>
-            <input type="text" class="outgoing_id" name="outgoing_id" value="<?php echo $_SESSION['unique_id']; ?>"
-                hidden>
+            <input type="text" class="outgoing_id" name="outgoing_id" value="<?php echo $_SESSION['unique_id']; ?>" hidden>
             <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
             <input type="text" class="b" name="b" value="<?php echo $b; ?>" hidden>
-            <input id="input-field" type="text" name="message" class="input-field" placeholder="Type a message here..."
-                autocomplete="off">
+            <input id="input-field" type="text" name="message" class="input-field" placeholder="Type a message here..." autocomplete="off">
             <button id="sendBtn"><i class="fab fa-telegram-plane "></i></button>
             <button id="sendMic" style="display:none"><i class="active fas fa-paper-plane "></i></button>
         </form>
-            </section>
+    </section>
 </div>
 
-<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-<!-- <script src="./Server/socket.io.min.js"></script> -->
+<!-- video Call interface -->
+<!-- ((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -->
+<!-- ((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -->
+<style>
+    /* Initial styling */
+    #videoCallContainer * {
+        border: solid 1px white;
+    }
+
+    #videoCallContainer {
+        display: none;
+        /* Initially hidden */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        z-index: 2;
+        /* Ensure it's on top */
+    }
+
+    #remoteVideoContainer {
+        border: solid 1px red;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        /* To allow positioning elements inside */
+    }
+
+    #remoteVideo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+    #localVideoContainer {
+        position: absolute;
+        bottom: 10%;
+        right: 5%;
+        width: 20vw;
+        height: 20vw;
+        border-radius: 50%;
+        overflow: hidden;
+        z-index: 10;
+    }
+
+    #localVideo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    #callControls {
+        position: absolute;
+        bottom: 5%;
+        left: 20%;
+        z-index: 10;
+    }
+
+    #callingMsg {
+        position: absolute;
+        bottom: 40%;
+        left: 30%;
+        z-index: 10;
+        color: yellow;
+        font: 3em;
+        font-weight: 800;
+    }
+
+    /* Minimized styles (add these later) */
+    .minimized {
+        width: 25%;
+        height: 25%;
+        top: 37.5%;
+        left: 37.5%;
+        border-radius: 10px;
+    }
+
+    .circle {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    /* Header Styles */
+    #header {
+        display: flex;
+        justify-content: flex-end;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 10;
+    }
+
+    #header button {
+        margin-left: 10px;
+    }
+
+    #circleBtn,
+    #maximizeBtn {
+        display: none;
+    }
+</style>
+<div id="videoCallContainer">
+
+    <div id="header">
+        <button id="minimizeBtn1">Minimize 1</button>
+        <button id="minimizeBtn2">Minimize 2</button>
+        <button id="maximizeBtn" style="display: none;">Maximize</button>
+    </div>
+
+    <div id="remoteVideoContainer">
+        <video id="remoteVideo" autoplay playsinline></video>
+    </div>
+
+    <div id="localVideoContainer">
+        <video id="localVideo" autoplay playsinline muted></video>
+    </div>
+    <div id="callingMsg">
+        <h1>calling</h1>
+    </div>
+
+    <div id="callControls">
+        <button id="muteVideoBtn">mute video</button>
+        <button id="muteBtn">Mute</button>
+        <button id="hangUpBtn">Hang Up</button>
+    </div>
+    <div id="circle">
+        <button id="minimizeToCircleBtn">Minimize (Circle)</button>
+        <button id="maximizeBtn" style="display: none;">Maximize</button>
+    </div>
+</div>
+
+<!-- ((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -->
+<!-- ((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -->
+
+
+<!-- <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> -->
+<script src="./Server/socket.io.min.js"></script>
+<!--  this was for chat -->
 <script>
-const ogi = document.querySelector('.outgoing_id').value;
-const ici = document.querySelector('.incoming_id').value;
+    const outgoingID = document.querySelector('.outgoing_id').value;
+    const incomingID = document.querySelector('.incoming_id').value;
 
-const host = `https://${window.location.hostname}`;
-const port = 4000;
-const socket = io.connect(`${host}:${port}/chat`);
+    const host = `https://${window.location.hostname}`;
+    const port = 4000;
+    const socket = io.connect(`${host}:${port}`);
 
-socket.on('connect', () => {
-    console.log('Connected to Socket.IO server');
-});
+    const chatNamespace = io(`${host}:${port}/chat`);
 
-socket.emit('get messages by user IDs', {
-    ogi,
-    ici
-});
+    chatNamespace.on('connect', () => {
+        console.log('Connected to Socket.IO server chatNamespace');
+    });
+
+    chatNamespace.emit('get messages by user IDs', { outgoingID, incomingID });
 
     const roomId = [outgoingID, incomingID].sort().join('-');
+
     chatNamespace.emit('join room', roomId);
 
-socket.on('load messages', (messages) => {
-    messages.forEach((message) => {
-        const chatElement = document.createElement('div');
-        chatElement.classList.add('chat');
+    chatNamespace.on('load messages', messages => {
 
-        if (message.outgoing_msg_id == ogi) {
-            chatElement.classList.add('outgoing');
-        } else {
-            chatElement.classList.add('incoming');
+        messages.forEach((message) => {
+            const chatElement = document.createElement('div');
+            chatElement.classList.add('chat');
+            if (message.outgoing_msg_id == outgoingID) {
+                chatElement.classList.add('outgoing');
+            } else {
+                chatElement.classList.add('incoming');
 
-            if (message.img) {
-                const imgElement = document.createElement('img');
-                imgElement.src = `php/images/${message.img}`;
-                imgElement.alt = "Profile picture";
-                chatElement.appendChild(imgElement);
+                if (message.img) {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = `php/images/${message.img}`;
+                    imgElement.alt = "Profile picture";
+                    chatElement.appendChild(imgElement);
+                }
             }
-        }
 
-        const detailsElement = document.createElement('div');
-        detailsElement.classList.add('details');
+            const detailsElement = document.createElement('div');
+            detailsElement.classList.add('details');
 
-        if (message.audio) {
-            const audioElement = document.createElement('audio');
-            audioElement.src = `php/uploads/${message.audio}`;
-            audioElement.type = 'audio/wav';
-            audioElement.controls = true;
-            detailsElement.appendChild(audioElement);
+            if (message.audio) {
+                const audioElement = document.createElement('audio');
+                audioElement.src = `php/uploads/${message.audio}`;
+                audioElement.type = 'audio/wav';
+                audioElement.controls = true;
+                detailsElement.appendChild(audioElement);
+            } else {
+                const messageElement = document.createElement('p');
+                messageElement.textContent = message.msg;
+                detailsElement.appendChild(messageElement);
+            }
+
+            chatElement.appendChild(detailsElement);
+
+            // Append the chat element to the chat box
+            chatBox.appendChild(chatElement);
+            // console.log(chatBox)
+            if (!chatBox.classList.contains("active")) {
+                scrollToBottom();
+            }
+        });
+        chatBox.scrollTop = chatBox.scrollHeight;
+        // document.querySelector('#mes').innerHTML = messages[0].msg
+    });
+
+    chatNamespace.on('new messages', (data) => {
+        console.log("new message", data);
+        let class_name = "";
+        let image = "";
+
+        if (data.outgoingId != outgoingID) {
+            class_name = 'incoming';
+            
+                        if (data.img) {
+                            image = `<img src="php/images/${data.img}" alt="">`;
+                        }
         } else {
-            const messageElement = document.createElement('p');
-            messageElement.textContent = message.msg;
-            detailsElement.appendChild(messageElement);
+            class_name = 'outgoing';
         }
 
-        chatElement.appendChild(detailsElement);
+        const whatData = data.message && !data.audioDataUrl ?
+            `<p>${data.message}</p>` :
+            `<audio src="php/uploads/${data.audioDataUrl}" type="audio/wav" controls></audio>`;
 
-        // Append the chat element to the chat box
-        chatBox.appendChild(chatElement);
-        // console.log(chatBox)
+
+        chatBox.innerHTML += `
+            <div class="chat ${class_name}">
+            ${image}
+            <div class="details">
+                        ${whatData}
+                    </div>
+                </div>
+                `;
         if (!chatBox.classList.contains("active")) {
             scrollToBottom();
         }
     });
-    chatBox.scrollTop = chatBox.scrollHeight;
-    // document.querySelector('#mes').innerHTML = messages[0].msg
-});
-
-socket.on('new messages', (data) => {
-    let class_name = "";
-    let image = "";
-
-    if (data.outgoingId === ogi) {
-        class_name = 'outgoing';
-    } else {
-        class_name = 'incoming';
-
-        if (data.img) {
-            image = `<img src="php/images/${data.img}" alt="">`;
-        }
-    }
-
-    const whatData = data.message && !data.audioDataUrl ?
-        `<p>${data.message}</p>` :
-        `<audio src="php/uploads/${data.audioDataUrl}" type="audio/wav" controls></audio>`;
 
 
-    chatBox.innerHTML += `
-                <div class="chat ${class_name}">
-                    ${image}
-                    <div class="details">
-                        ${whatData}
-                    </div>
-                </div>
-            `;
-    if (!chatBox.classList.contains("active")) {
-        scrollToBottom();
-    }
-});
 
-socket.on('disconnect', () => {
-    console.log('Disconnected from Socket.IO server');
-});
+    chatNamespace.on('disconnect', () => {
+        console.log('Disconnected from Socket.IO server');
+    });
 </script>
+
+<!-- this was for video calling  -->
+<!-- <script>
+    // ########################################################################
+
+    const userName = document.getElementById("Fname").innerText
+    const password = "x";
+    // document.querySelector('#user-name').innerHTML = userName;
+
+    const webRtcNamespace = io(`${host}:${port}/webRtc`, {
+        auth: {
+            userName,
+            password
+        }
+    });
+
+    const localVideoEl = document.querySelector('#local-video');
+    const remoteVideoEl = document.querySelector('#remote-video');
+
+    let localStream; //a var to hold the local video stream
+    let remoteStream; //a var to hold the remote video stream
+    let peerConnection; //the peerConnection that the two clients use to talk
+    let didIOffer = false;
+
+    let peerConfiguration = {
+        iceServers: [{
+            urls: [
+                'stun:stun.l.google.com:19302',
+                'stun:stun1.l.google.com:19302'
+            ]
+        }]
+    }
+
+    //when a client initiates a call
+    const call = async e => {
+        await fetchUserMedia();
+
+        //peerConnection is all set with our STUN servers sent over
+        await createPeerConnection();
+
+        //create offer time!
+        try {
+            console.log("Creating offer...")
+            const offer = await peerConnection.createOffer();
+            console.log(offer);
+            peerConnection.setLocalDescription(offer);
+            didIOffer = true;
+            webRtcNamespace.emit('newOffer', offer); //send offer to signalingServer
+        } catch (err) {
+            console.log(err)
+        }
+
+    }
+
+    const answerOffer = async (offerObj) => {
+        await fetchUserMedia()
+        await createPeerConnection(offerObj);
+        const answer = await peerConnection.createAnswer({}); //just to make the docs happy
+        await peerConnection.setLocalDescription(answer); //this is CLIENT2, and CLIENT2 uses the answer as the localDesc
+        console.log(offerObj)
+        console.log(answer)
+        // console.log(peerConnection.signalingState) //should be have-local-pranswer because CLIENT2 has set its local desc to it's answer (but it won't be)
+        //add the answer to the offerObj so the server knows which offer this is related to
+        offerObj.answer = answer
+        //emit the answer to the signaling server, so it can emit to CLIENT1
+        //expect a response from the server with the already existing ICE candidates
+        const offerIceCandidates = await webRtcNamespace.emitWithAck('newAnswer', offerObj)
+        offerIceCandidates.forEach(c => {
+            peerConnection.addIceCandidate(c);
+            console.log("======Added Ice Candidate======")
+        })
+        console.log(offerIceCandidates)
+    }
+
+    const addAnswer = async (offerObj) => {
+        //addAnswer is called in socketListeners when an answerResponse is emitted.
+        //at this point, the offer and answer have been exchanged!
+        //now CLIENT1 needs to set the remote
+        await peerConnection.setRemoteDescription(offerObj.answer)
+        // console.log(peerConnection.signalingState)
+    }
+
+    const fetchUserMedia = () => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    // audio: true,
+                });
+                localVideoEl.srcObject = stream;
+                localStream = stream;
+                resolve();
+            } catch (err) {
+                console.log(err);
+                reject()
+            }
+        })
+    }
+
+    const createPeerConnection = (offerObj) => {
+        return new Promise(async (resolve, reject) => {
+            //RTCPeerConnection is the thing that creates the connection
+            //we can pass a config object, and that config object can contain stun servers
+            //which will fetch us ICE candidates
+            peerConnection = await new RTCPeerConnection(peerConfiguration)
+            remoteStream = new MediaStream()
+            remoteVideoEl.srcObject = remoteStream;
+
+
+            localStream.getTracks().forEach(track => {
+                //add local tracks so that they can be sent once the connection is established
+                peerConnection.addTrack(track, localStream);
+            })
+
+            peerConnection.addEventListener("signalingstatechange", (event) => {
+                console.log(event);
+                console.log(peerConnection.signalingState)
+            });
+
+            peerConnection.addEventListener('icecandidate', e => {
+                console.log('........Ice candidate found!......')
+                console.log(e)
+                if (e.candidate) {
+                    webRtcNamespace.emit('sendIceCandidateToSignalingServer', {
+                        iceCandidate: e.candidate,
+                        iceUserName: userName,
+                        didIOffer,
+                    })
+                }
+            })
+
+            peerConnection.addEventListener('track', e => {
+                console.log("Got a track from the other peer!! How exiting")
+                console.log(e)
+                e.streams[0].getTracks().forEach(track => {
+                    remoteStream.addTrack(track, remoteStream);
+                    console.log("Here's an exciting moment... fingers cross")
+                })
+            })
+
+            if (offerObj) {
+                //this won't be set when called from call();
+                //will be set when we call from answerOffer()
+                // console.log(peerConnection.signalingState) //should be stable because no setDesc has been run yet
+                await peerConnection.setRemoteDescription(offerObj.offer)
+                // console.log(peerConnection.signalingState) //should be have-remote-offer, because client2 has setRemoteDesc on the offer
+            }
+            resolve();
+        })
+    }
+
+    const addNewIceCandidate = iceCandidate => {
+        peerConnection.addIceCandidate(iceCandidate)
+        console.log("======Added Ice Candidate======")
+    }
+
+
+    document.querySelector('#call').addEventListener('click', call)
+
+    webRtcNamespace.on('connect', () => {
+        console.log('Connected to Socket.io server');
+        // ... Now you can use 'socket' for emitting and listening to events ...
+    });
+
+    // ########################################################################
+    const videoCallingBtn = document.getElementById("videoCallingBtn");
+
+    videoCallingBtn.addEventListener("click", () => {
+
+        console.log("videoCallingBtn clicked", videoCallingBtn)
+
+        const roomId = [outgoingID, incomingID].sort().join('-');
+
+        chatNamespace.emit("callRequest", {
+            roomId,
+            callerId: outgoingID,
+            recipientId: incomingID
+        });
+
+        // You can optionally display a "Calling..." message here
+        console.log({
+            roomId,
+            callerId: outgoingID,
+            recipientId: incomingID
+        })
+
+        videoCallingBtn.textContent = "Calling...";
+    });
+
+    chatNamespace.on("incomingCall", cid => {
+        if (outgoingID != cid.callerId) {
+            const modalElement = document.getElementById("incomingCallModal");
+            modalElement.style.display = "block";
+            document.getElementById("callerName").textContent = document.getElementById("Fname").innerText; // Replace with actual caller name
+        }
+    })
+</script> -->
+
 <script src="javascript/chat.js"> </script>

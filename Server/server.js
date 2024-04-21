@@ -197,8 +197,9 @@ chatNamespace.on("connection", (socket) => {
   });
 
   socket.on("get messages by user IDs", (data) => {
-    const outgoing_id = data.ogi;
-    const incoming_id = data.ici;
+    
+    const outgoing_id = data.outgoingID;
+    const incoming_id = data.incomingID;
 
     const sql = `
             SELECT m.*, 
@@ -231,51 +232,49 @@ chatNamespace.on("connection", (socket) => {
         }));
 
         socket.emit("load messages", messages);
-        // console.log(messages);
       }
     );
   });
 
   socket.on("formSubmission", (data) => {
     const roomId = data.roomId;
-    const outgoingId = data.outgoingId; // Ensure you have the sender's ID
-
+    const outgoingId = data.outgoingId;
+ 
     const sql = `
-    SELECT COALESCE(t.img, u.img) AS img
-    FROM users u
-    LEFT JOIN therapist t ON u.unique_id = t.unique_id
-    WHERE u.unique_id NOT IN (?)  
-    `;
+    SELECT img FROM users WHERE unique_id = ?
+    UNION
+    SELECT img FROM therapist WHERE unique_id = ?;
+`;
 
-    connection.query(sql, [outgoingId], (err, results) => {
-      if (err) {
+connection.query(sql,[outgoingId, outgoingId], (err, results) => {
+    if (err) {
         console.error("Error fetching image:", err);
         return;
-      }
-
+    }
       if (results.length > 0) {
         data.img = results[0].img; // Add image URL to data
       }
 
+
       chatNamespace.to(roomId).emit("new messages", data);
     });
   });
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-socket.on("callRequest", (data) => {
-  const roomId = data.roomId;
-  const callerId = data.callerId;
-  const recipientId = data.recipientId;
+  socket.on("callRequest", (data) => {
+    const roomId = data.roomId;
+    const callerId = data.callerId;
+    const recipientId = data.recipientId;
 
-  // Notify the recipient about the incoming call
-  socket.to(recipientId).emit("incomingCall", { callerId });
-  console.log("incomingCall",data)
-});
+    // Notify the recipient about the incoming call
+    socket.to(recipientId).emit("incomingCall", { callerId });
+    console.log("incomingCall", data);
+    chatNamespace.to(roomId).emit("incomingCall", { callerId });
+  });
 
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
 

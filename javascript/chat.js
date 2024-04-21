@@ -11,9 +11,9 @@ const form = document.querySelector(".typing-area"),
   isRecording = document.getElementById("isRecording"),
   cancelRecordingButton = document.getElementById("cRec"),
   incoming_id = form.querySelector(".incoming_id").value,
-  outgoing_id = form.querySelector(".outgoing_id").value,
+  outgoing_id = form.querySelector(".outgoing_id").value;
   // formV = document.querySelector(".formV"), //new added for video
-  videoCallingBtn = document.getElementById("videoCallingBtn");
+  // videoCallingBtn = document.getElementById("videoCallingBtn");
 
 inputField.addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
@@ -69,7 +69,7 @@ sendTextButton.onclick = () => {
   const message = document.getElementById("input-field").value;
 
   // Emit a Socket.IO event with the message data
-  socket.emit("formSubmission", {
+  chatNamespace.emit("formSubmission", {
     incomingId: incoming_id,
     outgoingId: outgoing_id,
     b: b,
@@ -175,7 +175,7 @@ async function handleRecordingStop() {
 
     manageUI("send recording");
 
-    socket.emit("formSubmission", {
+    chatNamespace.emit("formSubmission", {
       incomingId: incoming_id,
       outgoingId: outgoing_id,
       b: b,
@@ -311,15 +311,3 @@ cancelRecordingButton.onclick = () => manageUI("Cancel recording");
 // @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!
 // @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!
 // @@@@@@@@@@@@@@@@@@@@@@@################!!!!!!!!!!!!!!!
-console.log("whoiydfaosdf")
-
-// const videoCallingBtn = document.getElementById("videoCallingBtn");
-videoCallingBtn.addEventListener("click", () => {
-  console.log("videoCallingBtn clicked", videoCallingBtn)
-    const roomId = [ogi, ici].sort().join('-');
-    socket.emit("callRequest", { roomId, callerId: ogi, recipientId: ici });
-    // You can optionally display a "Calling..." message here
-    console.log(roomId)
-    console.log({ roomId, callerId: ogi, recipientId: ici })
-    videoCallingBtn.textContent ="Calling...";
-});

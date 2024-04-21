@@ -102,6 +102,7 @@ if (mysqli_num_rows($query) > 0) {
 
 echo '<div class="schedule right table-container">
 <h1>Schedule</h1>
+<div>
         <table>
             <tr>
                 <th>Name</th>
@@ -117,4 +118,4 @@ if ($output !== "") {
     echo '<tr><td colspan="5">there is no scheduled</td></tr>';
 }
 
-echo '</table></div>';
+echo '</table></div></div>';
