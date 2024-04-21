@@ -313,7 +313,7 @@ else // header("location: profile.php");
     });
 
     chatNamespace.on('new messages', (data) => {
-        console.log("new message", data);
+        // console.log("new message", data);
         let class_name = "";
         let image = "";
 
@@ -372,22 +372,7 @@ else // header("location: profile.php");
         // ... Now you can use 'socket' for emitting and listening to events ...
     });
 
-    // webRtcNamespace.emit("callRequest", {
-    //     roomId,
-    //     callerId: outgoingID,
-    //     recipientId: incomingID
-    // });
-
-    // webRtcNamespace.on("incomingCall", (data) => {
-    //     const { callerId } = data;
-    //     console.log("Incoming call from:", callerId);
-    //     if (incomingID === callerId) {
-    //         const modalElement = document.getElementById("incomingCallModal");
-    //         modalElement.style.display = "block";
-    //         document.getElementById("callerName").textContent = document.getElementById("Fname").innerText; // Or any other way to get caller's name
-    //     }
-    // });
-
+    webRtcNamespace.emit('joinRoom', roomId);
 
     let localStream; //a var to hold the local video stream
     let remoteStream; //a var to hold the remote video stream
@@ -406,6 +391,11 @@ else // header("location: profile.php");
     // Log the caller ID only if it doesn't match the outgoing ID
     if (callerId !== outgoingID) {
         console.log("Call request from:", callerId);
+        const modalElement = document.getElementById("incomingCallModal");
+        modalElement.style.display = "block";
+        document.getElementById("callerName").textContent = document.getElementById("Fname").innerText; // Or any other way to get caller's name
+        videoCallingBtn.style.display = "none";
+    
     }
 });
 
@@ -429,9 +419,8 @@ else // header("location: profile.php");
 
             // Show the video call container
             videoCallContainer.style.display = 'block';
+            videoCallingBtn.style.display = 'none';
 
-            // Emit the joinRoom event
-            webRtcNamespace.emit("joinRoom", roomId);
 
             // Emit the callRequest event to initiate the call
             webRtcNamespace.emit("callRequest", {
@@ -549,31 +538,6 @@ else // header("location: profile.php");
 
 
     videoCallingBtn.addEventListener('click', call)
-
-    // ########################################################################
-    // ########################################################################
-
-    // webRtcNamespace.emit("createRoom", "myAwesomeRoom");
-    // webRtcNamespace.on("roomCreated", a => console.log(a))
-
-
-    //     function inCalling() {
-    //        console.log("================================")
-    //  webRtcNamespace.on("incomingCall", cid => {
-
-    //             console.log("ddddddddddddddd:", cid, "incoming", incomingID);
-
-    //             if (incomingID == cid) {
-    //                 const modalElement = document.getElementById("incomingCallModal");
-    //                 modalElement.style.display = "block";
-    //                 document.getElementById("callerName").textContent = document.getElementById("Fname").innerText; // Replace with actual caller name
-    //             }
-    //         })
-    //         videoCallingBtn.style.display = "none";
-    //         callingMsg.style.display = "block";
-    //     }
-
-
 
     // ##################################################################
     // ##################################################################
