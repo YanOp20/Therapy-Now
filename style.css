@@ -383,14 +383,30 @@ align-items: center;
   align-content: center;
 
 }
+.profile-container .chatt .typing-area button{
+  height: 50px;
+  border-radius: 50%;
+  margin: 0.9em;
+  
+}
+
+.profile-container .chatt .typing-area input:focus{
+  background:rgba(233, 137, 137, 0.1)
+}
+.profile-container .chatt .typing-area input{
+  border-radius: 16px;
+
+}
 .profile-container .chatt .typing-area button,
 .profile-container .chatt .typing-area input{
-  height: 45px;
-  box-sizing: border-box;
+  height: 50px;
 }
 .profile-container .chatt .typing-area{
   padding: 0;
   margin: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 .profile-container .chatt section .chat-box {
   flex: 1;
