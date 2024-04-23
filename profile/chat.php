@@ -220,7 +220,7 @@ else // header("location: profile.php");
     </div>
     <div id="callingMsg">
         <h1>calling</h1>
-    </div>
+    </div>  
 
     <div id="callControls">
         <button id="muteVideoBtn">mute video</button>
@@ -543,37 +543,37 @@ else // header("location: profile.php");
     // ##################################################################
 
     //on connection get all available offers and call createOfferEls
-    // webRtcNamespace.on('availableOffers',offers=>{
-    //     // console.log(offers)
-    //     createOfferEls(offers)
-    // })
+    webRtcNamespace.on('availableOffers',offers=>{
+        // console.log(offers)
+        createOfferEls(offers)
+    })
 
-    // //someone just made a new offer and we're already here - call createOfferEls
-    // webRtcNamespace.on('newOfferAwaiting',offers=>{
-    //     createOfferEls(offers)
-    // })
+    //someone just made a new offer and we're already here - call createOfferEls
+    webRtcNamespace.on('newOfferAwaiting',offers=>{
+        createOfferEls(offers)
+    })
 
-    // webRtcNamespace.on('answerResponse',offerObj=>{
-    //     // console.log(offerObj)
-    //     addAnswer(offerObj)
-    // })
+    webRtcNamespace.on('answerResponse',offerObj=>{
+        // console.log(offerObj)
+        addAnswer(offerObj)
+    })
 
-    // webRtcNamespace.on('receivedIceCandidateFromServer',iceCandidate=>{
-    //     addNewIceCandidate(iceCandidate)
-    //     // console.log(iceCandidate)
-    // })
+    webRtcNamespace.on('receivedIceCandidateFromServer',iceCandidate=>{
+        addNewIceCandidate(iceCandidate)
+        // console.log(iceCandidate)
+    })
 
-    // function createOfferEls(offers){
-    //     //make green answer button for this new offer
-    //     const answerEl = document.querySelector('#answer');
-    //     offers.forEach(o=>{
-    //         // console.log(o);
-    //         const newOfferEl = document.createElement('div');
-    //         newOfferEl.innerHTML = `<button class="btn btn-success col-1">Answer ${o.offererUserName}</button>`
-    //         newOfferEl.addEventListener('click',()=>answerOffer(o))
-    //         answerEl.appendChild(newOfferEl);
-    //     })
-    // }
+    function createOfferEls(offers){
+        //make green answer button for this new offer
+        // const answerEl = document.querySelector('#answer');
+        offers.forEach(o=>{
+            // console.log(o);
+            const newOfferEl = document.createElement('div');
+            newOfferEl.innerHTML = `<button class="btn btn-success col-1">Answer ${o.offererUserName}</button>`
+            newOfferEl.addEventListener('click',()=>answerOffer(o))
+            answerEl.appendChild(newOfferEl);
+        })
+    }
 
 
     webRtcNamespace.on('disconnect', () => console.log('Disconnected from Socket.IO server web RTC namespace'));

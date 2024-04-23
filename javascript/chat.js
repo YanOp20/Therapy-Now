@@ -193,28 +193,30 @@ function displayErrorMessage(message) {
   console.log(message);
 }
 
-// Event listener for the stop button
 stopRecordingButton.addEventListener("click", () => {
-  console.log("stopRecordingButton clicked");
-  clearInterval(intervalId); // Stop the timer
-  rec.stop(); // Stop the recording
-
-  // Update UI elements stopRecordingButton
-  manageUI("stop recording");
-});
-
-// Sending audio data logic within sendAudioButton.onclick
-sendAudioButton.addEventListener("click", () => {
-  console.log("sendAudioButton clicked");
-  handleRecordingStop();
-  if (rec) {
-    if (rec.state !== "inactive") {
-      clearInterval(intervalId);
-      rec.stop();
-    }
+  if (rec && rec.state === "recording") {
+    clearInterval(intervalId); // Stop the timer
+    rec.stop(); // Stop the recording
+    manageUI("stop recording");
+  } else {
+    console.error("No active recording to stop.");
   }
 });
 
+sendAudioButton.addEventListener("click", () => {
+  console.log("sendAudioButton clicked");
+  if (rec && rec.state === "recording") {
+    rec.stop();
+    clearInterval(intervalId); // Ensure the timer is stopped
+    rec.onstop = () => {
+      handleRecordingStop(); // Process and send the recording after it has been stopped
+    };
+  } else if (rec && (rec.state === "paused" || rec.state === "inactive") && audioChunks.length > 0) {
+    handleRecordingStop(); // Process and send the recording
+  } else {
+    console.error("Recorder is not active or already stopped.");
+  }
+});
 
 function manageUI(state) {
   const show = (element) => (element.style.display = "block");

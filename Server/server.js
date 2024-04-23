@@ -28,7 +28,7 @@ for (const name of Object.keys(networkInterfaces)) {
 }
 // const host = "https://192.168.0.65"
 // const host = "https://localhost"
-const host = `https://${ipAddresses[0]}`;
+const host = `https://${ipAddresses[2]}`;
 const port = 4000;
 // Load HTTPS key and certificate
 //we need a key and cert to run https
