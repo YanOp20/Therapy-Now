@@ -345,7 +345,6 @@ select option[disabled] {
 /* Chat Area CSS Start */
 .chat-area header {
   display: flex;
-  /* align-items: center; */
   justify-content: space-between;
   padding: 18px 30px;
 }
@@ -370,27 +369,39 @@ select option[disabled] {
   font-weight: 500;
 }
 
-.chat-box {
-  /* position: relative; */
-  min-height: 56vh;
-  max-height: 65vh;
-  /* max-height: 57vh; */
-  /* max-height: auto; */
+.profile-container .chatt{
+  height: 86vh;
+}
+
+.profile-container .chatt .chat-area {
+  height: 81.6vh;
+  display: flex;
+  flex-direction: column;
+}
+.profile-container .chatt .typing-area button *{
+align-items: center;
+  align-content: center;
+
+}
+.profile-container .chatt .typing-area button,
+.profile-container .chatt .typing-area input{
+  height: 45px;
+  box-sizing: border-box;
+}
+.profile-container .chatt .typing-area{
+  padding: 0;
+  margin: 0;
+}
+.profile-container .chatt section .chat-box {
+  flex: 1;
   overflow-y: auto;
   padding: 10px 30px 20px 30px;
-  /* background: #f7f7f7; */
-  /* background-color: red !important; */
   box-shadow: inset 0 32px 32px -32px rgb(0 0 0 / 5%),
     inset 0 -32px 32px -32px rgb(0 0 0 / 5%);
 }
 
 .chat-box .text {
-  /* position: absolute;
-  top: 45%;
-  left: 50%;
-  width: calc(100% - 50px); */
   text-align: center;
-  /* transform: translate(-50%, -50%); */
   padding-top: 30%;
 }
 
@@ -936,12 +947,7 @@ footer div a:hover {
 
 
 footer {
-  /* box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
-          0 32px 64px -48px rgba(0, 0, 0, 0.5);
-
-
-      background: #fff; */
-  background-color: #083836;
+   background-color: #083836;
   color: #E2D1F9;
   font-size: small;
   display: flex;
@@ -1010,7 +1016,19 @@ header.cotact {
 }
 
 /* header */
+
+#header-container .logo img{
+  width: 50px;
+}
+#header-container .logo h1{
+  color: #4E6BA4;
+}
+
+#header-container header #mobile-menu-close-button{
+  display: none;
+}
 #header-container {
+  z-index: 1;
   background-color: #97BC62;
   display: flex;
   align-items: center;
@@ -1379,12 +1397,8 @@ a {
   }
 }
 
-/* profile */
 
-/* *{border: solid 2px red;} */
-/* body{overflow: hidden;} */
 .profile {
-  /* border: solid red 1px; */
   height: 90vh;
   width: 100%;
   display: flex;
@@ -1393,8 +1407,6 @@ a {
   text-decoration: none;
   font-family: 'Poppins', sans-serif;
   justify-content: space-between;
-  /* flex-wrap: wrap;
-      overflow: hidden; */
 }
 
 .profile .left {
@@ -1843,25 +1855,73 @@ a:hover .icon-name {
   .profile-container {
     /* background-color: #1a044d; */
     flex-direction: column;
+    gap: 0.1em;
+    border-radius: 0;
+    justify-content: space-between;
+    
   }
-
+  
   .profile-container .left a {
     /* border: solid red 1px; */
     margin: -6px;
     width: auto;
   }
-
+  .profile-container .schedule h1{
+    margin-bottom: -0.3em;
+  }
+  .profile-container .schedule table *{
+    box-sizing:content-box;
+  }
+  .profile-container .schedule{
+    padding:0;
+  }
+  .profile-container .user{
+    height: 86vh;
+    margin: 0;
+    border-radius: 25px;
+    max-width: 600px;
+    width: 100%;
+    border-radius: 0;
+  }
+  .profile-container .right{
+    border-radius: 0;
+  }
   .profile-container .left {
-    max-width: 100%;
+    min-width: 360px;
+    max-width: 100vw;
+    width: 100%;
+    min-height: 65px;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    /* height: 100px; */
-    /* margin: 0; */
-    /* margin-top: 1em; */
-    /* padding: 0; */
     margin-bottom: -15px;
     max-height: 10%;
+    border-radius: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+  }
+  .profile-container .chatt header{
+    padding: 0 1em 0 0em;
+    border-radius: 0;  
+  }
+  #header-container{
+    border-radius: 0;
+  }
+  *{
+    /* border: solid 0.2px  blue; */
+  }
+  .chat-area header{
+    /* padding-bottom: 0; */
+  }
+  .profile-containe{
+    margin: 0;
+    padding: 0;
+  }
+  .profile-container .chatt{
+    margin: 0;
+    padding: 0;
+    height: 100vh;
   }
 
   .profile-container .showw {
@@ -1881,26 +1941,6 @@ a:hover .icon-name {
 
 }
 
-
-
-/*   
-  *{
-    border: solid rgb(137, 223, 239) 0.0089px !important;
-  } */
-
-
-
-/* appointment */
-
-/* .profile-container .appointment .app-form{
-      width: 100vw;
-      border: solid 2px purple;
-      margin-left: -130px;
-    } */
-/* .profile-container .appointment {
-            width: 50vw;
-            margin: 0 auto;
-        } */
 h1 {
   color: green;
 }
@@ -2010,3 +2050,4 @@ h1 {
 
 /* videovideovideovideovideovideovideovideovideovideovideovideovdeovideovvideovideo */
 /* videovideovideovideovideovideovideovideovideovideovideovideovdeovideovvideovideo */
+

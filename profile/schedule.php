@@ -119,3 +119,4 @@ if ($output !== "") {
 }
 
 echo '</table></div></div>';
+?>

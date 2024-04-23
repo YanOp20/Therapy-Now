@@ -1,8 +1,8 @@
 <div id="header-container">
     <div class="logo">
         <a href="index.php">
-            <img src="img/logo.png" alt="" style="width: 50px;">
-            <h1 style="color: #4E6BA4;">Therapy Now</h1>
+            <img src="img/logo.png" alt="" >
+            <h1>Therapy Now</h1>
         </a>
     </div>
     <header>
@@ -38,7 +38,7 @@
         </div>
         <?php } ?>
         <button id="mobile-menu-button" class="menu-button"><i class="fa fa-bars"></i></button>
-        <button id="mobile-menu-close-button" class="c-menu-button" style="display: none;"><i
+        <button id="mobile-menu-close-button" class="c-menu-button" ><i
                 class="fa fa-times"></i></button>
     </header>
 </div>
@@ -52,8 +52,19 @@ const links = document.querySelector(".navigation-links");
 const div = document.getElementById("header-container");
 const h = document.querySelector("header");
 
-
 var initialHeight = div.offsetHeight;
+
+// if(window.innerWidth < 600 ){
+//     if (window.innerWidth <= 850) {
+//             div.style.height = "auto";
+//         } else {
+//             div.style.height = (initialHeight / 2) + "px";
+//             // body.style.marginTop = "200px";
+//             div.style.flexDirection = "row";
+//             h.style.width = "30%";
+//         }
+// }
+
 window.addEventListener("scroll", function() {
     var scrollY = window.scrollY;
 
@@ -135,6 +146,6 @@ function toggleButton() {
 btn.addEventListener("click", m);
 cbtn.addEventListener("click", c);
 
-
+toggleButton()
 window.onresize = toggleButton;
 </script>
