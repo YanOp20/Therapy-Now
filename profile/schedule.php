@@ -3,8 +3,9 @@
 
 $id = $_SESSION['unique_id'];
 $output = "";
-$sql = "SELECT * FROM users LEFT JOIN appointment ON users.unique_id = appointment.user_id WHERE appointment.user_id = $id";
-$sqlD = "SELECT * FROM therapist LEFT JOIN appointment ON therapist.unique_id = appointment.therapist_id WHERE appointment.therapist_id = $id";
+
+$sql = "SELECT * FROM users LEFT JOIN appointment ON users.unique_id = appointment.user_id WHERE appointment.user_id = $id ORDER BY appointment.date DESC";
+$sqlD = "SELECT * FROM therapist LEFT JOIN appointment ON therapist.unique_id = appointment.therapist_id WHERE appointment.therapist_id = $id ORDER BY appointment.date DESC";
 $query = mysqli_query($conn, $sql);
 $queryD = mysqli_query($conn, $sqlD);
 
@@ -24,7 +25,18 @@ while ($row = mysqli_fetch_assoc($queryD)) {
         $fname = $img = $lname = "";
     }
 
-    $output .= '<tr>
+    $appointmentTime = strtotime($row['date'] . ' ' . $row['start_time']);
+    $currentTime = time();
+    if ($appointmentTime < $currentTime) {
+        $status = 'past';
+    } elseif ($appointmentTime > $currentTime) {
+        $status = 'future';
+    } else {
+        $status = 'present';
+    }
+
+
+    $output .= '<tr class=' . $status . '>
                     <td class="name">
                         <a href="profile.php?user_id=' . $u_id . '&link=chat&b=b">
                             <img src="php/images/' . $img . '?>" alt="">' . $fname . ' ' . $lname . '
@@ -69,8 +81,17 @@ if (mysqli_num_rows($query) > 0) {
         } else {
             $fname = $img = $lname = "";
         }
+        $appointmentTime = strtotime($row['date'] . ' ' . $row['start_time']);
+        $currentTime = time();
+        if ($appointmentTime < $currentTime) {
+            $status = 'past';
+        } elseif ($appointmentTime > $currentTime) {
+            $status = 'future';
+        } else {
+            $status = 'present';
+        }
 
-        $output .= '<tr>
+        $output .= '<tr class=' . $status . '>
                         <td class="name">
                             <a href="profile.php?user_id=' . $u_id . '&link=chat&b=b">
                                 <img src="php/images/' . $img . '?>" alt="">' . $fname . ' ' . $lname . '

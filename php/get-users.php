@@ -77,41 +77,41 @@ if (mysqli_num_rows($sqlU) > 0) { // for user viewing
         }
     }
 } elseif (mysqli_num_rows($sqlT) > 0) { // for therapists viewing
-    $sqlT2 = mysqli_query($conn, "SELECT * FROM users WHERE unique_id IN (SELECT outgoing_msg_id FROM messages WHERE incoming_msg_id = 40000);"); // public
+    // $sqlT2 = mysqli_query($conn, "SELECT * FROM users WHERE unique_id IN (SELECT outgoing_msg_id FROM messages WHERE incoming_msg_id = 40000);"); // public
     $sqlT22 = mysqli_query($conn, "SELECT * FROM users WHERE unique_id IN (SELECT user_id FROM appointment WHERE therapist_id = {$outgoing_id});"); // private
-    if (mysqli_num_rows($sqlT2) > 0) { // therapists public view
+    // if (mysqli_num_rows($sqlT2) > 0) { // therapists public view
 
-        while ($row = mysqli_fetch_assoc($sqlT2)) {
-            // $sql2 = "SELECT * FROM messages WHERE ((NOT b = 'b') AND ((incoming_msg_id = {$row['unique_id']}
-            //     OR outgoing_msg_id = {$row['unique_id']}) AND (outgoing_msg_id = {$outgoing_id} 
-            //     OR incoming_msg_id = {$outgoing_id}) ))ORDER BY msg_id DESC LIMIT 1";
-            $sql2 = "SELECT * FROM messages WHERE  ((NOT b = 'b') AND ((incoming_msg_id = 40000)
-                OR (outgoing_msg_id = {$outgoing_id}))) ORDER BY msg_id DESC LIMIT 1";
-            $query2 = mysqli_query($conn, $sql2);
-            $row2 = mysqli_fetch_assoc($query2);
-            (mysqli_num_rows($query2) > 0) ? $result = $row2['msg'] : $result = "No message available";
-            (strlen($result) > 20) ? $msg =  substr($result, 0, 20) . '...' : $msg = $result;
-            if (isset($row2['outgoing_msg_id'])) {
-                ($outgoing_id == $row2['outgoing_msg_id']) ? $you = "You: " : $you = "";
-            } else {
-                $you = "";
-            }
-            ($row['status'] == "Offline now") ? $offline = "offline" : $offline = "";
-            ($outgoing_id == $row['unique_id']) ? $hid_me = "hide" : $hid_me = "";
+    //     while ($row = mysqli_fetch_assoc($sqlT2)) {
+    //         // $sql2 = "SELECT * FROM messages WHERE ((NOT b = 'b') AND ((incoming_msg_id = {$row['unique_id']}
+    //         //     OR outgoing_msg_id = {$row['unique_id']}) AND (outgoing_msg_id = {$outgoing_id} 
+    //         //     OR incoming_msg_id = {$outgoing_id}) ))ORDER BY msg_id DESC LIMIT 1";
+    //         $sql2 = "SELECT * FROM messages WHERE  ((NOT b = 'b') AND ((incoming_msg_id = 40000)
+    //             OR (outgoing_msg_id = {$outgoing_id}))) ORDER BY msg_id DESC LIMIT 1";
+    //         $query2 = mysqli_query($conn, $sql2);
+    //         $row2 = mysqli_fetch_assoc($query2);
+    //         (mysqli_num_rows($query2) > 0) ? $result = $row2['msg'] : $result = "No message available";
+    //         (strlen($result) > 20) ? $msg =  substr($result, 0, 20) . '...' : $msg = $result;
+    //         if (isset($row2['outgoing_msg_id'])) {
+    //             ($outgoing_id == $row2['outgoing_msg_id']) ? $you = "You: " : $you = "";
+    //         } else {
+    //             $you = "";
+    //         }
+    //         ($row['status'] == "Offline now") ? $offline = "offline" : $offline = "";
+    //         ($outgoing_id == $row['unique_id']) ? $hid_me = "hide" : $hid_me = "";
 
 
-            $output .= '<a href="profile.php?user_id=' . $row['unique_id'] . '&link=chat">
-                    <div class="content">
-                        <img src="php/images/' . $row['img'] . '" alt="">
-                        <div class="details">
-                            <span>' . $row['fname'] . " " . $row['lname'] . '</span>
-                            <p>' . $you . $msg . '</p>
-                        </div>
-                    </div>
-                    <div class="status-dot ' . $offline . '"><i class="fas fa-circle"></i></div>
-                </a>';
-        }
-    }
+    //         $output .= '<a href="profile.php?user_id=' . $row['unique_id'] . '&link=chat">
+    //                 <div class="content">
+    //                     <img src="php/images/' . $row['img'] . '" alt="">
+    //                     <div class="details">
+    //                         <span>' . $row['fname'] . " " . $row['lname'] . '</span>
+    //                         <p>' . $you . $msg . '</p>
+    //                     </div>
+    //                 </div>
+    //                 <div class="status-dot ' . $offline . '"><i class="fas fa-circle"></i></div>
+    //             </a>';
+    //     }
+    // }
     if (mysqli_num_rows($sqlT22) > 0) { // therapists private view
 
 

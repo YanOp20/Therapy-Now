@@ -2067,3 +2067,34 @@ h1 {
 /* videovideovideovideovideovideovideovideovideovideovideovideovdeovideovvideovideo */
 /* videovideovideovideovideovideovideovideovideovideovideovideovdeovideovvideovideo */
 
+a{
+  color: #36006b;
+}
+a:hover{
+  color: #007a99;
+}
+/* Target table rows with specific data-status values */
+tr.past{
+  background-color: #f2dede; /* Light red for past appointments */
+}
+
+tr.present{
+  background-color: #dff0d8; /* Light green for present appointments */
+  font-weight: bold; /* Optional: Make present appointments stand out */
+}
+
+tr.future {
+  background-color: #d9edf7; /* Light blue for future appointments */
+}
+
+/* Additional styling for the table (optional) */
+/* table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+} */
