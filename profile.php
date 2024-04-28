@@ -73,7 +73,7 @@ if (isset($_GET['b'])) {
     
     // Example usage:
     const linkValue = getQueryParam('link');
-    console.log(linkValue); // Print the value of the 'link' parameter
+    // console.log(linkValue); // Print the value of the 'link' parameter
   
     const us = document.querySelector('.user')
     if( linkValue =="chat")

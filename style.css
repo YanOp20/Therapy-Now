@@ -2001,7 +2001,7 @@ h1 {
   /* background-color: #fff; */
   padding-right: 0.3em;
   font-size: 1em;
-  font-weight: thing;
+  font-weight: lighter;
 }
 
 .profile-container .appointment input[type="submit"] {
@@ -2070,8 +2070,8 @@ h1 {
 a{
   color: #36006b;
 }
-a:hover{
-  color: #007a99;
+a:hover, .users-list *:hover{
+  color: #007a99 ;
 }
 /* Target table rows with specific data-status values */
 tr.past{
@@ -2098,3 +2098,16 @@ th, td {
   text-align: left;
   border-bottom: 1px solid #ddd;
 } */
+
+
+/* <-------------  forget password ---------------> */
+.forgetPassword header{
+  max-width: 466px;
+  font-size: 20px;
+}
+
+.user-email{
+  display: flex;
+  gap: 2em;
+  align-items: center;
+}

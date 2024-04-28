@@ -30,6 +30,7 @@
           <input type="submit" name="submit" value="Log In">
         </div>
       </form>
+      <div class="link"><a href="forgetPassword.php">Forgot password?</a></div>
       <div class="link">Not yet signed up? <a href="signup.php">Signup now</a></div>
     </section>
   </div>

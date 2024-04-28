@@ -8,9 +8,6 @@
         <div class="users-list">
             
         </div>
-        <div class="users-list">
-            
-        </div>
     </section>
 </div>
 <script src="javascript/users.js"></script>

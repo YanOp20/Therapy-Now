@@ -1,4 +1,4 @@
-const { emit } = require("process");
+const { emit, off } = require("process");
 
 const fs = require("fs"),
   https = require("https"),
@@ -10,7 +10,7 @@ const fs = require("fs"),
   app = express();
 
 // Define the directory for your static files
-const staticDirectory = path.join(__dirname, "../javascript/webRtc");
+// const staticDirectory = path.join(__dirname, "../javascript/webRtc");
 
 // Tell Express to serve static files from the specified directory
 // app.use(express.static(staticDirectory));
@@ -28,7 +28,7 @@ for (const name of Object.keys(networkInterfaces)) {
 }
 // const host = "https://192.168.0.65"
 // const host = "https://localhost"
-const host = `https://${ipAddresses[1]}`;
+const host = `https://${ipAddresses[2]}`;
 const port = 4000;
 // Load HTTPS key and certificate
 //we need a key and cert to run https
@@ -48,10 +48,14 @@ const io = socketIo(httpsServer, {
     methods: ["GET", "POST"],
   },
 });
+httpsServer.listen(port, () => {
+  console.log(`server running on - ${host + ":" + port}`);
+  console.log(`server running on - ${host}/therapy-now`);
+});
+
 // Namespaces
 const webRtcNamespace = io.of("/webRtc");
 const chatNamespace = io.of("/chat");
-
 
 // Database  connection
 const connection = mysql.createConnection({
@@ -74,20 +78,20 @@ const offers = [
   // answer
   // answererIceCandidates
 ];
+
 const connectedSockets = [
   //username, socketId
 ];
 
 //create our socket.io server... it will listen to our express port
 // webRtc signaling event handlers (in webRtcNamespace)
-webRtcNamespace.on('connection', (socket) => {
-
+webRtcNamespace.on("connection", (socket) => {
   console.log("Someone has connected in webRtcNamespace");
-  
+
   const userName = socket.handshake.auth.userName;
   const password = socket.handshake.auth.password;
-  
-  
+  console.log(userName);
+
   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
@@ -101,10 +105,10 @@ webRtcNamespace.on('connection', (socket) => {
 
     webRtcNamespace.to(roomId).emit("logCallerId", { callerId, recipientId });
   });
-  
+
   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  
+
   if (password !== "p") {
     socket.disconnect(true);
     return;
@@ -113,13 +117,12 @@ webRtcNamespace.on('connection', (socket) => {
     socketId: socket.id,
     userName,
   });
-  
   //a new client has joined. If there are any offers available,
   //emit them out
   if (offers.length) {
     socket.emit("availableOffers", offers);
   }
-  
+
   socket.on("newOffer", (newOffer) => {
     offers.push({
       offererUserName: userName,
@@ -129,11 +132,11 @@ webRtcNamespace.on('connection', (socket) => {
       answer: null,
       answererIceCandidates: [],
     });
-    // console.log(newOffer.sdp.slice(50))
+    console.log(newOffer.sdp.slice(50));
     //send out to all connected sockets EXCEPT the caller
     socket.broadcast.emit("newOfferAwaiting", offers.slice(-1));
   });
-  
+
   socket.on("newAnswer", (offerObj, ackFunction) => {
     console.log(offerObj);
     //emit this answer (offerObj) back to CLIENT1
@@ -159,25 +162,75 @@ webRtcNamespace.on('connection', (socket) => {
     ackFunction(offerToUpdate.offerIceCandidates);
     offerToUpdate.answer = offerObj.answer;
     offerToUpdate.answererUserName = userName;
+    console.log("offerUpdate: " + offerToUpdate);
     //socket has a .to() which allows emitting to a "room"
     //every socket has it's own room
     socket.to(socketIdToAnswer).emit("answerResponse", offerToUpdate);
   });
-  
+
+  // socket.on("sendIceCandidateToSignalingServer", (iceCandidateObj) => {
+  //   const { didIOffer, iceUserName, iceCandidate } = iceCandidateObj;
+  //   console.log(iceCandidate);
+  //   console.log("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii---------------",iceUserName)
+  //   if (didIOffer) {
+  //     //this ice is coming from the offerer. Send to the answerer
+  //     const offerInOffers = offers.find((o) => o.offererUserName === iceUserName);
+  //     if (offerInOffers) {
+  //       offerInOffers.offerIceCandidates.push(iceCandidate);
+  //       // 1. When the answerer answers, all existing ice candidates are sent
+  //       // 2. Any candidates that come in after the offer has been answered, will be passed through
+  //       if (offerInOffers.answererUserName) {
+  //         //pass it through to the other socket
+  //         const socketToSendTo = connectedSockets.find((s) => s.userName === offerInOffers.answererUserName);
+  //         if (socketToSendTo) {
+  //           webRtcNamespace.to(socketToSendTo.socketId).emit("receivedIceCandidateFromServer", iceCandidate);
+  //         } else {
+  //           console.log("Ice candidate received but could not find answer");
+  //         }
+  //       }
+  //     }
+  //   } else {
+  //     //this ice is coming from the answerer. Send to the offerer
+  //     //pass it through to the other socket
+  //     console.log("ffffffffffffffffffffffffffffffffፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍፍffffffffffff")
+  //     console.log("offers", offers)
+
+  //     console.log("offerooooooooooooooooooooooo", offers.answererIceCandidates)
+
+  //     console.log("llllllllllllllllllllllllllllllllllllllllll")
+  //     const offerInOffers = offers.find( o => o.answererUserName === iceUserName);
+
+  //     console.log("offerInOffers", offerInOffers)
+  //     const socketToSendTo = connectedSockets.find((s) => s.userName === offerInOffers.offererUserName);
+  //     if (socketToSendTo) {
+  //       webRtcNamespace.to(socketToSendTo.socketId).emit("receivedIceCandidateFromServer", iceCandidate);
+  //     } else {
+  //       console.log("Ice candidate received but could not find offerer");
+  //     }
+  //   }
+  //   // console.log(offers)
+  // });
+
   socket.on("sendIceCandidateToSignalingServer", (iceCandidateObj) => {
     const { didIOffer, iceUserName, iceCandidate } = iceCandidateObj;
-    // console.log(iceCandidate);
+    console.log(iceCandidate);
+    console.log(
+      "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii---------------",
+      iceUserName
+    );
+    console.log("offerssssssssssssss---------------", offers);
     if (didIOffer) {
-      //this ice is coming from the offerer. Send to the answerer
+      // This ice is coming from the offerer. Send to the answerer
       const offerInOffers = offers.find(
         (o) => o.offererUserName === iceUserName
       );
       if (offerInOffers) {
         offerInOffers.offerIceCandidates.push(iceCandidate);
+
         // 1. When the answerer answers, all existing ice candidates are sent
         // 2. Any candidates that come in after the offer has been answered, will be passed through
         if (offerInOffers.answererUserName) {
-          //pass it through to the other socket
+          // Pass it through to the other socket
           const socketToSendTo = connectedSockets.find(
             (s) => s.userName === offerInOffers.answererUserName
           );
@@ -186,43 +239,179 @@ webRtcNamespace.on('connection', (socket) => {
               .to(socketToSendTo.socketId)
               .emit("receivedIceCandidateFromServer", iceCandidate);
           } else {
-            console.log("Ice candidate received but could not find answer");
+            console.log("Ice candidate received but could not find answerer");
           }
         }
       }
     } else {
-      //this ice is coming from the answerer. Send to the offerer
-      //pass it through to the other socket
+      // This ice is coming from the answerer. Send to the offerer
       const offerInOffers = offers.find(
         (o) => o.answererUserName === iceUserName
       );
-      const socketToSendTo = connectedSockets.find(
-        (s) => s.userName === offerInOffers.offererUserName
-      );
-      if (socketToSendTo) {
-        socket
-          .to(socketToSendTo.socketId)
-          .emit("receivedIceCandidateFromServer", iceCandidate);
+
+      if (offerInOffers) {
+        // Check if offerInOffers is defined
+        const socketToSendTo = connectedSockets.find(
+          (s) => s.userName === offerInOffers.offererUserName
+        );
+        if (socketToSendTo) {
+          socket.to(socketToSendTo.socketId).emit("receivedIceCandidateFromServer", iceCandidate);
+        } else {
+          console.log("Ice candidate received but could not find offerer");
+        }
       } else {
-        console.log("Ice candidate received but could not find offerer");
+        console.warn("Offer not found for answerer:", iceUserName);
       }
     }
-    // console.log(offers)
   });
-  
-  socket.on('error', (error) => {
-      console.error('Error in WebRTC namespace:', error);
+
+  socket.on("error", (error) => {
+    console.error("Error in WebRTC namespace:", error);
   });
 });
+// #######################################################33
+// #######################################################33
+// #######################################################33
+// #######################################################33
+// #######################################################33
+// #######################################################33
+// #######################################################33
+// #######################################################33
+
+// app.use(express.static(__dirname))
+
+// webRtcNamespace.on('connection',(socket)=>{
+//   console.log("Someone has connected in webRtcNamespace");
+
+//     // console.log("Someone has connected");
+//     const userName = socket.handshake.auth.userName;
+//     const password = socket.handshake.auth.password;
+
+//       // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+//   socket.on("joinRoom", (roomId) => {
+//     socket.join(roomId);
+//   });
+
+//   socket.on("callRequest", (data) => {
+//     const { callerId, recipientId, roomId } = data;
+//     console.log("Received call request:", data);
+
+//     webRtcNamespace.to(roomId).emit("logCallerId", { callerId, recipientId });
+//   });
+
+//   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+//     if(password !== "p"){
+//         socket.disconnect(true);
+//         return;
+//     }
+//     connectedSockets.push({
+//         socketId: socket.id,
+//         userName
+//     })
+
+//     //a new client has joined. If there are any offers available,
+//     //emit them out
+//     if(offers.length){
+//         socket.emit('availableOffers',offers);
+//     }
+
+//     socket.on('newOffer',newOffer=>{
+//         offers.push({
+//             offererUserName: userName,
+//             offer: newOffer,
+//             offerIceCandidates: [],
+//             answererUserName: null,
+//             answer: null,
+//             answererIceCandidates: []
+//         })
+//         // console.log(newOffer.sdp.slice(50))
+//         //send out to all connected sockets EXCEPT the caller
+//         socket.broadcast.emit('newOfferAwaiting',offers.slice(-1))
+//     })
+
+//     socket.on('newAnswer',(offerObj,ackFunction)=>{
+//         console.log(offerObj);
+//         //emit this answer (offerObj) back to CLIENT1
+//         //in order to do that, we need CLIENT1's socketid
+//         const socketToAnswer = connectedSockets.find(s=>s.userName === offerObj.offererUserName)
+//         if(!socketToAnswer){
+//             console.log("No matching socket")
+//             return;
+//         }
+//         //we found the matching socket, so we can emit to it!
+//         const socketIdToAnswer = socketToAnswer.socketId;
+//         //we find the offer to update so we can emit it
+//         const offerToUpdate = offers.find(o=>o.offererUserName === offerObj.offererUserName)
+//         if(!offerToUpdate){
+//             console.log("No OfferToUpdate")
+//             return;
+//         }
+//         //send back to the answerer all the iceCandidates we have already collected
+//         ackFunction(offerToUpdate.offerIceCandidates);
+//         offerToUpdate.answer = offerObj.answer
+//         offerToUpdate.answererUserName = userName
+//         //socket has a .to() which allows emiting to a "room"
+//         //every socket has it's own room
+//         socket.to(socketIdToAnswer).emit('answerResponse',offerToUpdate)
+//     })
+
+//     socket.on('sendIceCandidateToSignalingServer',iceCandidateObj=>{
+//         const { didIOffer, iceUserName, iceCandidate } = iceCandidateObj;
+//         // console.log(iceCandidate);
+//         if(didIOffer){
+//             //this ice is coming from the offerer. Send to the answerer
+//             const offerInOffers = offers.find(o=>o.offererUserName === iceUserName);
+//             if(offerInOffers){
+//                 offerInOffers.offerIceCandidates.push(iceCandidate)
+//                 // 1. When the answerer answers, all existing ice candidates are sent
+//                 // 2. Any candidates that come in after the offer has been answered, will be passed through
+//                 if(offerInOffers.answererUserName){
+//                     //pass it through to the other socket
+//                     const socketToSendTo = connectedSockets.find(s=>s.userName === offerInOffers.answererUserName);
+//                     if(socketToSendTo){
+//                         socket.to(socketToSendTo.socketId).emit('receivedIceCandidateFromServer',iceCandidate)
+//                     }else{
+//                         console.log("Ice candidate recieved but could not find answere")
+//                     }
+//                 }
+//             }
+//         }else{
+//             //this ice is coming from the answerer. Send to the offerer
+//             //pass it through to the other socket
+//             const offerInOffers = offers.find(o=>o.answererUserName === iceUserName);
+//             const socketToSendTo = connectedSockets.find(s=>s.userName === offerInOffers.offererUserName);
+//             if(socketToSendTo){
+//                 socket.to(socketToSendTo.socketId).emit('receivedIceCandidateFromServer',iceCandidate)
+//             }else{
+//                 console.log("Ice candidate recieved but could not find offerer")
+//             }
+//         }
+//         // console.log(offers)
+//     })
+
+// })
+
+// #######################################################33
+// #######################################################33
+// #######################################################33
+// #######################################################33
+// #######################################################33
+// #######################################################33
+// #######################################################33
+// #######################################################33
 
 // Chat event handlers (in chatNamespace)
 chatNamespace.on("connection", (socket) => {
   console.log("A user connected in chatNamespace");
-  
+
   socket.on("join room", (roomId) => {
     socket.join(roomId);
   });
-  
+
   socket.on("get messages by user IDs", (data) => {
     const outgoing_id = data.outgoingID;
     const incoming_id = data.incomingID;
@@ -267,10 +456,9 @@ chatNamespace.on("connection", (socket) => {
     const outgoingId = data.outgoingId;
 
     const sql = `
-    SELECT img FROM users WHERE unique_id = ?
-    UNION
+    SELECT img FROM users WHERE unique_id = ?    UNION
     SELECT img FROM therapist WHERE unique_id = ?;
-`;
+  `;
 
     connection.query(sql, [outgoingId, outgoingId], (err, results) => {
       if (err) {
@@ -288,9 +476,4 @@ chatNamespace.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("user disconnected in chatNamespace");
   });
-});
-
-httpsServer.listen(port, () => {
-  console.log(`server running on - ${host + ":" + port}`);
-  console.log(`server running on - ${host}/therapy-now`);
 });
