@@ -10,10 +10,10 @@ const fs = require("fs"),
   app = express();
 
 // Define the directory for your static files
-// const staticDirectory = path.join(__dirname, "../javascript/webRtc");
+const staticDirectory = path.join(__dirname, "../javascript/webRtc");
 
 // Tell Express to serve static files from the specified directory
-// app.use(express.static(staticDirectory));
+app.use(express.static(staticDirectory));
 
 //   gating hostname
 const networkInterfaces = os.networkInterfaces();
@@ -245,15 +245,11 @@ webRtcNamespace.on("connection", (socket) => {
       }
     } else {
       // This ice is coming from the answerer. Send to the offerer
-      const offerInOffers = offers.find(
-        (o) => o.answererUserName === iceUserName
-      );
+      const offerInOffers = offers.find( (o) => o.answererUserName === iceUserName );
 
       if (offerInOffers) {
         // Check if offerInOffers is defined
-        const socketToSendTo = connectedSockets.find(
-          (s) => s.userName === offerInOffers.offererUserName
-        );
+        const socketToSendTo = connectedSockets.find( (s) => s.userName === offerInOffers.offererUserName );
         if (socketToSendTo) {
           socket.to(socketToSendTo.socketId).emit("receivedIceCandidateFromServer", iceCandidate);
         } else {

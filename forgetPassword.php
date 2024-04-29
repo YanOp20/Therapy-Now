@@ -34,7 +34,6 @@ if (isset($_SESSION['unique_id'])) {
     </div>
     <?php include_once "footer.php"; ?>
 
-    <script src="javascript/pass-show-hide.js"></script>
     <script src="javascript/forgetPassword.js"></script>
 
 </body>
