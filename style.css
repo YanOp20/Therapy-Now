@@ -2004,6 +2004,7 @@ h1 {
   font-weight: lighter;
 }
 
+.profile-container .appointment button,
 .profile-container .appointment input[type="submit"] {
   background-color: green;
   padding: 0.5em;
