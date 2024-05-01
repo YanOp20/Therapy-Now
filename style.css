@@ -1962,7 +1962,16 @@ h1 {
 }
 
 .profile-container .appointment h1 {
+  /* margin-bottom: 1em; */
   text-align: center;
+}
+.profile-container .appointment form{
+  display: flex;
+  align-items: center;
+}
+.profile-container .appointment form *{
+  
+  max-width: 600px;
 }
 
 .profile-container .appointment form {
@@ -1973,7 +1982,6 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-
   gap: 1em;
   box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
     0 32px 64px -48px rgba(0, 0, 0, 0.5);
@@ -2111,4 +2119,11 @@ th, td {
   display: flex;
   gap: 2em;
   align-items: center;
+}
+
+.opacity-50 {
+  opacity: 0.5;
+}
+.opacity-100{
+  opacity: 1;
 }

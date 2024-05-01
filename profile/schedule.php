@@ -3,6 +3,7 @@
 
 $id = $_SESSION['unique_id'];
 $output = "";
+date_default_timezone_set('Africa/Addis_Ababa');
 
 $sql = "SELECT * FROM users LEFT JOIN appointment ON users.unique_id = appointment.user_id WHERE appointment.user_id = $id ORDER BY appointment.date DESC";
 $sqlD = "SELECT * FROM therapist LEFT JOIN appointment ON therapist.unique_id = appointment.therapist_id WHERE appointment.therapist_id = $id ORDER BY appointment.date DESC";
@@ -35,8 +36,10 @@ while ($row = mysqli_fetch_assoc($queryD)) {
         $status = 'present';
     }
 
+    $datetime_string = $row['r_date']. " " .$row['r_time'];
+    $status .=  (abs(time() - strtotime($datetime_string)) <= 60) ? " opacity-50" : " opacity-100";
 
-    $output .= '<tr class=' . $status . '>
+    $output .= '<tr class="' . $status . '">
                     <td class="name">
                         <a href="profile.php?user_id=' . $u_id . '&link=chat&b=b">
                             <img src="php/images/' . $img . '?>" alt="">' . $fname . ' ' . $lname . '
@@ -67,6 +70,7 @@ while ($row = mysqli_fetch_assoc($queryD)) {
 
 if (mysqli_num_rows($query) > 0) {
     while ($row = mysqli_fetch_assoc($query)) {
+
         $user_id = $row['therapist_id'];
         $sql2 = "SELECT * FROM therapist  WHERE therapist.unique_id = $user_id";
         $query2 = mysqli_query($conn, $sql2);
@@ -91,7 +95,10 @@ if (mysqli_num_rows($query) > 0) {
             $status = 'present';
         }
 
-        $output .= '<tr class=' . $status . '>
+        $datetime_string = $row['r_date']. " " .$row['r_time'];
+        $status .=  (abs(time() - strtotime($datetime_string)) <= 60) ? " opacity-50" : " opacity-100";
+
+        $output .= '<tr class="' . $status . '">
                         <td class="name">
                             <a href="profile.php?user_id=' . $u_id . '&link=chat&b=b">
                                 <img src="php/images/' . $img . '?>" alt="">' . $fname . ' ' . $lname . '
@@ -120,6 +127,7 @@ if (mysqli_num_rows($query) > 0) {
                     </tr>';
     }
 }
+
 
 echo '<div class="schedule right table-container">
 <h1>Schedule</h1>

@@ -98,16 +98,26 @@
 
     .p-c {
         color: green;
+        font-size: larger !important;
+        font-weight: 700;
+
     }
+    .payment, .process-payment {
+        border: solid 1px #000;
+        padding: 1em;
+        border-radius: 10px;
+        visibility: hidden;
+    }
+
 </style>
 <div class="right appointment">
     <form class="app-form" action="#" method="POST" enctype="multipart/form-data" autocomplete="off">
+        <h1>Booking Appointment</h1>
         <div class="form">
-            <h1>Booking Appointment</h1>
             <div class="error-text"></div>
             <div>
                 <label for="">Whats lead you to consider therapy today</label>
-                <select name="symptom" id="" required>
+                <select name="symptom" id="select-" required>
                     <option value="">select...</option>
                     <option value="I've been felling depressed">I've been felling depressed</option>
                     <option value="I feel anxious or overwhelmed">I feel anxious or overwhelmed</option>
@@ -143,14 +153,14 @@
             <div class="appointment-success"></div>
         </div>
 
-        <div class="payment">
-            <p>Date:<span class="p">39/23/2021</span></p>
-            <p>Time: <span class="p">3:29 - 2:29</span></p>
-            <p>200 ETB</p>
-            <button>process to pay</button>
+        <div id="payment" class="payment">
+            <p>Date:<span id="p-date" class="p">39/23/2021</span></p>
+            <p>Time: <span id="p-time" class="p">3:29 - 2:29</span></p>
+            <p>session payment: <span>200 ETB</span></p>
+            <button id="processToPayButton">process to pay</button>
         </div>
 
-        <div class="process-payment">
+        <div id="processPayment" class="process-payment">
             <div class="img-log">
                 <img src="img/awash.webp" alt="">
                 <img src="img/cbe.webp" alt="">
@@ -173,7 +183,7 @@
                 </div>
                 <p>Fill in / payment code</p>
                 <p>select "confirm your payment"</p>
-                <p>you therapy appointment was appointemented</p>
+                <p>you therapy appointment was appointment</p>
             </div>
             <div class="payment-code-container">
                 <p class="p-c">payment code</p>

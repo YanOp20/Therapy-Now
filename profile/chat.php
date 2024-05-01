@@ -251,10 +251,10 @@ if (mysqli_num_rows($sqlU) > 0) {
 <!-- ((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -->
 
 
-<!-- <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> -->
-<script src="./Server/socket.io.min.js"></script>
-<!-- <script src="./Server/socket.io/socket.io.js"></script> -->
-
+<!-- <script src="./Server/socket.io.min.js"></script>
+<script src="/socket.io/socket.io.js"></script> -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
+<!-- <script src="/socket.io/socket.io.js"></script> -->
 <!--  this was for chat -->
 <script>
     const host = `https://${window.location.hostname}`;
@@ -266,13 +266,18 @@ if (mysqli_num_rows($sqlU) > 0) {
     const outgoingID = document.querySelector('.outgoing_id').value;
     const incomingID = document.querySelector('.incoming_id').value;
 
-    const chatNamespace = io(`${host}:${port}/chat`);
+    const chatNamespace = io.connect(`${host}:${port}/chat`,{
+        secure: true,
+        rejectUnauthorized: false
+    });
 
 
     chatNamespace.on('connect', () => {
         console.log('Connected to Socket.IO server chatNamespace');
     });
-
+    chatNamespace.on('connect_error', (error) => {
+    console.error('Connection error:', error);
+});
 
     chatNamespace.emit('get messages by user IDs', {
         outgoingID,
@@ -368,7 +373,7 @@ if (mysqli_num_rows($sqlU) > 0) {
 </script>
 
 <!-- this was for video calling  -->
-<script>
+<!-- <script>
     const videoCallingBtn = document.getElementById("videoCallingBtn");
     const localVideoEl = document.querySelector('#localVideo');
     const remoteVideoEl = document.querySelector('#remoteVideo');
@@ -383,9 +388,13 @@ if (mysqli_num_rows($sqlU) > 0) {
         auth: {
             userName,
             password
-        }
+        },
+        secure: true,
+        rejectUnauthorized: false
     });
     webRtcNamespace.on('connect', console.log('Connected to Socket.io server on web rtc namespace'));
+    webRtcNamespace.on('error', (error) => {console.error('Connection error:', error);
+    });
 
     webRtcNamespace.emit('joinRoom', roomId);
 
@@ -597,7 +606,7 @@ if (mysqli_num_rows($sqlU) > 0) {
 
 
     webRtcNamespace.on('disconnect', () => console.log('Disconnected from Socket.IO server web RTC namespace'));
-</script>
+</script> -->
 <!-- <script>
     //newwwwwwwwwwwwwwwwwwwww
 
