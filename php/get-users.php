@@ -270,7 +270,7 @@ if (mysqli_num_rows($sqlU) > 0) { // for user viewing
 } elseif (mysqli_num_rows($sqlT) > 0 && $outgoing_id !== '40000') { // for therapists viewing
     $output .= "therapyist vieing";
     $sqlT22 = mysqli_query($conn, " SELECT * FROM users "); // private
-          
+   
     if (mysqli_num_rows($sqlT22) > 0) { // therapists private view
 
 
@@ -309,11 +309,9 @@ if (mysqli_num_rows($sqlU) > 0) { // for user viewing
     $output .= "speack freely";
     // $sqlT2 = mysqli_query($conn, "SELECT * FROM users "); // public
 
-    $sqlT2 = mysqli_query($conn,
-        "SELECT u.*, m.msg_id FROM users u 
-        LEFT JOIN messages m ON m.incoming_msg_id = 40000 OR m.outgoing_msg_id = 40000 GROUP BY u.unique_id ORDER BY m.msg_id DESC;
-    "
-    );
+    $sqlT22 = mysqli_query($conn, "  SELECT u.* FROM Users u
+           LEFT JOIN messages m ON u.unique_id = m.incoming_msg_id OR u.user_id = m.outgoing_id
+           ORDER BY m.msg_id DESC;   " 
 
 
 
