@@ -9,9 +9,13 @@ $sqlT = mysqli_query($conn, "SELECT * FROM therapist WHERE unique_id = {$user_id
 if (mysqli_num_rows($sqlU) > 0) {
     $row = mysqli_fetch_assoc($sqlU);
     $Fname = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM therapist WHERE unique_id = {$unique_id}"))['fname'];
+    $lname = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM therapist WHERE unique_id = {$unique_id}"))['lname'];
+    $img = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM therapist WHERE unique_id = {$unique_id}"))['img'];
 } elseif (mysqli_num_rows($sqlT) > 0) {
     $row = mysqli_fetch_assoc($sqlT);
     $Fname = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$unique_id}"))['fname'];
+    $lname = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$unique_id}"))['lname'];
+    $img = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$unique_id}"))['img'];
 } else // header("location: profile.php");
 ?>
 
@@ -28,6 +32,27 @@ if (mysqli_num_rows($sqlU) > 0) {
         z-index: 1000;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
+/* Styling for the video calling button */
+#videoCallingBtn, #muteVideoBtn, #header button, #callControls button{
+  background: none; 
+  border: none;    
+  padding: 10px;   
+  cursor: pointer; 
+  transition: transform 0.2s ease-in-out;
+  margin-right: 2%;
+}
+#header *, #callControls *{
+    color: white;
+}
+
+#muteVideoBtn:hover, #videoCallingBtn:hover, #header button:hover, #callControls button:hover{
+  transform: scale(1.1); 
+}
+
+#videoCallingBtn .fa-video{
+  color: #007bff; 
+  font-size: 2em;  
+}
 </style>
 
 <div class="wrapper chatt">
@@ -37,6 +62,8 @@ if (mysqli_num_rows($sqlU) > 0) {
                 <img src="php/images/<?php echo $row['img']; ?>" alt="">
                 <div>
                     <input id="Fname" type="hidden" value=<?php echo $Fname ?> name="">
+                    <input id="lname" type="hidden" value=<?php echo $lname ?> name="">
+                    <input id="img" type="hidden" value=<?php echo $img ?> name="">
                     <span><?php echo $row['fname'] . " " . $row['lname'] ?></span>
                     <p><?php echo $row['status']; ?></p>
                 </div>
@@ -44,42 +71,19 @@ if (mysqli_num_rows($sqlU) > 0) {
             <?php if (isset($_GET['b'])) : ?>
                 <?php $b = 'b'; ?>
 
-                <!-- <form action="#" class="formV"> -->
-                <!-- new added for getting user id -->
-                <!-- <input type="text" class="outgoing_id" name="outgoing_id" value="<?php echo $_SESSION['unique_id']; ?>"
-                    hidden>
-                <input type="text" class="incoming_id" name="incoming_id" value="<?php echo $user_id; ?>" hidden>
-                <input type="text" class="b" name="b" value="<?php echo $b; ?>" hidden>
-                <input id="c-input-field" type="text" name="message" class="input-field" value="<?php echo "calling" ?>"
-                    hidden>
-                <button id="videoCallingBtn"> -->
-                <!-- <a href="localhost:8181" target="_blank" onclick="window.open('https://172.22.181.203:8181', 'popup', 'width=600,height=400'); return false;"> <i class="fas fa-duotone fa-video fa-2xl "></i> </a> -->
-                <!-- <a href="192.168.0.65:4000" target="_blank"
-                        onclick="window.open('https://192.168.0.65:4000', 'popup', 'width=600,height=400'); return false;">
-                        <i class="fas fa-duotone fa-video fa-2xl "></i> </a>
-                </button>
-            </form> -->
                 <button id="videoCallingBtn">
-                    <!-- <a href="localhost:8181" target="_blank" onclick="window.open('https://172.22.181.203:8181', 'popup', 'width=600,height=400'); return false;"> <i class="fas fa-duotone fa-video fa-2xl "></i> </a> -->
-                    <!-- <a href="192.168.0.65:4000" target="_blank"
-                    onclick="window.open('https://192.168.0.65:4000', 'popup', 'width=600,height=400'); return false;"> -->
                     <i class="fas fa-duotone fa-video fa-2xl "></i>
-                    <!-- </a> -->b
                 </button>
 
 
             <?php endif; ?>
-            <div class="row mb-3 mt-3 justify-content-md-center">
-            <div id="user-name"></div>
-                <div id="user-name"></div>
-                <button id="call" class="btn btn-primary col-1">Call!</button>
-                <button id="hangup" class="col-1" class="btn btn-primary">Hangup</button>
-                <div id="answer" class="col"></div>
-            </div>
-            <div id="incomingCallModal" class="modal">
 
+            <div id="incomingCallModal" class="modal">
                 <div class="modal-content">
-                    <span id="callerName"></span>
+                    <div class="callerInfo">
+                        <img id="callerImg" src="" alt="">
+                        <p id="callerName"> </p>
+                    </div>
                     <button id="acceptCallBtn">Accept</button>
                     <button id="declineCallBtn">Decline</button>
                 </div>
@@ -108,17 +112,15 @@ if (mysqli_num_rows($sqlU) > 0) {
 </div>
 
 <!-- video Call interface -->
-<!-- ((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -->
-<!-- ((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -->
 <style>
     /* Initial styling */
-    #videoCallContainer * {
+    /* .videoCallContainer * {
         border: solid 1px white;
-    }
+    } */
 
-    #videoCallContainer {
-        display: none;
-        /* Initially hidden */
+    .videoCallContainer {
+        /*display: none;*/
+        visibility: hidden;
         position: fixed;
         top: 0;
         left: 0;
@@ -129,8 +131,8 @@ if (mysqli_num_rows($sqlU) > 0) {
         /* Ensure it's on top */
     }
 
-    #remoteVideoContainer {
-        border: solid 1px red;
+    .remoteVideoContainer {
+        /* border: solid 1px red; */
         width: 100%;
         height: 100%;
         position: relative;
@@ -146,7 +148,7 @@ if (mysqli_num_rows($sqlU) > 0) {
         right: 0;
     }
 
-    #localVideoContainer {
+    .localVideoContainer {
         position: absolute;
         bottom: 10%;
         right: 5%;
@@ -163,21 +165,29 @@ if (mysqli_num_rows($sqlU) > 0) {
         object-fit: cover;
     }
 
+    #callControls #hangUpBtn i{
+        color: red;
+    }
     #callControls {
         position: absolute;
         bottom: 5%;
         left: 20%;
         z-index: 10;
+        width: 100%;
     }
 
+    #callingMsg p{
+        /* font-weight: 500; */
+        color: white;
+        /* font: 1em; */
+    }
     #callingMsg {
+        display: none;
         position: absolute;
-        bottom: 40%;
-        left: 30%;
+        bottom: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         z-index: 10;
-        color: yellow;
-        font: 3em;
-        font-weight: 800;
     }
 
     /* Minimized styles (add these later) */
@@ -188,14 +198,26 @@ if (mysqli_num_rows($sqlU) > 0) {
         left: 37.5%;
         border-radius: 10px;
     }
+    .local-minimized{
+        position: absolute;
+        bottom: 10%;
+        right: 5%;
+        width: 5vw;
+        height: 5vw;
+        border-radius: 50%;
+        overflow: hidden;
+        z-index: 10;
+    }
 
     .circle {
-        width: 150px;
-        height: 150px;
+        position:absolute ;
+        width: 5vw;
+        height: 5vw;
         border-radius: 50%;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        background:#721c24;
     }
 
     /* Header Styles */
@@ -203,8 +225,8 @@ if (mysqli_num_rows($sqlU) > 0) {
         display: flex;
         justify-content: flex-end;
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: 0.5%;
+        right: 0.5%;
         z-index: 10;
     }
 
@@ -212,80 +234,109 @@ if (mysqli_num_rows($sqlU) > 0) {
         margin-left: 10px;
     }
 
-    #circleBtn,
-    #maximizeBtn {
+     #uNmuteBtn, #circle, #maximizeBtn, #maximizeBtn, #maximizeBtn2 {
         display: none;
     }
 </style>
-<div id="videoCallContainer">
+
+<div id="videoCallContainer" class="videoCallContainer">
 
     <div id="header">
-        <button id="minimizeBtn1">Minimize 1</button>
-        <button id="minimizeBtn2">Minimize 2</button>
-        <button id="maximizeBtn" style="display: none;">Maximize</button>
+        <button id="minimizeBtn1"><i class="fas fa-window-minimize"></i></button>
+        <button id="minimizeBtn2"><i class="fas fa-window-maximize"></i></button>
+        <button id="maximizeBtn"><i class='fas fa-expand'></i></button>
     </div>
 
-    <div id="remoteVideoContainer">
+    <div id="remoteVideoContainer" class="remoteVideoContainer">
         <video id="remoteVideo" autoplay playsinline></video>
     </div>
 
-    <div id="localVideoContainer">
+    <div id="localVideoContainer" class="localVideoContainer">
         <video id="localVideo" autoplay playsinline muted></video>
     </div>
     <div id="callingMsg">
-        <h1>calling</h1>
+        <p>calling...</p>
     </div>
 
     <div id="callControls">
-        <button id="muteVideoBtn">mute video</button>
-        <button id="muteBtn">Mute</button>
-        <button id="hangUpBtn">Hang Up</button>
-    </div>
-    <div id="circle">
-        <button id="minimizeToCircleBtn">Minimize (Circle)</button>
-        <button id="maximizeBtn" style="display: none;">Maximize</button>
+        <button id="muteVideoBtn"><i class="fas fa-video-slash"></i></i></button>
+        <button id="muteBtn"><i class="fas fa-microphone-slash"></i></button>
+        <button id="uNmuteBtn"><i class="fas fa-microphone"></i></button>
+        <button id="hangUpBtn"><i class="fa fa-phone"></i>
+</button>
     </div>
 </div>
+<div id="circle" class="circle">
 
-<!-- ((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -->
-<!-- ((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))) -->
+</div>
+<script> // video container 
+    const videoCallContainer = document.getElementById("videoCallContainer");
+    const localVideoContainer = document.getElementById("localVideoContainer");
+    const remoteVideoContainer = document.getElementById("videoCallContainer");
+    const minimizeBtn1 = document.getElementById("minimizeBtn1");
+    const minimizeBtn2 = document.getElementById("minimizeBtn2");
+    const maximizeBtn = document.getElementById("maximizeBtn");
+    const circle = document.getElementById("circle");
 
+    minimizeBtn2.addEventListener("click",()=>{
+        videoCallContainer.classList.add("minimized");
+        localVideoContainer.classList.add("local-minimized");
+        minimizeBtn2.style.display = "none";
+        maximizeBtn.style.display = "block";
+    });
 
-<!-- <script src="./Server/socket.io.min.js"></script>
-<script src="/socket.io/socket.io.js"></script> -->
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
-<!-- <script src="/socket.io/socket.io.js"></script> -->
-<!--  this was for chat -->
-<script>
-    const host = `https://${window.location.hostname}`;
-    const port = 4000;
-    // const socket = io.connect(`${host}:${port}`);
-</script>
-<script>
-    // chat
-    const outgoingID = document.querySelector('.outgoing_id').value;
-    const incomingID = document.querySelector('.incoming_id').value;
+    maximizeBtn.addEventListener('click', ()=>{
+        videoCallContainer.classList.remove("minimized");
+        localVideoContainer.classList.remove("local-minimized");
+        minimizeBtn2.style.display = "block";
+        maximizeBtn.style.display = "none";
+    });
 
-    const chatNamespace = io.connect(`${host}:${port}/chat`,{
-        secure: true,
-        rejectUnauthorized: false
+    minimizeBtn1.addEventListener('click', ()=>{
+        videoCallContainer.style.visibility = "hidden";
+        circle.style.display = "block";
+    });
+    circle.addEventListener('click', ()=>{
+        videoCallContainer.style.visibility = "visible";
+        circle.style.display = "none";
     });
 
 
+</script>
+
+
+
+<!-- <script src="./Server/socket.io.min.js"></script>-->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
+
+<script> // host and port
+    const host = `https://${window.location.hostname}`;
+    const port = 3000;
+    // const socket = io.connect(`${host}:${port}`);
+</script>
+    <!--  this was for chat -->
+<script>    // chat
+    const outgoingID = document.querySelector('.outgoing_id').value;
+    const incomingID = document.querySelector('.incoming_id').value;
+    const roomId = [outgoingID, incomingID].sort().join('-');
+
+    const chatNamespace = io.connect(`${host}:${port}/chat`,{ secure: true, rejectUnauthorized: false });
+    
     chatNamespace.on('connect', () => {
         console.log('Connected to Socket.IO server chatNamespace');
     });
     chatNamespace.on('connect_error', (error) => {
-    console.error('Connection error:', error);
-});
-
+        console.error('Connection error:', error);
+    });
+    chatNamespace.on('disconnect', () => {
+        console.log('Disconnected from Socket.IO server chatnamespace');
+    });
     chatNamespace.emit('get messages by user IDs', {
         outgoingID,
         incomingID
     });
-
-    const roomId = [outgoingID, incomingID].sort().join('-');
-
+    
+    
     chatNamespace.emit('join room', roomId);
 
     chatNamespace.on('load messages', messages => {
@@ -322,7 +373,7 @@ if (mysqli_num_rows($sqlU) > 0) {
             }
 
             chatElement.appendChild(detailsElement);
-
+            
             // Append the chat element to the chat box
             chatBox.appendChild(chatElement);
             // console.log(chatBox)
@@ -367,36 +418,46 @@ if (mysqli_num_rows($sqlU) > 0) {
         }
     });
 
-    chatNamespace.on('disconnect', () => {
-        console.log('Disconnected from Socket.IO server chatnamespace');
-    });
+
 </script>
 
 <!-- this was for video calling  -->
-<!-- <script>
-    const videoCallingBtn = document.getElementById("videoCallingBtn");
+<script>
+    const videoCallingBtn = document.getElementById('videoCallingBtn');
+    const incomingCallModal = document.getElementById('incomingCallModal');
+    const callerName = document.getElementById('callerName');
+    const callerImg = document.getElementById('callerImg');
+    const acceptCallBtn = document.getElementById('acceptCallBtn');
+    const callingMsg = document.querySelector('#callingMsg');
     const localVideoEl = document.querySelector('#localVideo');
     const remoteVideoEl = document.querySelector('#remoteVideo');
-    const callingMsg = document.querySelector('#callingMsg');
-    const userName = document.getElementById("Fname").value+"-" + outgoingID
-    // const userName = "Rob-" + Math.floor(Math.random() * 100000)
-    const password = "p";
+    const userName = document.getElementById('Fname').value + "-" + outgoingID;
+    const Fname = document.getElementById('Fname').value
+    const lname = document.getElementById('lname').value
+    const img = document.getElementById('img').value
+
     // document.querySelector('#user-name').innerHTML = userName;
-    // const host = `https://${window.location.hostname}`;
-    // const port = 4000;
-    const webRtcNamespace = io.connect(`${host}:${port}/webRtc`, {
-        auth: {
-            userName,
-            password
-        },
-        secure: true,
-        rejectUnauthorized: false
-    });
-    webRtcNamespace.on('connect', console.log('Connected to Socket.io server on web rtc namespace'));
-    webRtcNamespace.on('error', (error) => {console.error('Connection error:', error);
-    });
 
-    webRtcNamespace.emit('joinRoom', roomId);
+    const webRtcNamespace = io.connect(`${host}:${port}/webRtc`, { auth: { userName, roomId } });
+
+    webRtcNamespace.on('connect', () => {
+        console.log('Connected to Socket.IO server webRtcNamespace');
+    });
+    webRtcNamespace.on('connect_error', (error) => {
+        console.error('Connection error:', error);
+    });
+    webRtcNamespace.on('disconnect', () => {
+        console.log('Disconnected from Socket.IO server webRtcNamespace');
+    });
+    // ##########################################
+    // ##########################################
+
+    webRtcNamespace.emit('rtcRoom', roomId)
+
+    // ##########################################
+    // ##########################################
+
+
 
     let localStream; //a var to hold the local video stream
     let remoteStream; //a var to hold the remote video stream
@@ -404,319 +465,64 @@ if (mysqli_num_rows($sqlU) > 0) {
     let didIOffer = false;
 
     let peerConfiguration = {
-        iceServers: [{
-            urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302']
-        }]
-    }
-
-    webRtcNamespace.on("logCallerId", (data) => {
-        console.log("Received data:", data);
-        const {
-            callerId
-        } = data;
-        // Log the caller ID only if it doesn't match the outgoing ID
-        if (callerId !== outgoingID) {
-            // console.log("Call request from:", callerId);
-            // const modalElement = document.getElementById("incomingCallModal");
-            // modalElement.style.display = "block";
-            // document.getElementById("callerName").textContent = document.getElementById("Fname").innerText; // Or any other way to get caller's name
-            videoCallingBtn.style.display = "none";
-
-        }
-    });
-
-
-    //when a client initiates a call
-    const call = async e => {
-        await fetchUserMedia();
-        //peerConnection is all set with our STUN servers sent over
-        await createPeerConnection();
-
-
-        //create offer time!
-        try {
-            console.log("Creating offer...")
-            const offer = await peerConnection.createOffer();
-            // console.log(offer);
-            peerConnection.setLocalDescription(offer);
-            didIOffer = true;
-            webRtcNamespace.emit('newOffer', offer); //send offer to signalingServer
-
-
-            // Show the video call container
-            videoCallContainer.style.display = 'block';
-            videoCallingBtn.style.display = 'none';
-            // Emit the callRequest event to initiate the call
-            webRtcNamespace.emit("callRequest", {
-                callerId: outgoingID,
-                recipientId: incomingID,
-                roomId
-            });
-
-        } catch (error) {
-            console.error("Error creating offer:", error);
-        }
-    };
-
-
-    const answerOffer = async (offerObj) => {
-        await fetchUserMedia()
-        await createPeerConnection(offerObj);
-        const answer = await peerConnection.createAnswer({}); //just to make the docs happy
-        await peerConnection.setLocalDescription(answer); //this is CLIENT2, and CLIENT2 uses the answer as the localDesc
-        console.log(offerObj)
-        console.log(answer)
-        console.log(peerConnection.signalingState) //should be have-local-pranswer because CLIENT2 has set its local desc to it's answer (but it won't be)
-        //add the answer to the offerObj so the server knows which offer this is related to
-        offerObj.answer = answer
-        //emit the answer to the signaling server, so it can emit to CLIENT1
-        //expect a response from the server with the already existing ICE candidates
-        const offerIceCandidates = await webRtcNamespace.emitWithAck('newAnswer', offerObj)
-        offerIceCandidates.forEach(c => {
-            peerConnection.addIceCandidate(c);
-            console.log("======Added Ice Candidate======")
-        })
-        console.log(offerIceCandidates)
-    }
-
-    const addAnswer = async (offerObj) => {
-        //addAnswer is called in socketListeners when an answerResponse is emitted.
-        //at this point, the offer and answer have been exchanged!
-        //now CLIENT1 needs to set the remote
-        await peerConnection.setRemoteDescription(offerObj.answer)
-        console.log(peerConnection.signalingState)
-    }
-
-    const fetchUserMedia = () => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    // audio: true,
-                });
-                localVideoEl.srcObject = stream;
-                localStream = stream;
-                resolve();
-            } catch (err) {
-                console.log(err);
-                reject()
-            }
-        })
-    }
-
-    const createPeerConnection = (offerObj) => {
-        return new Promise(async (resolve, reject) => {
-            //RTCPeerConnection is the thing that creates the connection
-            //we can pass a config object, and that config object can contain stun servers
-            //which will fetch us ICE candidates
-            peerConnection = await new RTCPeerConnection(peerConfiguration)
-            remoteStream = new MediaStream()
-            remoteVideoEl.srcObject = remoteStream;
-
-
-            localStream.getTracks().forEach(track => {
-                //add local tracks so that they can be sent once the connection is established
-                peerConnection.addTrack(track, localStream);
-            })
-
-            peerConnection.addEventListener("signalingstatechange", (event) => {
-                console.log(event);
-                console.log(peerConnection.signalingState)
-            });
-
-            peerConnection.addEventListener('icecandidate', e => {
-                console.log('........Ice candidate found!......')
-                console.log(e)
-                if (e.candidate) {
-                    webRtcNamespace.emit('sendIceCandidateToSignalingServer', {
-                        iceCandidate: e.candidate,
-                        iceUserName: userName,
-                        didIOffer,
-                    })
-                }
-            })
-
-            peerConnection.addEventListener('track', e => {
-                console.log("Got a track from the other peer!! How exiting")
-                console.log(e)
-                e.streams[0].getTracks().forEach(track => {
-                    remoteStream.addTrack(track, remoteStream);
-                    console.log("Here's an exciting moment... fingers cross")
-                })
-            })
-
-            if (offerObj) {
-                //this won't be set when called from call();
-                //will be set when we call from answerOffer()
-                console.log(peerConnection.signalingState) //should be stable because no setDesc has been run yet
-                await peerConnection.setRemoteDescription(offerObj.offer)
-                console.log(peerConnection.signalingState) //should be have-remote-offer, because client2 has setRemoteDesc on the offer
-            }
-            resolve();
-        })
-    }
-
-    const addNewIceCandidate = iceCandidate => {
-        peerConnection.addIceCandidate(iceCandidate)
-        console.log("======Added Ice Candidate======")
-    }
-
-
-    videoCallingBtn.addEventListener('click', call)
-
-    // ##################################################################
-    // ##################################################################
-
-    //on connection get all available offers and call createOfferEls
-    webRtcNamespace.on('availableOffers', offers => {
-        console.log(offers)
-        createOfferEls(offers)
-    })
-
-    //someone just made a new offer and we're already here - call createOfferEls
-    webRtcNamespace.on('newOfferAwaiting', offers => {
-        createOfferEls(offers)
-    })
-
-    webRtcNamespace.on('answerResponse', offerObj => {
-        console.log(offerObj)
-        addAnswer(offerObj)
-    })
-
-    webRtcNamespace.on('receivedIceCandidateFromServer', iceCandidate => {
-        addNewIceCandidate(iceCandidate)
-        console.log(iceCandidate)
-    })
-
-    function createOfferEls(offers) {
-        //make green answer button for this new offer
-        const answerEl = document.querySelector('#answer');
-        offers.forEach(o => {
-            console.log(o);
-            const newOfferEl = document.createElement('div');
-            newOfferEl.innerHTML = `<button class="btn btn-success col-1">Answer ${o.offererUserName}</button>`
-            newOfferEl.addEventListener('click', () => {
-                videoCallContainer.style.display = 'block';
-                videoCallingBtn.style.display = 'none';
-                answerOffer(o)
-            })
-            answerEl.appendChild(newOfferEl);
-        })
-    }
-
-
-    webRtcNamespace.on('disconnect', () => console.log('Disconnected from Socket.IO server web RTC namespace'));
-</script> -->
-<!-- <script>
-    //newwwwwwwwwwwwwwwwwwwww
-
-    const videoCallingBtn = document.getElementById("videoCallingBtn");
-    const localVideoEl = document.querySelector('#localVideo');
-    const remoteVideoEl = document.querySelector('#remoteVideo');
-    const callingMsg = document.querySelector('#callingMsg');
-
-    const userName = "Rob-" + Math.floor(Math.random() * 100000)
-    const password = "p";
-    document.querySelector('#user-name').innerHTML = userName;
-
-    // const host = `https://192.168.100.7`;
-    // const port = 4000
-    const webRtcNamespace = io.connect(`${host}:${port}/webRtc`, {
-        auth: {
-            userName,
-            password
-        }
-    });
-
-    let localStream; //a var to hold the local video stream
-    let remoteStream; //a var to hold the remote video stream
-    let peerConnection; //the peerConnection that the two clients use to talk
-    let didIOffer = false;
-
-    let peerConfiguration = {
-        iceServers: [{
-            urls: [
+        iceServers:[
+            {
+                urls:[
                 'stun:stun.l.google.com:19302',
                 'stun:stun1.l.google.com:19302'
-            ]
-        }]
+                ]
+            }
+        ]
     }
-    webRtcNamespace.on('connect', (socket) => {
-        console.log('Connected to Socket.io server on web rtc namespace');
-        // ... Now you can use 'socket' for emitting and listening to events ...
-    });
-
-    webRtcNamespace.emit('joinRoom', roomId);
-    webRtcNamespace.on("logCallerId", (data) => {
-        console.log("Received data:", data);
-        const {
-            callerId
-        } = data;
-        // Log the caller ID only if it doesn't match the outgoing ID
-        if (callerId !== outgoingID) {
-            // console.log("Call request from:", callerId);
-            // const modalElement = document.getElementById("incomingCallModal");
-            // modalElement.style.display = "block";
-            // document.getElementById("callerName").textContent = document.getElementById("Fname").innerText; // Or any other way to get caller's name
-            videoCallingBtn.style.display = "none";
-
-        }
-    });
 
     //when a client initiates a call
-    const call = async e => {
+    const call = async e=>{
         await fetchUserMedia();
-
+        console.log(e.message);
+        console.log("call button clicked")
         //peerConnection is all set with our STUN servers sent over
         await createPeerConnection();
 
         //create offer time!
-        try {
+        try{
             console.log("Creating offer...")
             const offer = await peerConnection.createOffer();
             console.log(offer);
             peerConnection.setLocalDescription(offer);
             didIOffer = true;
-            webRtcNamespace.emit('newOffer', offer); //send offer to signalingServer
+            webRtcNamespace.emit('newOffer',offer, roomId); //send offer to signalingServer
+            videoCallContainer.style.visibility = 'visible';
+            callingMsg.style. display = 'block';
 
+            webRtcNamespace.emit('calling',{ name: Fname + " "+ lname, img: `php/images/${img}`})
 
-            // Show the video call container
-            videoCallContainer.style.display = 'block';
-            videoCallingBtn.style.display = 'none';
-            // Emit the callRequest event to initiate the call
-            webRtcNamespace.emit("callRequest", {
-                callerId: outgoingID,
-                recipientId: incomingID,
-                roomId
-            });
-
-        } catch (err) {
+        }catch(err){
             console.log(err)
         }
 
     }
 
-    const answerOffer = async (offerObj) => {
+    const answerOffer = async(offerObj)=>{
         await fetchUserMedia()
         await createPeerConnection(offerObj);
         const answer = await peerConnection.createAnswer({}); //just to make the docs happy
         await peerConnection.setLocalDescription(answer); //this is CLIENT2, and CLIENT2 uses the answer as the localDesc
-        console.log(offerObj)
-        console.log(answer)
+        console.log("offerObj: ", offerObj)
+        console.log("answer: ", answer)
         // console.log(peerConnection.signalingState) //should be have-local-pranswer because CLIENT2 has set its local desc to it's answer (but it won't be)
         //add the answer to the offerObj so the server knows which offer this is related to
-        offerObj.answer = answer
+        offerObj.answer = answer 
         //emit the answer to the signaling server, so it can emit to CLIENT1
         //expect a response from the server with the already existing ICE candidates
-        const offerIceCandidates = await webRtcNamespace.emitWithAck('newAnswer', offerObj)
-        offerIceCandidates.forEach(c => {
+        const offerIceCandidates = await webRtcNamespace.emitWithAck('newAnswer',offerObj)
+        offerIceCandidates.forEach(c=>{
             peerConnection.addIceCandidate(c);
             console.log("======Added Ice Candidate======")
         })
-        console.log(offerIceCandidates)
+        console.log("offerIceCandidates: " + offerIceCandidates)
     }
 
-    const addAnswer = async (offerObj) => {
+    const addAnswer = async(offerObj)=>{
         //addAnswer is called in socketListeners when an answerResponse is emitted.
         //at this point, the offer and answer have been exchanged!
         //now CLIENT1 needs to set the remote
@@ -724,25 +530,25 @@ if (mysqli_num_rows($sqlU) > 0) {
         // console.log(peerConnection.signalingState)
     }
 
-    const fetchUserMedia = () => {
-        return new Promise(async (resolve, reject) => {
-            try {
+    const fetchUserMedia = ()=>{
+        return new Promise(async(resolve, reject)=>{
+            try{
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: true,
                     // audio: true,
                 });
                 localVideoEl.srcObject = stream;
-                localStream = stream;
-                resolve();
-            } catch (err) {
+                localStream = stream;    
+                resolve();    
+            }catch(err){
                 console.log(err);
                 reject()
             }
         })
     }
 
-    const createPeerConnection = (offerObj) => {
-        return new Promise(async (resolve, reject) => {
+    const createPeerConnection = (offerObj)=>{
+        return new Promise(async(resolve, reject)=>{
             //RTCPeerConnection is the thing that creates the connection
             //we can pass a config object, and that config object can contain stun servers
             //which will fetch us ICE candidates
@@ -751,38 +557,38 @@ if (mysqli_num_rows($sqlU) > 0) {
             remoteVideoEl.srcObject = remoteStream;
 
 
-            localStream.getTracks().forEach(track => {
+            localStream.getTracks().forEach(track=>{
                 //add localtracks so that they can be sent once the connection is established
-                peerConnection.addTrack(track, localStream);
+                peerConnection.addTrack(track,localStream);
             })
 
             peerConnection.addEventListener("signalingstatechange", (event) => {
-                console.log(event);
+                console.log("signalingstatechange event ",event);
                 console.log(peerConnection.signalingState)
             });
 
-            peerConnection.addEventListener('icecandidate', e => {
+            peerConnection.addEventListener('icecandidate',e=>{
                 console.log('........Ice candidate found!......')
-                console.log(e)
-                if (e.candidate) {
-                    webRtcNamespace.emit('sendIceCandidateToSignalingServer', {
+                console.log("icecandidate", e)
+                if(e.candidate){
+                    webRtcNamespace.emit('sendIceCandidateToSignalingServer',{
                         iceCandidate: e.candidate,
                         iceUserName: userName,
                         didIOffer,
-                    })
+                    })    
                 }
             })
-
-            peerConnection.addEventListener('track', e => {
-                console.log("Got a track from the other peer!! How excting")
-                console.log(e)
-                e.streams[0].getTracks().forEach(track => {
-                    remoteStream.addTrack(track, remoteStream);
+            
+            peerConnection.addEventListener('track',e=>{
+                console.log("Got a track from the other peer!! How exiting")
+                console.log("track e: ", e)
+                e.streams[0].getTracks().forEach(track=>{
+                    remoteStream.addTrack(track,remoteStream);
                     console.log("Here's an exciting moment... fingers cross")
                 })
             })
 
-            if (offerObj) {
+            if(offerObj){
                 //this won't be set when called from call();
                 //will be set when we call from answerOffer()
                 // console.log(peerConnection.signalingState) //should be stable because no setDesc has been run yet
@@ -793,55 +599,79 @@ if (mysqli_num_rows($sqlU) > 0) {
         })
     }
 
-    const addNewIceCandidate = iceCandidate => {
+    const addNewIceCandidate = iceCandidate=>{
         peerConnection.addIceCandidate(iceCandidate)
         console.log("======Added Ice Candidate======")
     }
 
-
-    document.querySelector('#call').addEventListener('click', call, )
+    videoCallingBtn.addEventListener('click', call)
 
 
     // ###########################################
     // ###########################################
 
     //on connection get all available offers and call createOfferEls
-    webRtcNamespace.on('availableOffers', offers => {
-        console.log(offers)
-        createOfferEls(offers)
-    })
+    // webRtcNamespace.on('availableOffers',offers=>{
+    //     console.log("availableOffers ",offers)
+    //     createOfferEls(offers)
+    // })
 
     //someone just made a new offer and we're already here - call createOfferEls
-    webRtcNamespace.on('newOfferAwaiting', offers => {
+    webRtcNamespace.on('newOfferAwaiting',offers=>{
         createOfferEls(offers)
     })
 
-    webRtcNamespace.on('answerResponse', offerObj => {
-        console.log(offerObj)
+    webRtcNamespace.on('answerResponse',offerObj=>{
+        console.log('answerResponse ',offerObj)
         addAnswer(offerObj)
     })
 
-    webRtcNamespace.on('receivedIceCandidateFromServer', iceCandidate => {
+    webRtcNamespace.on('receivedIceCandidateFromServer',iceCandidate=>{
         addNewIceCandidate(iceCandidate)
-        console.log(iceCandidate)
+        console.log('receivedIceCandidateFromServer ',iceCandidate)
     })
 
-    function createOfferEls(offers) {
+    function createOfferEls(offers){
         //make green answer button for this new offer
-        const answerEl = document.querySelector('#answer');
-        offers.forEach(o => {
-            console.log(o);
-            const newOfferEl = document.createElement('div');
-            newOfferEl.innerHTML = `<button class="btn btn-success col-1">Answer ${o.offererUserName}</button>`
-            newOfferEl.addEventListener('click', () => {
+        // const answerEl = document.querySelector('#answer');
+        
+        offers.forEach(o=>{
+
+            console.log('offers ',o);
+            // s
+                // const newOfferEl = document.createElement('div');
+                // newOfferEl.innerHTML = `<button class="btn btn-success col-1">Answer ${o.offererUserName}</button>`
+
+                // newOfferEl.addEventListener('click',()=>{
+
+                //     answerOffer(o);
+
+                //     videoCallContainer.style.visibility = 'visible';
+                //     console.log("answer button clicked")
+                //     webRtcNamespace.emit('answerBtnClicked', 'you know what are you doing')
+                // });
+                // answerEl.appendChild(newOfferEl);
+
+            acceptCallBtn.addEventListener('click', () =>{
                 answerOffer(o);
+                videoCallContainer.style.visibility = 'visible';
+                console.log("answer button clicked")
+                webRtcNamespace.emit('answerBtnClicked', 'you know what are you doing')
+                incomingCallModal.style.display = 'none';
 
-                videoCallContainer.style.display = 'block';
-                videoCallingBtn.style.display = 'none';
+            });
+            webRtcNamespace.on('receivedCall', a => {
+                incomingCallModal.style.display = 'block';
+                callerName.textContent = a.name;
+                callerImg.src = a.img;
+            });
 
-            })
-            answerEl.appendChild(newOfferEl);
         })
     }
-</script> -->
+    webRtcNamespace.on('answerBtnClicked2', a => {
+        console.log("sssssssssss",a)
+        callingMsg.style. display = 'none';
+    })
+</script>
+
 <script src="javascript/chat.js"> </script>

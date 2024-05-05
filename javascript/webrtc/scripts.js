@@ -5,7 +5,7 @@ document.querySelector('#user-name').innerHTML = userName;
 
 // Construct the host URL using the hostname
 const host = `https://${window.location.hostname}`;
-const port = 4000
+const port = 3000
 
 const socket = io.connect(`${host+':'+port}/webRtc`,{
     auth: {

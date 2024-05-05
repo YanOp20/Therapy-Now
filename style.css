@@ -1779,7 +1779,7 @@ a:hover .icon-name {
 .profile-container .chatt {
   height: 86vh;
   margin: 1em;
-  min-width: 300px;
+  min-width: 320px;
   /* max-width: 700px; */
   width: 100%;
   flex-grow: 4;
@@ -2054,9 +2054,9 @@ h1 {
 /* videovideovideovideovideovideovideovideovideovideovideovideovdeovideovvideovideo */
 
 .modal {
-  display: none; /* Initially hidden */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
   left: 0;
   top: 0;
   width: 100%; 
@@ -2065,6 +2065,10 @@ h1 {
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
+.modal-content .callerInfo{
+  display: flex;
+  align-items: center;
+}
 .modal-content {
   background-color: #fefefe;
   margin: 15% auto; /* 15% from the top and centered */
@@ -2072,7 +2076,26 @@ h1 {
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on your design */
 }
+#acceptCallBtn,
+#declineCallBtn {
+    padding: 10px 20px; 
+    font-size: 16px;    
+    border-radius: 5px; 
+    cursor: pointer;    
+    margin: 5px;        
+}
 
+#acceptCallBtn {
+    background-color: #4CAF50; 
+    color: white;              
+    border: none;               
+}
+
+#declineCallBtn {
+    background-color: #f44336; 
+    color: white;              
+    border: none;               
+}
 /* videovideovideovideovideovideovideovideovideovideovideovideovdeovideovvideovideo */
 /* videovideovideovideovideovideovideovideovideovideovideovideovdeovideovvideovideo */
 
