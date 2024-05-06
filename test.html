@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Draggable & Resizable Div</title>
+  <style>
+#myDiv {
+  position: absolute; /* Allow positioning anywhere within parent */
+  background-color: lightblue;
+  padding: 20px;
+  border: 1px solid black;
+  /* cursor: move; Indicate draggable behavior */
+  resize: both;  /*Allow resizing both horizontally and vertically */
+  overflow: auto; /* Add scrollbars if content overflows */
+  width: 100px;
+  height: 70px;
+}  </style>
+</head>
+<body>
+  <div id="myDiv"></div>
+  <script>
+// $(document).ready(function() {
+//   // Make the div draggable
+//   $("#myDiv").draggable();
+
+//   // Add resize functionality
+//   $("#myDiv").resizable();
+});
+</script>
+</body>
+</html>
