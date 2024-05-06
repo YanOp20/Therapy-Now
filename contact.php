@@ -11,19 +11,20 @@
                 soon
                 as
                 possible.</header>
-            <form action=" #" method="POST" enctype="multipart/form-data" autocomplete="off">
+                <div class="contact-success"></div>
+            <form class="app-form" action=" #" method="POST" enctype="multipart/form-data" autocomplete="off">
                 <div class="field input">
-                    <input type="text" name="fname" placeholder="Name" required>
+                    <input type="text" name="name" placeholder="Name" required>
                 </div>
                 <div class="field input">
                     <input type="text" name="email" placeholder="Email" required>
                 </div>
                 <div class="field input">
-                    <textarea name="textarea" id="" cols="30" rows="10" placeholder="Message"></textarea>
+                    <textarea  name="textarea" id="" cols="30" rows="10" placeholder="Message"></textarea>
                 </div>
 
                 <div class="field button">
-                    <input type="submit" name="submit" value="Send">
+                    <input class="submit" type="submit" name="submit" value="Send">
                 </div>
             </form>
         </section>
@@ -31,5 +32,5 @@
     <?php include_once "footer.php"; ?>
 
 </body>
-
+<script src="javascript/contact.js"></script>
 </html>

@@ -95,7 +95,8 @@ continueBtn.onclick = () => {
               document.querySelector(".payment-code").textContent =  Math.floor(100000 + Math.random() * 900000);
 
               // location.href = "profile.php?link=appointment";
-              setTimeout(() => {  location.href = "profile.php?link=appointment";}, 50000);});
+              setTimeout(() => {  location.href = "profile.php?link=appointment";}, 50000);
+            });
         } else {
           errorText.style.display = "block";
           errorText.textContent = data;
