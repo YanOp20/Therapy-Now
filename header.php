@@ -10,9 +10,9 @@
             <div class="navigation-links">
                 <a href="index.php">Home</a>
                 <a href="blog.php">Blog</a>
+                <!-- <a href="#">Link 3</a>
                 <a href="#">Link 3</a>
-                <a href="#">Link 3</a>
-                <a href="#">Link 3</a>
+                <a href="#">Link 3</a> -->
             </div>
         </div>
         <?php include_once "php/config.php";
@@ -51,6 +51,8 @@ const btns = document.querySelector(".user-buttons");
 const links = document.querySelector(".navigation-links");
 const div = document.getElementById("header-container");
 const h = document.querySelector("header");
+
+
 
 var initialHeight = div.offsetHeight;
 

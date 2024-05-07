@@ -7,17 +7,19 @@
 
     // $sql = "SELECT * FROM users WHERE NOT unique_id = {$outgoing_id} AND (fname LIKE '%{$searchTerm}%' OR lname LIKE '%{$searchTerm}%') "; old
 
-    $Sq = mysqli_query($conn, "SELECT * FROM users WHERE unique_id = 40000");
-    $tq = mysqli_query($conn, "SELECT * FROM therapist WHERE NOT unique_id = 40000");
+    // $Sq = mysqli_query($conn, "SELECT * FROM therapist WHERE unique_id = 40000");
+    $tq = mysqli_query($conn, "SELECT * FROM therapist WHERE unique_id = $outgoing_id");
 
-    if(mysqli_num_rows($Sq) > 0)
+    if(mysqli_num_rows($tq) > 0 && $outgoing_id === '40000'){
         $sql = "SELECT * FROM users WHERE (fname LIKE '%{$searchTerm}%' OR lname LIKE '%{$searchTerm}%') ";
-    elseif(mysqli_num_rows($tq) > 0)
+    }
+    elseif(mysqli_num_rows($tq) > 0 && $outgoing_id !== '40000' ){
+
         $sql = "SELECT * FROM users WHERE unique_id IN 
             (SELECT user_id FROM appointment WHERE therapist_id = {$outgoing_id}) AND 
             (fname LIKE '%{$searchTerm}%' OR lname LIKE '%{$searchTerm}%') ";
-    else
-        $sql ="";
+    }else {$sql = '';}
+
 
 
     $output = "";

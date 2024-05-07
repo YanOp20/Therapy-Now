@@ -12,6 +12,7 @@ const fs = require("fs"),
 // app.use(express.static(staticDirectory));
 app.use(cors());
 
+
 const networkInterfaces = os.networkInterfaces();
 let ipAddresses = [];
 for (const name of Object.keys(networkInterfaces)) {
@@ -27,6 +28,9 @@ let ipAddressess = (typeof ipAddresses[2] !== 'undefined') ? ipAddresses[2] : ip
 const host = `https://${ipAddressess}`;
 const port = 3000;
 
+app.get('/', (req, res) => {
+  res.redirect(`${host}/therapy-now`);
+});
 // Load HTTPS key and certificate
 //we need a key and cert to run https
 //we generated them with mkcert

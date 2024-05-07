@@ -19,7 +19,7 @@ continueBtn.onclick = ()=>{
                 errorText.style.backgroundColor = "white";
                 errorText.style.border='none';
                 errorText.textContent = "thanks for your message";
-                setTimeout(() => {  location.href="contact.php"; }, 500);
+                setTimeout(() => {  location.href="contact.php"; }, 650);
               }else{
                 errorText.style.display = "block";
                 errorText.textContent = data;
