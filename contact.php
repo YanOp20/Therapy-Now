@@ -6,13 +6,13 @@
     <?php include_once "header.php"; ?>
     <div class="wrapper contact">
         <section class="form signup">
-            <header class="cotact"> Have question and need to talk to us? Please complete this form and we will get in
+            <header class="contact"> Have question and need to talk to us? Please complete this form and we will get in
                 touch as
                 soon
                 as
                 possible.</header>
-                <div class="contact-success"></div>
             <form class="app-form" action=" #" method="POST" enctype="multipart/form-data" autocomplete="off">
+                <div class="error-text"></div>
                 <div class="field input">
                     <input type="text" name="name" placeholder="Name" required>
                 </div>
