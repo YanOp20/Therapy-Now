@@ -18,6 +18,21 @@ if (mysqli_num_rows($sqlU) > 0) {
     $img = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$unique_id}"))['img'];
 } else // header("location: profile.php");
 ?>
+<style>
+@media screen and (max-width: 930px) {
+  .users .users-list a .status-dot, .users .search,
+  .users .users-list a div.content div{
+      display: none !important;
+  }
+  .user{
+      max-width: 100px !important;
+  }
+  .users .users-list{
+    scrollbar-width: none;
+  }
+  
+  }
+</style>
 <div class="wrapper chatt">
     <section class="chat-area">
         <header>

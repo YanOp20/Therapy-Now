@@ -2155,19 +2155,7 @@ th, td {
 
 /* <------------------ comes from chat.php ----------------> */
 /* first style */
-@media screen and (max-width: 930px) {
-  .users .users-list a .status-dot, .users .search,
-  .users .users-list a div.content div{
-      display: none !important;
-  }
-  .user{
-      max-width: 100px !important;
-  }
-  .users .users-list{
-    scrollbar-width: none;
-  }
-  
-  }
+
   
   /* second style */
 
