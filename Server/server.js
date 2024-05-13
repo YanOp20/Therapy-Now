@@ -16,11 +16,8 @@ app.use(cors());
 const networkInterfaces = os.networkInterfaces();
 let ipAddresses = [];
 for (const name of Object.keys(networkInterfaces)) {
-  for (const net of networkInterfaces[name]) {
-    // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
-    if (net.family === "IPv4" && !net.internal) {
-      ipAddresses.push(net.address);
-    }
+  for (const net of networkInterfaces[name]) {// Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+      if (net.family === "IPv4" && !net.internal) ipAddresses.push(net.address);
   }
 }
 let ipAddressess = (typeof ipAddresses[2] !== 'undefined') ? ipAddresses[2] : ipAddresses[0];
@@ -28,9 +25,8 @@ let ipAddressess = (typeof ipAddresses[2] !== 'undefined') ? ipAddresses[2] : ip
 const host = `https://${ipAddressess}`;
 const port = 3000;
 
-app.get('/', (req, res) => {
-  res.redirect(`${host}/therapy-now`);
-});
+app.get('/', (req, res) => {  res.redirect(`${host}/therapy-now`); });
+
 // Load HTTPS key and certificate
 //we need a key and cert to run https
 //we generated them with mkcert
@@ -43,39 +39,22 @@ const cert = fs.readFileSync("cert.crt");
 const httpsServer = https.createServer({ key, cert }, app);
 
 // Socket.io configuration
-const io = socketIo(httpsServer, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
-httpsServer.listen(port, () => {  console.log(`server running on - ${host + ":" + port} and ${host}/therapy-now`);});
+const io = socketIo(httpsServer, {  cors: { origin: "*",  methods: ["GET", "POST"]  } });
+
+httpsServer.listen(port, () => {  console.log(`server running on - ${host + ":" + port}`);});
 
 // Namespaces
 const webRtcNamespace = io.of("/webRtc");
 const chatNamespace = io.of("/chat");
 
 // Database  connection
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "therapy",
-});
-connection.connect((err) => {
-  if (err) throw err;
-  console.log("Connected to MySQL database");
-});
+const connection = mysql.createConnection({  host: "localhost",  user: "root",  password: "",  database: "therapy",});
+connection.connect((err) => {  if (err) throw err;  console.log("Connected to MySQL database");});
 
 //offers will contain {}
-const offers = [
-  // offererUserName
-  // offer
-  // offerIceCandidates
-  // answererUserName
-  // answer
-  // answererIceCandidates
-];
+// const offers = [  // offererUserName  // offer  // offerIceCandidates  // answererUserName  // answer  // answererIceCandidates
+let offers = [  // offererUserName  // offer  // offerIceCandidates  // answererUserName  // answer  // answererIceCandidates
+  ];
 
 const connectedSockets = [  //username, socketId
 ];
@@ -89,9 +68,12 @@ const connectedSockets = [  //username, socketId
     // ###########################################################
     // ###########################################################
 
-    socket.on('rtcRoom', roomId => {
-      socket.join(roomId);
-    })
+    socket.join(roomId);
+    socket.on('rtcRoom', roomId => {})
+
+
+
+    connectedSockets.push({socketId: socket.id, userName, roomId})
 
     socket.on('calling', c => {
       webRtcNamespace.to(roomId).emit('receivedCall', c)
@@ -102,7 +84,6 @@ const connectedSockets = [  //username, socketId
     // ###########################################################
     // ###########################################################
 
-    connectedSockets.push({socketId: socket.id, userName, roomId})
     // console.log('connected', connectedSockets)
     //a new client has joined. If there are any offers available,
     //emit them out
@@ -121,6 +102,14 @@ const connectedSockets = [  //username, socketId
             answer: null,
             answererIceCandidates: []
         })
+        // offers[0] = {
+        //   offererUserName: userName,
+        //   offer: newOffer,
+        //   offerIceCandidates: [], 
+        //   answererUserName: null,
+        //   answer: null,
+        //   answererIceCandidates: []
+        // };
         // console.log(newOffer.sdp.slice(50))
         //send out to all connected sockets EXCEPT the caller
         // socket.broadcast.emit('newOfferAwaiting',offers.slice(-1))
@@ -194,6 +183,33 @@ const connectedSockets = [  //username, socketId
         }
         // console.log(offers)
     })
+    // Inside webRtcNamespace.on('connection', ...)
+// ... (Your existing code) ...
+
+
+// Inside webRtcNamespace.on('connection', ...)
+const handleCallEnd = (userName, roomId) => {
+    socket.to(roomId).emit('callEnded'); // Notify other user
+    const offerIndex = offers.findIndex(offer => 
+        (offer.offererUserName === userName && offer.roomId === roomId) || 
+        (offer.answererUserName === userName && offer.roomId === roomId)
+    );
+    if (offerIndex > -1) offers.splice(offerIndex, 1);
+};
+
+socket.on('declineCall', ({ userName, roomId, callerSocketId }) => {
+    console.log("Call declined.");
+    webRtcNamespace.to(callerSocketId).emit('callDeclined', { reason: 'User declined the call' });
+    handleCallEnd(userName, roomId);
+});
+
+socket.on('userDisconnected', (roomId, callerSocketId) => {
+    console.log("User disconnected.");
+    handleCallEnd(socket.handshake.auth.userName, roomId); // Use userName from socket
+});
+
+// ... (Your existing code) ...
+
 
 })
 
@@ -272,3 +288,5 @@ chatNamespace.on("connection", (socket) => {
     console.log("user disconnected in chatNamespace");
   });
 });
+
+

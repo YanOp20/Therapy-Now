@@ -1,5 +1,3 @@
-<style>
-</style>
 <footer>
     <div>
         <a href="index.php">
@@ -36,3 +34,4 @@
         <p class="copy">© 2023 Online Therapy. All rights reserved.</p>
     </div>
 </footer>
+<script src="javascript/webRtc.js"> </script>
