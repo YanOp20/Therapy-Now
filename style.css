@@ -2324,3 +2324,6 @@ font-size: 2em;
 
 
 /* <------------------ end ----------------> */
+.right-section .users-list *:hover{
+  color: black;
+}

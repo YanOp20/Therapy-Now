@@ -27,8 +27,8 @@ function displayUsers($users, $t = "") {
         echo "<div>";
         echo "<img src='php/images/{$user['img']}' alt='img'>";
         echo "<p>{$user['fname']} {$user['lname']}</p>";
-        echo $t === 'therapist' ? "<div>
-                                    <form  action='#' method='post' autocomplete='off'>
+        echo $t === 'therapist' ? "<div class='remove-button'>
+                                    <form  method='post' autocomplete='off'>
                                         <input type='hidden' name='remove' value='{$user['unique_id']}'>
                                         <button type='submit'>Remove</button>
                                     </form>
@@ -44,4 +44,3 @@ $onlineUsers = fetchData($conn, "users", "WHERE status = 'Active now'");
 $onlineTherapists = fetchData($conn, "therapist", "WHERE status = 'Active now'");
 $schedules = fetchData($conn, "appointment"); 
 ?>
-<input type="checkbox" name="" id="">

@@ -3,7 +3,8 @@ require_once 'config.php'; // Include your database connection file
 
 if (!empty($_POST['remove'])) {
     $therapist_id = $_POST['remove'];
-
+    if($therapist_id == '40000') return "false";
+    error_log("Remove request received: Therapist ID = " . $therapist_id); // Log the received ID
     // Check if the therapist has associated appointments
     $check_sql = "SELECT * FROM appointment WHERE therapist_id = '{$therapist_id}'";
     $check_result = mysqli_query($conn, $check_sql);

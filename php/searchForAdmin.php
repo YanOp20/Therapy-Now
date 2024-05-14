@@ -4,7 +4,7 @@ include_once "config.php";
 $searchTerm = mysqli_real_escape_string($conn, $_POST['searchTerm']); 
 $whereToSearch = mysqli_real_escape_string($conn, $_POST['whereToSearch']); 
 
-$table ="";
+$t ="";
 
 
 // if (!empty($searchTerm)) {
@@ -35,12 +35,12 @@ $table ="";
     JOIN therapist t ON a.therapist_id = t.unique_id
     JOIN users u ON a.user_id = u.unique_id
     WHERE (u.fname LIKE '%{$searchTerm}%' OR u.lname LIKE '%{$searchTerm}%' OR t.fname LIKE '%{$searchTerm}%' OR t.lname LIKE '%{$searchTerm}%');";
-        $table = 'schedule';
+        $t = 'schedule';
         
             // $sql = "SELECT * FROM appointment 
             //         WHERE (fname LIKE '%{$searchTerm}%' OR lname LIKE '%{$searchTerm}%')";
     }elseif ($whereToSearch == 'all-therapist-list-remove') {
-        $table = 'therapist';
+        $t = 'therapist';
             $sql = "SELECT * FROM therapist 
                     WHERE (fname LIKE '%{$searchTerm}%' OR lname LIKE '%{$searchTerm}%')";
     }else{
@@ -52,7 +52,7 @@ $table ="";
     if (mysqli_num_rows($result) > 0) {
         
         while ($row = mysqli_fetch_assoc($result)) {
-            if ($table === 'schedule') {
+            if ($t === 'schedule') {
                         echo"<div>
                                 <div class='users-img-name'>
                                     <img src='php/images/{$row['user_img']}' alt='img'>
@@ -70,8 +70,8 @@ $table ="";
                 echo "<div>";
                 echo "<img src='php/images/{$row['img']}' alt='img'>";
                 echo "<p>{$row['fname']} {$row['lname']}</p>";
-                echo $table === 'therapist' ? "<div>
-                                            <form  action='#' method='post' autocomplete='off'>
+                echo $t === 'therapist' ? "<div>
+                                            <form method='post' autocomplete='off'>
                                                 <input type='hidden' name='remove' value='{$row['unique_id']}'>
                                                 <button type='submit'>Remove</button>
                                             </form>
