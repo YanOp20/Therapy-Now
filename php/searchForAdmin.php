@@ -67,20 +67,17 @@ $table ="";
                             </div>";
 
             }else{
-            // Use the same display logic from displayUsers() 
                 echo "<div>";
                 echo "<img src='php/images/{$row['img']}' alt='img'>";
                 echo "<p>{$row['fname']} {$row['lname']}</p>";
+                echo $table === 'therapist' ? "<div>
+                                            <form  action='#' method='post' autocomplete='off'>
+                                                <input type='hidden' name='remove' value='{$row['unique_id']}'>
+                                                <button type='submit'>Remove</button>
+                                            </form>
+                                        </div>
+                                        " :'';
                 echo "</div>";
-                // Add any additional elements like the "remove" button here if needed
-                if ($table === 'therapist') {
-                    echo "<div>
-                            <form  action='#' method='post' autocomplete='off'>
-                                <input type='hidden' name='remove' value='{$user['unique_id']}'>
-                                <button type='submit'>Remove</button>
-                            </form>
-                        </div>";
-                }
             }
         }
     }
