@@ -47,7 +47,7 @@ handleSearch("search-all-therapist-remove", "all-therapist-list-remove");
 // form submission
 const form = document.querySelector(".add-therapist form"),
 continueBtn = form.querySelector(".button input"),
-errorText = form.querySelector(".error-text");
+e = form.querySelector(".error-text");
 
 form.onsubmit = (e)=>{
     e.preventDefault();
@@ -61,17 +61,18 @@ continueBtn.onclick = ()=>{
           if(xhr.status === 200){
               let data = xhr.response;
               if(data === "success"){
-                errorText.style.display = "block";
-                errorText.style.color = "green";
-                errorText.style.backgroundColor = "white";
-                errorText.style.border='none';
-                errorText.textContent = "Therapist added successfully";
-                setTimeout(() => {errorText.style.display = "none";}, 2000);
+                e.style.display = "block";
+                e.style.color = "green";
+                e.style.backgroundColor = "white";
+                e.style.border='none';
+                e.textContent = "Therapist added successfully";
+                setTimeout(() => {e.style.display = "none";}, 2000);
                 form.reset(); 
 
               }else{
-                errorText.style.display = "block";
-                errorText.textContent = data;
+                e.style.display = "block";
+                e.style.color = "red";
+                e.textContent = data;
               }
           }
       }

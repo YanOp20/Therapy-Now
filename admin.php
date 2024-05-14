@@ -1,33 +1,7 @@
 <?php
 include_once "php/config.php";
 require_once "php/feachToDisplayData.php";
-
-
-if (isset($_POST['submit']) && isset($_POST['remove'])) {
-    $therapist_id = $_POST['remove'];
-
-    // Check if the therapist has associated appointments
-    $query_check_appointments = "SELECT * FROM Appointment WHERE therapist_id = :therapist_id";
-    $stmt_check_appointments = $pdo->prepare($query_check_appointments);
-    $stmt_check_appointments->execute(array(':therapist_id' => $therapist_id));
-    $appointments = $stmt_check_appointments->fetchAll();
-
-    if (count($appointments) > 0) {
-        // Provide feedback to the user that the therapist has associated appointments
-        echo "Cannot remove therapist as there are associated appointments.";
-    } else {
-        // No associated appointments, proceed with deletion
-        $query_remove_therapist = "DELETE FROM therapist WHERE unique_id = :therapist_id";
-        $stmt_remove_therapist = $pdo->prepare($query_remove_therapist);
-        $stmt_remove_therapist->execute(array(':therapist_id' => $therapist_id));
-
-        // Provide feedback to the user
-        echo "Therapist removed successfully.";
-    }
-}
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -263,6 +237,7 @@ if (isset($_POST['submit']) && isset($_POST['remove'])) {
                     <input id="search-all-therapist-remove" type="text" placeholder="Enter name to search...">
                     <button><i class="fas fa-search"></i></button>
                 </div>
+                <div class="e-t" style="display: none;"></div>
                 <div class="users-list" id="all-therapist-list-remove">
                     <div>
                         <?php displayUsers($therapists, 'therapist') ?>
@@ -332,6 +307,7 @@ if (isset($_POST['submit']) && isset($_POST['remove'])) {
 </script>
 <script src="javascript/pass-show-hide.js"></script>
 <script src="javascript/addTherapist.js"></script>
+<script src="javascript/removeTherapist.js"></script>
 
 
 </html>

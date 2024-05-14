@@ -53,16 +53,6 @@ $table ="";
         
         while ($row = mysqli_fetch_assoc($result)) {
             if ($table === 'schedule') {
-                // $user_result = mysqli_query($conn, "SELECT * FROM users WHERE (fname LIKE '%{$searchTerm}%' OR lname LIKE '%{$searchTerm}%') AND unique_id = '{$row['user_id']}'");
-                // $therapist_result = mysqli_query($conn, "SELECT * FROM therapist WHERE (fname LIKE '%{$searchTerm}%' OR lname LIKE '%{$searchTerm}%') AND unique_id = '{$row['therapist_id']}'");
-                
-                // // Check if the queries returned results
-                // if ($user_result && $therapist_result) {
-                //     $users = mysqli_fetch_assoc($user_result);
-                //     $therapist_row = mysqli_fetch_assoc($therapist_result);
-                    
-                //     // Output the HTML only if both user and therapist rows are found
-                //     if ($users && $therapist_row) {
                         echo"<div>
                                 <div class='users-img-name'>
                                     <img src='php/images/{$row['user_img']}' alt='img'>
@@ -75,8 +65,7 @@ $table ="";
                                     <p>{$row['therapist_fname']} {$row['therapist_lname']}</p>
                                 </div>
                             </div>";
-                //     }
-                // }
+
             }else{
             // Use the same display logic from displayUsers() 
                 echo "<div>";
@@ -85,7 +74,12 @@ $table ="";
                 echo "</div>";
                 // Add any additional elements like the "remove" button here if needed
                 if ($table === 'therapist') {
-                    echo "<div><form methoud='post'><button type='submit' name='remove' value={$row['unique_id']}>remove</button></div></form>";
+                    echo "<div>
+                            <form  action='#' method='post' autocomplete='off'>
+                                <input type='hidden' name='remove' value='{$user['unique_id']}'>
+                                <button type='submit'>Remove</button>
+                            </form>
+                        </div>";
                 }
             }
         }

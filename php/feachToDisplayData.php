@@ -28,12 +28,12 @@ function displayUsers($users, $t = "") {
         echo "<img src='php/images/{$user['img']}' alt='img'>";
         echo "<p>{$user['fname']} {$user['lname']}</p>";
         echo $t === 'therapist' ? "<div>
-                                    <form action='#' method='post'>
-                                        <input type='text' name='remove' value='{$user['unique_id']}' hidden '>
-                                        <button type='submit'>remove</button>
+                                    <form  action='#' method='post' autocomplete='off'>
+                                        <input type='hidden' name='remove' value='{$user['unique_id']}'>
+                                        <button type='submit'>Remove</button>
                                     </form>
-                                  </div>
-                                  " :'';
+                                </div>
+                                " :'';
         echo "</div>";
     }
 }
