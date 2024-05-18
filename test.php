@@ -1,5 +1,5 @@
 <?php
-include_once "php/config.php";
+require_once "php/config.php";
 function fetchData($conn, $table, $condition = "") {
     $data = array();
     $sql = "SELECT * FROM $table $condition";

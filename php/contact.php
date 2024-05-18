@@ -1,6 +1,6 @@
 <?php
 session_start();
-    include_once "config.php";
+    require_once "config.php";
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $message = mysqli_real_escape_string($conn, $_POST['textarea']);

@@ -1,383 +1,387 @@
 <?php
-include_once "php/config.php";
-require_once "php/feachToDisplayData.php";
-?>
-<!DOCTYPE html>
-<html lang="en">
+require_once 'head.php';
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    .right-section>div {
-      display: none;
-    }
-
-    .admin {
-      display: flex;
-      gap: 1em;
-    }
-
-    .admin .left-section {
-      display: flex;
-      flex-direction: row;
-      gap: 3em;
-    }
-  </style>
-  <!-- comes form goo -->
-  <style>
-    /* General Styles */
-    body {
-      /* font-family: sans-serif; */
-      margin: 0;
-      padding: 0;
-      background-color: #f2f2f2;
-    }
-
-    .admin {
-      display: flex;
-      min-height: 80vh;
-      width: 100vw;
-      padding: 20px;
-      justify-content: center;
-    }
-
-    /* Left Section */
-    .admin .left-section {
-      width: max-content;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      margin-right: 20px;
-      flex-wrap: wrap;
-    }
-
-    .admin .left-section h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-
-    .admin .row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-
-    .admin .row span {
-      font-size: 16px;
-      color: #555;
-      width: 200px;
-    }
-
-    .admin .row span.count-number {
-      width: 50px !important;
-
-    }
-
-    .admin .count-number {
-      font-weight: bold;
-      color: #007bff;
-    }
-
-    .admin .button button {
-      padding: 8px 16px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .admin .remove-therapist .remove-button {
-      width:100%;
-    }
-    .admin .remove-therapist .users-list p{
-    white-space: nowrap;
+session_start();
+require_once "php/config.php";
+if (!isset($_SESSION['unique_id'])) {
+  header("location: login.php");
+} else {
+  $outgoing_id = $_SESSION['unique_id'];
 }
-    .admin .remove-therapist form button {
-      padding: 8px;
-      background-color: red;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+require_once "php/config.php";
+require_once "php/feachToDisplayData.php";
 
-    /* Show Button Styles */
-    .left-section .row button {
-      padding: 8px 16px;
-      background-color: #007bff;
-      /* Blue background color */
-      color: #fff;
-      /* White text color */
-      border: none;
-      /* Remove border */
-      border-radius: 5px;
-      /* Rounded corners */
-      cursor: pointer;
-      /* Change cursor to pointer on hover */
-      font-size: 14px;
-      /* Adjust font size as needed */
-      transition: background-color 0.3s ease;
-      /* Smooth transition for hover effect */
-    }
+?>
+<style>
+  .right-section>div {
+    display: none;
+  }
 
-    /* Hover Effect */
-    .left-section .row button:hover {
-      background-color: #0056b3;
-      /* Darker blue on hover */
-    }
+  .admin {
+    display: flex;
+    gap: 1em;
+  }
 
-    /* Optional: Disabled State */
-    .left-section .row button[disabled] {
-      background-color: #ccc;
-      /* Grayed out background */
-      cursor: not-allowed;
-      /* Disable pointer cursor */
-    }
+  .admin .left-section {
+    display: flex;
+    flex-direction: row;
+    gap: 3em;
+  }
+</style>
+<!-- comes form goo -->
+<style>
+  /* General Styles */
+  /* body {
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+  } */
 
-    /* Right Section */
-    .right-section {
-      width: 75%;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      display: none;
-    }
+  .admin {
+    display: flex;
+    min-height: 80vh;
+    width: 100vw;
+    padding: 20px;
+    justify-content: center;
+  }
 
-    .show {
-      display: none;
-      /* Initially hide all right sections */
-      padding: 20px;
-      border-radius: 10px;
-      background-color: #fff;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
-    }
+  /* Left Section */
+  .admin .left-section {
+    width: max-content;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-right: 20px;
+    flex-wrap: wrap;
+  }
 
-    .right-section h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
+  .admin .left-section h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
 
-    .search {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
+  .admin .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
 
-    .search input {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px 0 0 5px;
-      width: 100%;
-    }
 
-    .search button {
-      padding: 8px 16px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 0 5px 5px 0;
-      cursor: pointer;
-    }
+  .admin .row span {
+    font-size: 16px;
+    color: #555;
+    width: 200px;
+  }
 
-    .users-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
+  .admin .row span.count-number {
+    width: 50px !important;
 
-    .users-list .row-schedule {
-      display: flex;
-      flex-wrap: wrap;
-      width: 100%;
-    }
+  }
 
-    .users-list div {
-      width: calc(25% - 10px);
-      /* Adjust width for 4 items per row */
-      margin-bottom: 10px;
-      background-color: #f8f9fa;
-      padding: 10px;
-      border-radius: 5px;
-      display: flex;
-      align-items: center;
-      min-width: 200px;
-    }
+  .admin .count-number {
+    font-weight: bold;
+    color: #007bff;
+  }
 
-    .users-list img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      margin-right: 10px;
-    }
+  .admin .button button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 
-    .users-list p {
-      margin: 0;
-      font-size: 14px;
-      color: #333;
-    }
+  .admin .remove-therapist .remove-button {
+    width: 100%;
+  }
 
-    /* Add Therapist Form */
-    .add-therapist {
-      display: flex;
-      max-width: 600px;
-      justify-content: space-between;
-    }
+  .admin .remove-therapist .users-list p {
+    white-space: nowrap;
+  }
 
-    .add-therapist form {
-      display: flex;
+  .admin .remove-therapist form button {
+    padding: 8px;
+    background-color: red;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  /* Show Button Styles */
+  .left-section .row button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    /* Blue background color */
+    color: #fff;
+    /* White text color */
+    border: none;
+    /* Remove border */
+    border-radius: 5px;
+    /* Rounded corners */
+    cursor: pointer;
+    /* Change cursor to pointer on hover */
+    font-size: 14px;
+    /* Adjust font size as needed */
+    transition: background-color 0.3s ease;
+    /* Smooth transition for hover effect */
+  }
+
+  /* Hover Effect */
+  .left-section .row button:hover {
+    background-color: #0056b3;
+    /* Darker blue on hover */
+  }
+
+  /* Optional: Disabled State */
+  .left-section .row button[disabled] {
+    background-color: #ccc;
+    /* Grayed out background */
+    cursor: not-allowed;
+    /* Disable pointer cursor */
+  }
+
+  /* Right Section */
+  .right-section {
+    width: 75%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: none;
+  }
+
+  .show {
+    display: none;
+    /* Initially hide all right sections */
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+
+  .right-section h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .search {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .search input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    width: 100%;
+  }
+
+  .search button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+  }
+
+  .users-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .users-list .row-schedule {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .users-list div {
+    width: calc(25% - 10px);
+    /* Adjust width for 4 items per row */
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    min-width: 200px;
+  }
+
+  .users-list img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .users-list p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+  }
+
+  /* Add Therapist Form */
+  .add-therapist {
+    display: flex;
+    max-width: 600px;
+    justify-content: space-between;
+  }
+
+  .add-therapist form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .add-therapist .error-text {
+    color: red;
+    margin-bottom: 10px;
+  }
+
+  .add-therapist .field {
+    margin-bottom: 15px;
+  }
+
+  .add-therapist label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .add-therapist input,
+  .add-therapist select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+  }
+
+  .add-therapist .field input[type="password"] {
+    position: relative;
+  }
+
+  .add-therapist .field input[type="password"] i {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+
+  .add-therapist .field button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .add-therapist .name-details {
+    display: flex;
+  }
+
+  .add-therapist .name-details .field {
+    margin-right: 10px;
+    width: calc(50% - 15px);
+  }
+
+  .add-therapist .gender_and_birthdate {
+    display: flex;
+  }
+
+  .add-therapist .gender_and_birthdate .field {
+    margin-right: 10px;
+    width: calc(50% - 15px);
+  }
+
+  .add-therapist .gender_and_birthdate .gender select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+  }
+
+
+  /* .remove-therapist div.therapist div{
+      width:400px;
+    }  */
+  .remove-therapist div.therapist {
+    display: flex;
+    align-items: center;
+
+    flex-wrap: wrap;
+    width: auto;
+    /* flex-direction: column; */
+  }
+
+  .remove-therapist .search {
+    margin-bottom: 10px;
+  }
+
+  .remove-therapist .e-t {
+    color: red;
+    margin-bottom: 10px;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .admin {
       flex-direction: column;
     }
 
-    .add-therapist .error-text {
-      color: red;
-      margin-bottom: 10px;
-    }
-
-    .add-therapist .field {
-      margin-bottom: 15px;
-    }
-
-    .add-therapist label {
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-
-    .add-therapist input,
-    .add-therapist select {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+    .admin .left-section {
       width: 100%;
-    }
-
-    .add-therapist .field input[type="password"] {
-      position: relative;
-    }
-
-    .add-therapist .field input[type="password"] i {
-      position: absolute;
-      top: 50%;
-      right: 10px;
-      transform: translateY(-50%);
-      cursor: pointer;
-    }
-
-    .add-therapist .field button {
-      padding: 8px 16px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .add-therapist .name-details {
-      display: flex;
-    }
-
-    .add-therapist .name-details .field {
-      margin-right: 10px;
-      width: calc(50% - 15px);
-    }
-
-    .add-therapist .gender_and_birthdate {
-      display: flex;
-    }
-
-    .add-therapist .gender_and_birthdate .field {
-      margin-right: 10px;
-      width: calc(50% - 15px);
-    }
-
-    .add-therapist .gender_and_birthdate .gender select {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      width: 100%;
-    }
-
-
-    /* .remove-therapist div.therapist div{
-      width:400px;
-    }  */
-    .remove-therapist div.therapist {
-      display: flex;
-      align-items: center;
-      
-      flex-wrap: wrap;
-      width: auto;
-      /* flex-direction: column; */
-    }
-
-    .remove-therapist .search {
-      margin-bottom: 10px;
-    }
-
-    .remove-therapist .e-t {
-      color: red;
-      margin-bottom: 10px;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .admin {
-        flex-direction: column;
-      }
-
-      .admin .left-section {
-        width: 100%;
-        margin-bottom: 20px;
-      }
-
-      .admin .right-section {
-        width: 100%;
-      }
-
-      .admin .users-list div {
-        width: calc(50% - 10px);
-        /* Adjust width for 2 items per row */
-      }
-    }
-  </style>
-  <style>
-    .admin .right-section .admin .search button.active {
-      background: #333;
-      color: #fff;
-    }
-
-    .admin .right-section .admin .search button {
-      position: relative;
-      z-index: 1;
-      width: 47px;
-      height: 42px;
-      font-size: 17px;
-      cursor: pointer;
-      border: none;
-      background: #fff;
-      color: #333;
-      outline: none;
-      border-radius: 0 5px 5px 0;
-      transition: all 0.2s ease;
-    }
-
-    .admin .right-section .search {
-      margin: 0px 20px;
       margin-bottom: 20px;
-      display: flex;
-      position: relative;
-      align-items: center;
-      justify-content: space-between;
     }
-  </style>
-</head>
+
+    .admin .right-section {
+      width: 100%;
+    }
+
+    .admin .users-list div {
+      width: calc(50% - 10px);
+      /* Adjust width for 2 items per row */
+    }
+  }
+</style>
+
+<style>
+  .admin .right-section .admin .search button.active {
+    background: #333;
+    color: #fff;
+  }
+
+  .admin .right-section .admin .search button {
+    position: relative;
+    z-index: 1;
+    width: 47px;
+    height: 42px;
+    font-size: 17px;
+    cursor: pointer;
+    border: none;
+    background: #fff;
+    color: #333;
+    outline: none;
+    border-radius: 0 5px 5px 0;
+    transition: all 0.2s ease;
+  }
+
+  .admin .right-section .search {
+    margin: 0px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
+  }
+</style>
 
 <body>
   <?php require_once "header.php"; ?>
@@ -635,6 +639,5 @@ require_once "php/feachToDisplayData.php";
 <script src="javascript/pass-show-hide.js"></script>
 <script src="javascript/addTherapist.js"></script>
 <script src="javascript/removeTherapist.js"></script>
-
 
 </html>

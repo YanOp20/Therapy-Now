@@ -1,6 +1,6 @@
 <?php
     session_start();
-    include_once "config.php";
+    require_once "config.php";
 
     $outgoing_id = $_SESSION['unique_id'];
     $searchTerm = mysqli_real_escape_string($conn, $_POST['searchTerm']);

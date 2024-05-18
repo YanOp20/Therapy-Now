@@ -5,12 +5,12 @@ if (isset($_SESSION['unique_id'])) {
 }
 ?>
 
-<?php include_once "head.php"; ?>
+<?php require_once "head.php"; ?>
 
 
 <body>
 
-  <?php include_once "header.php"; ?>
+  <?php require_once "header.php"; ?>
 
   <div class="wrapper">
     <section class="form signup">
@@ -83,7 +83,7 @@ if (isset($_SESSION['unique_id'])) {
     </section>
   </div>
 
-  <?php include_once "footer.php"; ?>
+  <?php require_once "footer.php"; ?>
   <script src="javascript/pass-show-hide.js"></script>
   <script src="javascript/signup.js"></script>
 

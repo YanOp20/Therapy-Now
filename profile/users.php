@@ -1,6 +1,6 @@
 <?php
 $style = "";
-include_once "php/config.php";
+require_once "php/config.php";
 
     $sql_p = mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$_SESSION['unique_id']}");
     if(mysqli_num_rows($sql_p) > 0) $style = "style='display: none;'";

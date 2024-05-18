@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (isset($_SESSION['unique_id'])) {
-    include_once "config.php";
+    require_once "config.php";
     $user_id = $_SESSION['unique_id'];
     $date = mysqli_real_escape_string($conn, $_POST['date']);
     $symptom = mysqli_real_escape_string($conn, $_POST['symptom']);

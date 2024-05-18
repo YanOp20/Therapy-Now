@@ -6,10 +6,10 @@ if (isset($_SESSION['unique_id'])) {
 ?>
 
 
-<?php include_once "head.php"; ?>
+<?php require_once "head.php"; ?>
 
 <body>
-    <?php include_once "header.php"; ?>
+    <?php require_once "header.php"; ?>
 
 
 
@@ -32,7 +32,7 @@ if (isset($_SESSION['unique_id'])) {
             </form>
         </section>
     </div>
-    <?php include_once "footer.php"; ?>
+    <?php require_once "footer.php"; ?>
 
     <script src="javascript/forgetPassword.js"></script>
 

@@ -1,6 +1,6 @@
 <?php
 
-include_once "config.php";
+require_once "config.php";
 $output = "";
 $id ="";
 $sql = "SELECT * FROM blog ORDER BY id DESC ";

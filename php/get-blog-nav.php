@@ -1,6 +1,6 @@
 <?php
 
-include_once "config.php";
+require_once "config.php";
 $output = "";
 $id ="";
 $idd = '0';

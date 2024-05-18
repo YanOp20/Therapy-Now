@@ -1,7 +1,7 @@
 <?php
-include_once 'head.php';
+require_once 'head.php';
 session_start();
-include_once "php/config.php";
+require_once "php/config.php";
 if (!isset($_SESSION['unique_id'])) {
     header("location: login.php");
 } else {
@@ -19,47 +19,47 @@ if (isset($_GET['b'])) {
 </style>
 
 <body>
-    <?php include_once "header.php";  ?>
+    <?php require_once "header.php";  ?>
     <div class="profile-container">
         <?php
-        include_once "profile/sidebar.php";
+        require_once "profile/sidebar.php";
         if (isset($_GET['link'])) {
             $link = $_GET['link'];
             switch ($link) {
                 case "profile":
-                    include_once "profile/profile.php";
+                    require_once "profile/profile.php";
                     break;
                 case "user-profile":
-                    include_once "profile/show-user-profile.php";
+                    require_once "profile/show-user-profile.php";
                     break;
                 case "schedule":
-                    include_once "profile/schedule.php";
+                    require_once "profile/schedule.php";
                     break;
                 case "appointment":
-                    include_once "profile/appointment.php";
+                    require_once "profile/appointment.php";
                     break;
                 case "patient":
-                    include_once "profile/patients.php";
+                    require_once "profile/patients.php";
                     break;
                 case "message":
-                    include_once "profile/users.php";
+                    require_once "profile/users.php";
                     break;
                 case "chat":
-                    include_once "profile/chat.php";
-                    include_once "profile/users.php";
+                    require_once "profile/chat.php";
+                    require_once "profile/users.php";
                     break;
                 default:
-                    include_once "profile/profile.php";
+                    require_once "profile/profile.php";
                     break;
             }
         } else
-            include_once "profile/profile.php";
+            require_once "profile/profile.php";
 
         ?>
 
     </div>
 
-    <?php include_once "footer.php" ?>
+    <?php require_once "footer.php" ?>
 
 
 </body>

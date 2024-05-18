@@ -1,5 +1,5 @@
 <?php session_start(); ?>
-<?php include_once "head.php" ?>
+<?php require_once "head.php" ?>
 <style>
 .home {
     width: 100%;
@@ -111,7 +111,7 @@
 </style>
 
 <body>
-    <?php include_once "header.php" ?>
+    <?php require_once "header.php" ?>
     <div class="home">
         <h1>Therapy that helps you find your inner peace</h1>
         <div>
@@ -152,7 +152,7 @@
         <a class="link" href="signup.php">Get Started</a>
     </div>
 
-    <?php include_once "footer.php" ?>
+    <?php require_once "footer.php" ?>
 </body>
 
 </html>

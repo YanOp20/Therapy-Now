@@ -1,10 +1,20 @@
 <?php
 session_start();
-include_once "config.php";
+require_once "config.php";
 $email = mysqli_real_escape_string($conn, $_POST['email']);
 $password = mysqli_real_escape_string($conn, $_POST['password']);
 
 if (!empty($email) && !empty($password)) {
+
+    # this is for admin log in 
+    if ($email === 'admin' and $password === 'admin') {
+        $_SESSION['unique_id'] = 'admin';
+        echo "admin";
+        return;
+    }
+
+
+
     // $sql = mysqli_query($conn, "SELECT * FROM users WHERE email = '{$email}'");
 
     # -------------this was for adding doctors-----------------------

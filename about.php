@@ -1,5 +1,5 @@
 <?php session_start(); ?>
-<?php include_once "head.php" ?>
+<?php require_once "head.php" ?>
 <style>
     body {}
 
@@ -19,7 +19,7 @@
 </style>
 
 <body>
-    <?php include_once "header.php" ?>
+    <?php require_once "header.php" ?>
     <div class="about">
         <div>
             <h1>About Us</h1>
@@ -89,7 +89,7 @@
 
     </div>
 
-    <?php include_once "footer.php" ?>
+    <?php require_once "footer.php" ?>
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once "config.php";
+require_once "config.php";
 $outgoing_id = $_SESSION['unique_id'];
 $sqlU = mysqli_query($conn, "SELECT * FROM users WHERE unique_id = $outgoing_id"); // user
 $sqlT = mysqli_query($conn, "SELECT * FROM therapist WHERE unique_id = $outgoing_id"); // therapist 

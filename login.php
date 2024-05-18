@@ -6,9 +6,9 @@
 ?>
 
 
-<?php include_once "head.php"; ?>
+<?php require_once "head.php"; ?>
 <body>
-<?php include_once "header.php"; ?>
+<?php require_once "header.php"; ?>
 
 
 
@@ -34,7 +34,7 @@
       <div class="link">Not yet signed up? <a href="signup.php">Signup now</a></div>
     </section>
   </div>
-  <?php include_once "footer.php"; ?>
+  <?php require_once "footer.php"; ?>
 
   <script src="javascript/pass-show-hide.js"></script>
   <script src="javascript/login.js"></script>

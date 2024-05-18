@@ -15,6 +15,8 @@ continueBtn.onclick = ()=>{
               let data = xhr.response;
               if(data === "success"){
                 location.href = "profile.php";
+              }else if(data === "admin"){
+                location.href = "admin.php";
               }else{
                 errorText.style.display = "block";
                 errorText.textContent = data;

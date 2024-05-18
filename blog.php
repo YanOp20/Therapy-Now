@@ -1,9 +1,9 @@
 <?php session_start(); ?>
 
-<?php include_once "head.php" ?>
+<?php require_once "head.php" ?>
 
 <body>
-    <?php include_once "header.php" ?>
+    <?php require_once "header.php" ?>
 
     <style>
         .blog {
@@ -273,7 +273,7 @@
         <?php
         $id = "";
         if (isset($_GET['id'])) {
-            // include_once "config.php";
+            // require_once "config.php";
             $id = $_GET['id'];
             $sql = "SELECT * FROM blog WHERE id=$id";
             $output = "";
@@ -301,7 +301,7 @@
             echo '</section>';
         } else {
             echo '<section class="see">';
-            include_once "php/get-blog.php";
+            require_once "php/get-blog.php";
             echo '</section>';
         }
         ?>
@@ -309,11 +309,25 @@
         <nav>
 
             <?php
-            include_once "php/config.php";
-            if (isset($_SESSION['unique_id'])) {
-                $sql = mysqli_query($conn, "SELECT * FROM therapist WHERE unique_id = {$_SESSION['unique_id']}");
+
+            require_once "php/config.php";
+
+            if (isset($_SESSION['unique_id']) && $_SESSION['unique_id'] != 'admin') {
+                $sql = mysqli_query($conn, "SELECT * FROM therapist WHERE unique_id = '{$_SESSION['unique_id']}'");
+            } else {
+                $sql = 'admin';
             }
-            if (isset($_SESSION['unique_id']) and mysqli_num_rows($sql) > 0) {
+
+            if (isset($_SESSION['unique_id']) && (is_string($sql) || mysqli_num_rows($sql) > 0)) {
+
+            // require_once "php/config.php";
+            // if (isset($_SESSION['unique_id']) and $_SESSION['unique_id'] != 'admin') {
+            //     $sql = mysqli_query($conn, "SELECT * FROM therapist WHERE unique_id = {$_SESSION['unique_id']}");
+            // }else{
+            //     $sql = 'admin';
+            // }
+
+            // if (isset($_SESSION['unique_id']) and (mysqli_num_rows($sql) > 0 or $_SESSION['unique_id']) == 'admin') {
             ?>
                 <!-- <div class="content" style="  display: flex;  align-items: center;"> -->
 
@@ -334,7 +348,8 @@
             <?php
             } else {
             ?>
-                <div style="display: none;"><button class="create-form-btn" id="create-form-btn">Create a post</button>
+                <div style="display: none;">
+                    <button class="create-form-btn" id="create-form-btn">Create a post</button>
                 </div>
 
             <?php
@@ -345,11 +360,11 @@
 
 
 
-            include_once "php/get-blog-nav.php";  ?>
+            require_once "php/get-blog-nav.php";  ?>
         </nav>
     </div>
     <button id="seemore" style="display:none"> See more</button>
-    <?php include_once "footer.php" ?>
+    <?php require_once "footer.php" ?>
     <script src="javascript/blog.js"></script>
 
 
