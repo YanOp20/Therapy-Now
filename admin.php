@@ -392,12 +392,12 @@ require_once "php/feachToDisplayData.php";
         <h2>Clients</h2>
         <div class="online-clients-number row">
           <span>online Clients</span>
-          <span class="count-number"> <?= countRows($conn, 'users', "WHERE status = 'Active now'") ?></span>
+          <span id="count-online-clients" class="count-number"> <?= countRows($conn, 'users', "WHERE status = 'Active now'") ?></span>
           <button id="show-online-client">show</button>
         </div>
         <div class="all-clients-number row">
           <span>All Clients</span>
-          <span class="count-number"><?= countRows($conn, 'users') ?></span>
+          <span id="count-all-clients" class="count-number"><?= countRows($conn, 'users') ?></span>
           <button id="show-all-client">show</button>
         </div>
 
@@ -409,13 +409,13 @@ require_once "php/feachToDisplayData.php";
 
         <div class="row online-therapist-number">
           <span>online Therapist</span>
-          <span class="count-number"><?= countRows($conn, 'therapist', "WHERE status = 'Active now'") ?></span>
+          <span id="count-online-therapist" class="count-number"><?= countRows($conn, 'therapist', "WHERE status = 'Active now'") ?></span>
           <button id="show-online-therapist">show</button>
         </div>
 
         <div class="all-therapist-number row">
           <span>All Therapist</span>
-          <span class="count-number"><?= countRows($conn, 'therapist') ?></span>
+          <span id="count-all-therapist" class="count-number"><?= countRows($conn, 'therapist') ?></span>
           <button id="show-all-therapist">show</button>
         </div>
         <div class="row button">
@@ -535,8 +535,8 @@ require_once "php/feachToDisplayData.php";
               <option value="Dialectical behavior therapy">Dialectical behavior therapy</option>
               <option value="Family therapy">Family therapy</option>
               <option value="Psychodynamic therapy">Psychodynamic therapy</option>
-              <option value="Play therapy">Divorced</option>
-              <option value="other">Widowed</option>
+              <option value="Play therapy">Play therapy</option>
+              <option value="other">other</option>
             </select>
           </div>
           <div class="field input">
@@ -569,7 +569,7 @@ require_once "php/feachToDisplayData.php";
         </div>
         <div class="e-t" style="display: none;"></div>
         <div class="users-list" id="all-therapist-list-remove">
-          <div class="therapist">
+          <div class="therapist" id="therapist-remove-t">
             <?php displayUsers($therapists, 'therapist') ?>
           </div>
         </div>
@@ -581,6 +581,8 @@ require_once "php/feachToDisplayData.php";
 <script>
   const leftSection = document.querySelector('.container .left-section');
   const rightSection = document.querySelector('.container .right-section');
+
+
 
   const online_client = document.querySelector('.container .right-section .online-client');
   const all_client = document.querySelector('.container .right-section .all-client');

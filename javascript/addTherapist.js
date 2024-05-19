@@ -3,6 +3,8 @@ const searchBar = document.querySelector(".search input"),
 searchIcon = document.querySelector(".search button"),
 usersList = document.querySelector(".users-list");
 
+
+
 searchIcon.onclick = ()=>{
   searchBar.classList.toggle("show");
   searchIcon.classList.toggle("active");
@@ -51,10 +53,14 @@ e = form.querySelector(".error-text");
 
 form.onsubmit = (e)=>{
     e.preventDefault();
-}
-
+  }
+  
 continueBtn.onclick = ()=>{
-    let xhr = new XMLHttpRequest();
+  console.log("add button was clicked")
+
+  
+  
+  let xhr = new XMLHttpRequest();
     xhr.open("POST", "php/addTherapist.php", true);
     xhr.onload = ()=>{
       if(xhr.readyState === XMLHttpRequest.DONE){
@@ -67,8 +73,9 @@ continueBtn.onclick = ()=>{
                 e.style.border='none';
                 e.textContent = "Therapist added successfully";
                 setTimeout(() => {e.style.display = "none";}, 2000);
-                form.reset(); 
-
+                form.reset();
+                
+                chatNamespace.emit("adding therapist", "adding therapist")                
               }else{
                 e.style.display = "block";
                 e.style.color = "red";

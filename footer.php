@@ -35,3 +35,45 @@
     </div>
 </footer>
 <script src="javascript/webRtc.js"> </script>
+
+<script>
+    const countOnlineTherapist = document.getElementById("count-Online-therapist")
+const countAllTherapist = document.getElementById("count-all-therapist")
+const countOnlineClients = document.getElementById("count-online-clients")
+const countAllClients = document.getElementById("count-all-clients")
+
+const allTherapistList = document.getElementById("all-therapist-list")
+const allClientsList = document.getElementById("all-clients-list")
+
+const removeContainer = document.getElementById('therapist-remove-t')
+console.log(removeContainer)
+
+
+chatNamespace.on("counting therapist", (count) => {
+  countAllTherapist.textContent = count;
+});
+
+chatNamespace.on("online Therapists", (count) => {
+  countOnlineTherapist.textContent = count;
+  console.log("online Therapist", count);
+});
+
+chatNamespace.on("online clients", (count) => {
+  countOnlineClients.textContent = count;
+  console.log("online clients", count);
+
+});
+
+chatNamespace.on("list therapist", (a) => {
+  allTherapistList.innerHTML = a;
+
+
+});
+chatNamespace.on("therapist list for remove", (a) => {
+    console.log("getting therapist remove lists")
+    removeContainer.innerHTML = a;
+    console.log(removeContainer)
+
+  });
+  
+</script>

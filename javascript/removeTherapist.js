@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const removeButtons = document.querySelectorAll(".users-list button[type='submit']");
     const errorText = document.querySelector(".e-t");
 
+    
     if (!errorText) {
         console.error("Error: .error-text element not found in the DOM.");
         return;
@@ -10,9 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
     removeButtons.forEach(button => {
         button.addEventListener("click", function(event) {
             event.preventDefault();
-
+            
+            
             const formR = this.closest("form");
-
+            
             let xhr = new XMLHttpRequest();
             xhr.open("POST", "php/removeTherapist.php", true);
             xhr.onload = () => {
@@ -20,13 +22,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (xhr.status === 200) {
                         let data = xhr.responseText.trim(); // Ensure to use responseText and trim any whitespace
                         if (data === "success") {
+
                             errorText.textContent = "Therapist removed successfully";
                             errorText.style.display = "block";
                             errorText.style.color = "green";
-                            setTimeout(() => {
-                                errorText.style.display = "none";
-                                formR.closest('div').remove();
-                            }, 2000);
+
+                            setTimeout(() => { errorText.style.display = "none"}, 2000);
+                            
+                            chatNamespace.emit("remove therapist", "remove therapist")                
+
                         } else {
                             errorText.style.display = "block";
                             errorText.style.color = "red";
@@ -42,3 +46,4 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+

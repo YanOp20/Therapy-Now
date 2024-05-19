@@ -3,10 +3,10 @@
     const incomingID = document.querySelector('.incoming_id').value;
     const roomId = [outgoingID, incomingID].sort().join('-');
 
-    const chatNamespace = io.connect(`${host}:${port}/chat`, {
-        secure: true,
-        rejectUnauthorized: false
-    });
+    // const chatNamespace = io.connect(`${host}:${port}/chat`, {
+    //     secure: true,
+    //     rejectUnauthorized: false
+    // });
 
     chatNamespace.on('connect', () => {
         console.log('Connected to Socket.IO server chatNamespace');

@@ -27,7 +27,7 @@
                         <img src="php/images/admin-icon.png" alt="">
                         <span>admin</span>
                     </a>
-                    <a href="php/logout.php?logout_id=<?php echo $_SESSION['unique_id'] ?>" class="logout">Logout</a>
+                    <a  href="php/logout.php?logout_id=<?php echo $_SESSION['unique_id'] ?>" class="logout">Logout</a>
                 </div>
        <?php }else {
             $sql = mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$_SESSION['unique_id']}");
@@ -157,10 +157,17 @@
 
     // const webRtcNamespace = io.connect(`${host}:${port}/webRtc`, { auth: { userName, roomId } });
     // const webRtcNamespace = io.connect(`${host}:${port}/webRtc`);
-
+    const chatNamespace = io.connect(`${host}:${port}/chat`, {
+        secure: true,
+        rejectUnauthorized: false
+    });
 
 </script>
-
+<script>
+    document.querySelector('a.logout').addEventListener('click', () => {
+        chatNamespace.emit('logout', 'a user logout');
+    },)
+</script>
 
 
 

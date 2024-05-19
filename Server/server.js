@@ -6,6 +6,7 @@ const fs = require("fs"),
   os = require("os"),
   path = require("path"),
   app = express();
+const { count } = require("console");
   const cors = require('cors');
 
 // const staticDirectory = path.join(__dirname, "../javascript/webRtc");
@@ -50,6 +51,77 @@ const chatNamespace = io.of("/chat");
 // Database  connection
 const connection = mysql.createConnection({  host: "localhost",  user: "root",  password: "",  database: "therapy",});
 connection.connect((err) => {  if (err) throw err;  console.log("Connected to MySQL database");});
+
+function countRows(connection, table, condition = "") {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT COUNT(*) AS total_rows FROM ${table} ${condition}`;
+    connection.query(sql, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        if (result.length > 0) {
+          resolve(result[0].total_rows);
+        } else {
+          resolve(0);
+        }
+      }
+    });
+  });
+}
+
+
+
+function fetchData(connection, table, condition = "") {
+  return new Promise((resolve, reject) => {
+      const sql = `SELECT * FROM ${table} ${condition}`;
+      connection.query(sql, (err, result) => {
+          if (err) {
+              reject(err);
+          } else {
+              resolve(result);
+          }
+      });
+  });
+}
+
+function displayUsers(users, t = "") {
+  let output = '';
+  users.forEach(user => {
+      output += "<div>";
+      output += `<img src='php/images/${user.img}' alt='img'>`;
+      output += `<p>${user.fname} ${user.lname}</p>`;
+      if (t === 'therapist') {
+          output += `
+              <div class='remove-button'>
+                  <form  method='post' autocomplete='off'>
+                      <input type='hidden' name='remove' value='${user.unique_id}'>
+                      <button type='submit'>Remove</button>
+                  </form>
+              </div>
+          `;
+      }
+      output += "</div>";
+  });
+  return output;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //offers will contain {}
 // const offers = [  // offererUserName  // offer  // offerIceCandidates  // answererUserName  // answer  // answererIceCandidates
@@ -221,6 +293,85 @@ chatNamespace.on("connection", (socket) => {
 });
   socket.on("join room", (roomId) => {
     socket.join(roomId);
+  });
+
+  socket.on("adding therapist", r => {
+    (async () => {
+      try {
+        const therapists = await fetchData(connection, 'therapist');
+        const countAllTherapists = await countRows(connection, 'therapist');
+
+        socket.emit("counting therapist", countAllTherapists);   
+        socket.emit("list therapist", displayUsers(therapists));
+        socket.emit("therapist list for remove", displayUsers(therapists, 'therapist'));
+
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    })();    
+  });
+
+  socket.on("login", r => {
+    (async () => {
+      try {
+        console.log(r)
+        const countOnlineClients = await countRows(connection, 'users', 'WHERE status = \'Active now\'');
+        const countOnlineTherapists = await countRows(connection, 'therapist', 'WHERE status = \'Active now\'');
+
+        socket.emit("online clients", countOnlineClients);
+        socket.emit("online Therapists", countOnlineTherapists);
+        console.log("Online clients", countOnlineClients);
+        console.log("Online Therapists", countOnlineTherapists);
+
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    })();    
+
+  });
+  socket.on("logout", r => {
+    (async () => {
+      try {
+        console.log(r)
+        const countOnlineClients = await countRows(connection, 'users', 'WHERE status = \'Active now\'');
+        const countOnlineTherapists = await countRows(connection, 'therapist', 'WHERE status = \'Active now\'');
+
+        socket.emit("online clients", countOnlineClients);
+        socket.emit("online Therapists", countOnlineTherapists);
+        console.log("Online clients", countOnlineClients);
+        console.log("Online Therapists", countOnlineTherapists);
+
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    })();    
+
+  });
+
+  socket.on("remove therapist", r => {
+    (async () => {
+      try {
+        console.log("removing therapeutic")
+
+        const a = await fetchData(connection, 'therapist')
+
+        const rowCount = await countRows(connection, 'therapist');
+        const rowOnlineCount = await countRows(connection, 'therapist', 'WHERE status = \'Active now\'');
+        console.log("Number of rows:", rowCount);
+        
+        socket.emit("counting therapist", rowCount);
+        socket.emit("online therapist", rowOnlineCount);
+        
+        socket.emit("list therapist", displayUsers(a));
+
+        socket.emit("therapist list for remove", displayUsers(a, 'therapist'));
+        // console.log(displayUsers(a, 'therapist'))
+
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    })();    
+
   });
 
   socket.on("get messages by user IDs", (data) => {
