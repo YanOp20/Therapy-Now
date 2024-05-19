@@ -5,6 +5,10 @@ require_once "php/config.php";
 if (!isset($_SESSION['unique_id'])) {
     header("location: login.php");
 } else {
+    if ($_SESSION['unique_id'] == 'admin') {
+        header("location: admin.php");
+    
+    }
     $outgoing_id = $_SESSION['unique_id'];
 }
 if (isset($_GET['b'])) {
