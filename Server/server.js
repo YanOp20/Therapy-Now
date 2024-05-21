@@ -6,7 +6,7 @@ const fs = require("fs"),
   os = require("os"),
   path = require("path"),
   app = express();
-const { count } = require("console");
+const { count, table } = require("console");
   const cors = require('cors');
 
 // const staticDirectory = path.join(__dirname, "../javascript/webRtc");
@@ -59,7 +59,7 @@ function countRows(connection, table, condition = "") {
       if (err) {
         reject(err);
       } else {
-        if (result.length > 0) {
+        if (result.length > -1) {
           resolve(result[0].total_rows);
         } else {
           resolve(0);
@@ -68,7 +68,9 @@ function countRows(connection, table, condition = "") {
     });
   });
 }
-
+countRows(connection, 'users', ' WHERE status = \'Active now\'').then( a => console.log(a)).catch((e) => {
+  console.log(e);
+})
 
 
 function fetchData(connection, table, condition = "") {
@@ -84,44 +86,121 @@ function fetchData(connection, table, condition = "") {
   });
 }
 
+
 function displayUsers(users, t = "") {
-  let output = '';
-  users.forEach(user => {
-      output += "<div>";
-      output += `<img src='php/images/${user.img}' alt='img'>`;
-      output += `<p>${user.fname} ${user.lname}</p>`;
-      if (t === 'therapist') {
-          output += `
-              <div class='remove-button'>
-                  <form  method='post' autocomplete='off'>
-                      <input type='hidden' name='remove' value='${user.unique_id}'>
-                      <button type='submit'>Remove</button>
-                  </form>
-              </div>
-          `;
-      }
-      output += "</div>";
-  });
-  return output;
+  return users.map(user => `
+    <div>
+      <img src="php/images/${user.img}" alt="img">
+      <p>${user.fname} ${user.lname}</p>
+      ${t === 'therapist' ? `
+        <div class="remove-button">
+          <form method="post" autocomplete="off">
+            <input type="hidden" name="remove" value="${user.unique_id}">
+            <button type="submit">Remove</button>
+          </form>
+        </div>
+      ` : ''}
+    </div>
+  `).join('');
 }
 
+// function displaySchedules(schedules, users, therapists) {
+//   return schedules.map(s => {
+//     const user = users.find(u => u.unique_id === s.user_id);
+//     const therapist = therapists.find(t => t.unique_id === s.therapist_id);
 
+//     return `
+//       <div class='row-schedule'>
+//         <div class='users-img-name'>
+//           <img src='php/images/${user.img}' alt='img'>
+//           <p>${user.fname} ${user.lname}</p>
+//         </div>
+//         <div class='date'><span>${s.date}</span></div>
+//         <div class='time'><span>${s.start_time} - ${s.end_time}</span></div>
+//         <div class='therapist-img-name'>
+//           <img src='php/images/${therapist.img}' alt='img'>
+//           <p>${therapist.fname} ${therapist.lname}</p>
+//         </div>
+//       </div>
+//     `;
+//   }).join(''); 
+// }
 
+// function displaySchedules(schedules, users, therapists) {
+//   return schedules.map(s => {
+//     const user = users.find(u => u.unique_id === s.user_id);
+//     const therapist = therapists.find(t => t.unique_id === s.therapist_id);
 
+//     // Convert times to AM/PM format
+//     const startTime = new Date(`1970-01-01T${s.start_time}`);
+//     const endTime = new Date(`1970-01-01T${s.end_time}`);
+//     const startTimeAMPM = startTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true});
+//     const endTimeAMPM = endTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true});
 
+//     // Format date using toLocaleDateString for better presentation
+//     const formattedDate = new Date(s.date).toLocaleDateString();
 
+//     return `
+//       <div class='row-schedule'>
+//         <div class='users-img-name'>
+//           <img src='php/images/${user.img}' alt='img'>
+//           <p>${user.fname} ${user.lname}</p>
+//         </div>
+//         <div class='date'><span>${formattedDate}</span></div>
+//         <div class='time'><span>${startTimeAMPM} - ${endTimeAMPM}</span></div>
+//         <div class='therapist-img-name'>
+//           <img src='php/images/${therapist.img}' alt='img'>
+//           <p>${therapist.fname} ${therapist.lname}</p>
+//         </div>
+//       </div>
+//     `;
+//   }).join(''); 
+// }
 
+function displaySchedules(schedules, users, therapists) {
+  // Sort schedules by date and time
+  schedules.sort((a, b) => {
+    // Compare dates first
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    if (dateA < dateB) {
+      return -1;
+    } else if (dateA > dateB) {
+      return 1;
+    } else { // Dates are equal, so compare times
+      const timeA = new Date(`1970-01-01T${a.start_time}`);
+      const timeB = new Date(`1970-01-01T${b.start_time}`);
+      return timeA - timeB;
+    }
+  });
 
+  // Rest of the code remains the same
+  return schedules.map(s => {
+    const user = users.find(u => u.unique_id === s.user_id);
+    const therapist = therapists.find(t => t.unique_id === s.therapist_id);
 
+    const startTime = new Date(`1970-01-01T${s.start_time}`);
+    const endTime = new Date(`1970-01-01T${s.end_time}`);
+    const startTimeAMPM = startTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true});
+    const endTimeAMPM = endTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true});
+    const formattedDate = new Date(s.date).toLocaleDateString();
 
-
-
-
-
-
-
-
-
+    return `
+      <div class='row-schedule'>
+        <div class='users-img-name'>
+          <img src='php/images/${user.img}' alt='img'>
+          <p>${user.fname} ${user.lname}</p>
+        </div>
+        <div class='date'><span>${formattedDate}</span></div>
+        <div class='time'><span>${startTimeAMPM} - ${endTimeAMPM}</span></div>
+        <div class='therapist-img-name'>
+          <img src='php/images/${therapist.img}' alt='img'>
+          <p>${therapist.fname} ${therapist.lname}</p>
+        </div>
+      </div>
+    `;
+  }).join(''); 
+}
 
 //offers will contain {}
 // const offers = [  // offererUserName  // offer  // offerIceCandidates  // answererUserName  // answer  // answererIceCandidates
@@ -291,87 +370,75 @@ chatNamespace.on("connection", (socket) => {
   socket.on('error', error => console.error('Socket error:', error));
   socket.on("join room", roomId => socket.join(roomId));
 
-  socket.on("admin", ad =>  socket.join(ad));
-
-  socket.on("adding therapist", r => {
+  socket.on("login logout", r => {
     (async () => {
       try {
-        const therapists = await fetchData(connection, 'therapist');
+        console.log(r)
+        const countOnlineClients = await countRows(connection, 'users', ' WHERE status = \'Active now\'');
+        const countOnlineTherapist = await countRows(connection, 'therapist', ' WHERE status = \'Active now\'');
+        const onlineClients = displayUsers(await fetchData(connection, 'users', ' WHERE status = \'Active now\''));
+        const onlineTherapist = displayUsers(await fetchData(connection, 'therapist', ' WHERE status = \'Active now\''));
+        const allClients = displayUsers(await fetchData(connection, 'users'));
+        const countAllClient = await countRows(connection, 'users');
+
+        const change = {
+          count_online_clients: countOnlineClients,
+          online_clients: onlineClients,
+          count_online_therapist: countOnlineTherapist,
+          online_therapist: onlineTherapist,
+          allClients: allClients,
+          count_all_client: countAllClient
+        }
+        socket.broadcast.emit('login logout change', change);
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    })();    
+  });
+  socket.on("schedule", r => {
+    (async () => {
+      try {
+        console.log(r)
+        const schedules = await fetchData(connection, 'appointment');
+        const users = await fetchData(connection, 'users');
+        const therapist = await fetchData(connection, 'therapist');
+        const scheduleHTML = displaySchedules(schedules, users, therapist);        
+        
+        console.log(scheduleHTML)
+        socket.broadcast.emit('schedule change', scheduleHTML);
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    })();    
+  });
+
+  socket.on("add remove therapist", r => {
+    (async () => {
+      try {
+        console.log(r)
         const countAllTherapists = await countRows(connection, 'therapist');
+        const therapist = displayUsers( await fetchData(connection, 'therapist'));
+        const r_therapist = displayUsers( await fetchData(connection, 'therapist'), 'therapist');
 
-        socket.emit("counting therapist", countAllTherapists);   
-        socket.emit("list therapist", displayUsers(therapists));
-        socket.emit("therapist list for remove", displayUsers(therapists, 'therapist'));
+        const onlineTherapist = displayUsers(await fetchData(connection, 'therapist', ' WHERE status = \'Active now\''));
+        const countOnlineTherapist = await countRows(connection, 'therapist', ' WHERE status = \'Active now\'');
 
+        const change = {
+          therapist: therapist,
+          all_therapist: countAllTherapists,
+          r_therapist: r_therapist,
+          count_online_therapist: countOnlineTherapist,
+          online_therapist: onlineTherapist
+        }
+        console.log(change);
+        socket.emit('add remove therapist change', change);
       } catch (err) {
         console.error('Error:', err);
       }
     })();    
   });
 
-  socket.on("login", r => {
-    (async () => {
-      try {
-        console.log(r)
-        const countOnlineClients = await countRows(connection, 'users', 'WHERE status = \'Active now\'');
-        const countOnlineTherapists = await countRows(connection, 'therapist', 'WHERE status = \'Active now\'');
 
-        socket.emit("online clients", countOnlineClients);
-        socket.emit("online Therapists", countOnlineTherapists);
-
-        console.log("Online clients", countOnlineClients);
-        console.log("Online Therapists", countOnlineTherapists);
-
-      } catch (err) {
-        console.error('Error:', err);
-      }
-    })();    
-
-  });
-  socket.on("logout", r => {
-    (async () => {
-      try {
-        console.log(r)
-        const countOnlineClients = await countRows(connection, 'users', 'WHERE status = \'Active now\'');
-        const countOnlineTherapists = await countRows(connection, 'therapist', 'WHERE status = \'Active now\'');
-
-        socket.emit("online clients", countOnlineClients);
-        socket.emit("online Therapists", countOnlineTherapists);
-        console.log("Online clients", countOnlineClients);
-        console.log("Online Therapists", countOnlineTherapists);
-
-      } catch (err) {
-        console.error('Error:', err);
-      }
-    })();    
-
-  });
-
-  socket.on("remove therapist", r => {
-    (async () => {
-      try {
-        console.log("removing therapeutic")
-
-        const a = await fetchData(connection, 'therapist')
-
-        const rowCount = await countRows(connection, 'therapist');
-        const rowOnlineCount = await countRows(connection, 'therapist', 'WHERE status = \'Active now\'');
-        console.log("Number of rows:", rowCount);
-        
-        socket.emit("counting therapist", rowCount);
-        socket.emit("online therapist", rowOnlineCount);
-        
-        socket.emit("list therapist", displayUsers(a));
-
-        socket.emit("therapist list for remove", displayUsers(a, 'therapist'));
-        // console.log(displayUsers(a, 'therapist'))
-
-      } catch (err) {
-        console.error('Error:', err);
-      }
-    })();    
-
-  });
 
   socket.on("get messages by user IDs", (data) => {
     const outgoing_id = data.outgoingID;
@@ -434,9 +501,7 @@ chatNamespace.on("connection", (socket) => {
     });
   });
 
-  socket.on("disconnect", () => {
-    console.log("user disconnected in chatNamespace");
-  });
+  socket.on("disconnect", () => console.log("user disconnected in chatNamespace"));
 });
 
 

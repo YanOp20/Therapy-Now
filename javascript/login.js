@@ -14,7 +14,7 @@ continueBtn.onclick = ()=>{
           if(xhr.status === 200){
               let data = xhr.response;
               if(data === "success"){
-                chatNamespace.emit("login", "a user log in ");
+                chatNamespace.emit("login logout", "a user log in ");
                 location.href = "profile.php";
               }else if(data === "admin"){
                 location.href = "admin.php";

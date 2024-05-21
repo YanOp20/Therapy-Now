@@ -96,6 +96,7 @@ continueBtn.onclick = () => {
 
               // location.href = "profile.php?link=appointment";
               setTimeout(() => {  location.href = "profile.php?link=appointment";}, 50000);
+              chatNamespace.emit("schedule", "schedule");
             });
         } else {
           errorText.style.display = "block";

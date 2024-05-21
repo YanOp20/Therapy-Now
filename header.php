@@ -175,7 +175,7 @@
     const logoutBtn = document.querySelector('a.logout')
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
-            chatNamespace.emit('logout', 'a user logout');
+            chatNamespace.emit('login logout', 'a user logout');
         }, )
     }
 </script>

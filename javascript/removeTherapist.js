@@ -26,10 +26,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             errorText.textContent = "Therapist removed successfully";
                             errorText.style.display = "block";
                             errorText.style.color = "green";
-
-                            setTimeout(() => { errorText.style.display = "none"}, 2000);
                             
-                            chatNamespace.emit("remove therapist", "remove therapist")                
+                            setTimeout(() => { errorText.style.display = "none"}, 3000);
+
+                            
+                            chatNamespace.emit("add remove therapist", "remove therapist")                
 
                         } else {
                             errorText.style.display = "block";

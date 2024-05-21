@@ -32,8 +32,8 @@ if (!empty(trim($fname)) && !empty(trim($lname)) && !empty($gender) && !empty($b
                         $time = time();
                         $new_img_name = $time . $img_name;
                         if (move_uploaded_file($tmp_name, "images/" . $new_img_name)) {
-                            $ran_id = rand(time(), 100000000);
-                            $status = "Active now";
+                            $ran_id = rand(time(), 400000);
+                            $status = "Offline now";
                             // $encrypt_pass = md5($password); 
                             $insert_query = mysqli_query($conn, "INSERT INTO therapist (unique_id, fname, lname, gender, birthDate, specialization, email, phone, password, img, status) 
                                 VALUES ({$ran_id}, '{$fname}','{$lname}', '{$gender}', '{$birthDate}', '{$specialization}', '{$email}', '{$phone}', '{$password}', '{$new_img_name}', '{$status}')");

@@ -75,7 +75,7 @@ continueBtn.onclick = ()=>{
                 setTimeout(() => {e.style.display = "none";}, 2000);
                 form.reset();
                 
-                chatNamespace.emit("adding therapist", "adding therapist")                
+                chatNamespace.emit("add remove therapist", "adding therapist")                
               }else{
                 e.style.display = "block";
                 e.style.color = "red";

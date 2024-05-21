@@ -473,7 +473,7 @@ require_once "php/feachToDisplayData.php";
         </div>
       </div>
       <div class="schedules show">
-        <h2>Shedules</h2>
+        <h2>Schedules</h2>
         <div class="search">
           <input id="search-all-schedules" type="text" placeholder="Enter name to search...">
           <button><i class="fas fa-search"></i></button>
@@ -638,11 +638,55 @@ require_once "php/feachToDisplayData.php";
     foo(leftSection, remove_therapist)
   })
 </script>
-<script>
-  socket.emit("admin", 'admin');
-</script>
+
 <script src="javascript/pass-show-hide.js"></script>
 <script src="javascript/addTherapist.js"></script>
 <script src="javascript/removeTherapist.js"></script>
+<script>
+  const countAllTherapist = document.getElementById("count-all-therapist")
+  const countOnlineTherapist = document.getElementById("count-online-therapist")
+    
+  const countAllClients = document.getElementById("count-all-clients")
+  const countOnlineClients = document.getElementById("count-online-clients")
+
+  const allTherapistList = document.getElementById("all-therapist-list")
+  const onlineTherapistList = document.getElementById("online-therapist-list")
+  
+  const allClientsList = document.getElementById("all-clients-list")
+  const onlineClientsList = document.getElementById("online-clients-list")
+
+  const removeContainer = document.getElementById('therapist-remove-t')
+  
+  const scheduleList = document.getElementById('all-schedules-list')
+
+
+
+  chatNamespace.on('login logout change', c => {
+    countOnlineTherapist.innerHTML = c.count_online_therapist
+    countOnlineClients.innerHTML = c.count_online_clients
+
+    onlineTherapistList.innerHTML = c.online_therapist
+    onlineClientsList.innerHTML = c.online_clients
+
+    countAllClients.innerHTML = c.count_all_client
+    allClientsList.innerHTML = c.allClients
+  })
+
+  chatNamespace.on('add remove therapist change', c => {
+    countAllTherapist.innerHTML = c.all_therapist
+    allTherapistList.innerHTML = c.therapist
+    removeContainer.innerHTML = c.r_therapist
+
+    countOnlineTherapist.innerHTML = c.count_online_therapist
+    onlineTherapistList.innerHTML = c.online_therapist
+  })
+
+  chatNamespace.on('schedule change', a => {
+    scheduleList.innerHTML = a
+    scheduleList.scrollTop = scheduleList.scrollHeight; 
+  })
+
+</script>
+
 
 </html>
