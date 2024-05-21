@@ -638,6 +638,9 @@ require_once "php/feachToDisplayData.php";
     foo(leftSection, remove_therapist)
   })
 </script>
+<script>
+  socket.emit("admin", 'admin');
+</script>
 <script src="javascript/pass-show-hide.js"></script>
 <script src="javascript/addTherapist.js"></script>
 <script src="javascript/removeTherapist.js"></script>

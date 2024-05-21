@@ -79,5 +79,5 @@ if (mysqli_num_rows($sqlU) > 0) {
 
 
 <script src="javascript/chat2.js"> </script>
-<script src="javascript/webRtc1.js"> </script>
+<script src="javascript/webRtc.js"> </script>
 <script src="javascript/chat.js"> </script>

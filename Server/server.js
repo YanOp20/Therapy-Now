@@ -288,12 +288,10 @@ socket.on('userDisconnected', (roomId, callerSocketId) => {
 // Chat event handlers (in chatNamespace)
 chatNamespace.on("connection", (socket) => {
   console.log("A user connected in chatNamespace");
-  socket.on('error', (error) => {
-    console.error('Socket error:', error);
-});
-  socket.on("join room", (roomId) => {
-    socket.join(roomId);
-  });
+  socket.on('error', error => console.error('Socket error:', error));
+  socket.on("join room", roomId => socket.join(roomId));
+
+  socket.on("admin", ad =>  socket.join(ad));
 
   socket.on("adding therapist", r => {
     (async () => {
@@ -320,6 +318,7 @@ chatNamespace.on("connection", (socket) => {
 
         socket.emit("online clients", countOnlineClients);
         socket.emit("online Therapists", countOnlineTherapists);
+
         console.log("Online clients", countOnlineClients);
         console.log("Online Therapists", countOnlineTherapists);
 

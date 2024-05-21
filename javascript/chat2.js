@@ -3,20 +3,8 @@
     const incomingID = document.querySelector('.incoming_id').value;
     const roomId = [outgoingID, incomingID].sort().join('-');
 
-    // const chatNamespace = io.connect(`${host}:${port}/chat`, {
-    //     secure: true,
-    //     rejectUnauthorized: false
-    // });
 
-    chatNamespace.on('connect', () => {
-        console.log('Connected to Socket.IO server chatNamespace');
-    });
-    chatNamespace.on('connect_error', (error) => {
-        console.error('Connection error:', error);
-    });
-    chatNamespace.on('disconnect', () => {
-        console.log('Disconnected from Socket.IO server chatnamespace');
-    });
+
     chatNamespace.emit('get messages by user IDs', { outgoingID, incomingID    });
 
 

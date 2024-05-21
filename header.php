@@ -21,15 +21,15 @@
                 <a href="signup.php">Sign up</a>
                 <a href="login.php">Log in</a>
             </div>
-<?php } else if(isset($_SESSION['unique_id']) and $_SESSION['unique_id'] == 'admin'){?>
-                <div class="user-buttons user-profile c">
-                    <a href="admin.php" class="pro_link">
-                        <img src="php/images/admin-icon.png" alt="">
-                        <span>admin</span>
-                    </a>
-                    <a  href="php/logout.php?logout_id=<?php echo $_SESSION['unique_id'] ?>" class="logout">Logout</a>
-                </div>
-       <?php }else {
+        <?php } else if (isset($_SESSION['unique_id']) and $_SESSION['unique_id'] == 'admin') { ?>
+            <div class="user-buttons user-profile c">
+                <a href="admin.php" class="pro_link">
+                    <img src="php/images/admin-icon.png" alt="">
+                    <span>admin</span>
+                </a>
+                <a href="php/logout.php?logout_id=<?php echo $_SESSION['unique_id'] ?>" class="logout">Logout</a>
+            </div>
+        <?php } else {
             $sql = mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$_SESSION['unique_id']}");
             if (mysqli_num_rows($sql) > 0) {
                 $row = mysqli_fetch_assoc($sql);
@@ -44,7 +44,7 @@
                 </a>
                 <a href="php/logout.php?logout_id=<?php echo $row['unique_id']; ?>" class="logout">Logout</a>
             </div>
-    <?php } ?>
+        <?php } ?>
 
 
         <button id="mobile-menu-button" class="menu-button"><i class="fa fa-bars"></i></button>
@@ -161,12 +161,23 @@
         secure: true,
         rejectUnauthorized: false
     });
-
+    chatNamespace.on('connect', () => {
+        console.log('Connected to Socket.IO server chatNamespace');
+    });
+    chatNamespace.on('connect_error', (error) => {
+        console.error('Connection error:', error);
+    });
+    chatNamespace.on('disconnect', () => {
+        console.log('Disconnected from Socket.IO server chatnamespace');
+    });
 </script>
 <script>
-    document.querySelector('a.logout').addEventListener('click', () => {
-        chatNamespace.emit('logout', 'a user logout');
-    },)
+    const logoutBtn = document.querySelector('a.logout')
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            chatNamespace.emit('logout', 'a user logout');
+        }, )
+    }
 </script>
 
 

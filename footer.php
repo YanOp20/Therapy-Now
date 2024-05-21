@@ -34,7 +34,6 @@
         <p class="copy">© 2023 Online Therapy. All rights reserved.</p>
     </div>
 </footer>
-<script src="javascript/webRtc.js"> </script>
 
 <script>
     const countOnlineTherapist = document.getElementById("count-Online-therapist")
@@ -46,7 +45,7 @@ const allTherapistList = document.getElementById("all-therapist-list")
 const allClientsList = document.getElementById("all-clients-list")
 
 const removeContainer = document.getElementById('therapist-remove-t')
-console.log(removeContainer)
+// console.log(removeContainer)
 
 
 chatNamespace.on("counting therapist", (count) => {
@@ -72,7 +71,7 @@ chatNamespace.on("list therapist", (a) => {
 chatNamespace.on("therapist list for remove", (a) => {
     console.log("getting therapist remove lists")
     removeContainer.innerHTML = a;
-    console.log(removeContainer)
+    // console.log(removeContainer)
 
   });
   
