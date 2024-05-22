@@ -86,6 +86,10 @@ function fetchData(connection, table, condition = "") {
   });
 }
 
+// <form method="post" autocomplete="off">
+//   <input type="hidden" name="remove" value="${user.unique_id}">
+//   <button type="submit">Remove</button>
+// </form>
 
 function displayUsers(users, t = "") {
   return users.map(user => `
@@ -94,10 +98,7 @@ function displayUsers(users, t = "") {
       <p>${user.fname} ${user.lname}</p>
       ${t === 'therapist' ? `
         <div class="remove-button">
-          <form method="post" autocomplete="off">
-            <input type="hidden" name="remove" value="${user.unique_id}">
-            <button type="submit">Remove</button>
-          </form>
+            <button data-id="${user.unique_id}">Remove</button> 
         </div>
       ` : ''}
     </div>
@@ -373,7 +374,7 @@ chatNamespace.on("connection", (socket) => {
   socket.on("login logout", r => {
     (async () => {
       try {
-        console.log(r)
+        // console.log(r)
         const countOnlineClients = await countRows(connection, 'users', ' WHERE status = \'Active now\'');
         const countOnlineTherapist = await countRows(connection, 'therapist', ' WHERE status = \'Active now\'');
         const onlineClients = displayUsers(await fetchData(connection, 'users', ' WHERE status = \'Active now\''));
@@ -398,13 +399,13 @@ chatNamespace.on("connection", (socket) => {
   socket.on("schedule", r => {
     (async () => {
       try {
-        console.log(r)
+        // console.log(r)
         const schedules = await fetchData(connection, 'appointment');
         const users = await fetchData(connection, 'users');
         const therapist = await fetchData(connection, 'therapist');
         const scheduleHTML = displaySchedules(schedules, users, therapist);        
         
-        console.log(scheduleHTML)
+        // console.log(scheduleHTML)
         socket.broadcast.emit('schedule change', scheduleHTML);
       } catch (err) {
         console.error('Error:', err);
@@ -415,7 +416,7 @@ chatNamespace.on("connection", (socket) => {
   socket.on("add remove therapist", r => {
     (async () => {
       try {
-        console.log(r)
+        // console.log(r)
         const countAllTherapists = await countRows(connection, 'therapist');
         const therapist = displayUsers( await fetchData(connection, 'therapist'));
         const r_therapist = displayUsers( await fetchData(connection, 'therapist'), 'therapist');
@@ -430,7 +431,7 @@ chatNamespace.on("connection", (socket) => {
           count_online_therapist: countOnlineTherapist,
           online_therapist: onlineTherapist
         }
-        console.log(change);
+        // console.log(change);
         socket.emit('add remove therapist change', change);
       } catch (err) {
         console.error('Error:', err);
