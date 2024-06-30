@@ -1,6 +1,7 @@
 <?php
 require_once "config.php";
-function fetchData($conn, $table, $condition = "") {
+function fetchData($conn, $table, $condition = "")
+{
     $data = array();
     $sql = "SELECT * FROM $table $condition";
     $result = mysqli_query($conn, $sql);
@@ -10,7 +11,8 @@ function fetchData($conn, $table, $condition = "") {
     return $data;
 }
 
-function countRows($conn, $table, $condition = "") {
+function countRows($conn, $table, $condition = "")
+{
     $sql = "SELECT COUNT(*) AS total_rows FROM $table $condition";
     $result = mysqli_query($conn, $sql);
 
@@ -22,25 +24,28 @@ function countRows($conn, $table, $condition = "") {
     }
 }
 
-function displayUsers($users, $t = "") {
+function displayUsers($users, $t = "")
+{
     foreach ($users as $user) {
         echo "<div>";
         echo "<img src='php/images/{$user['img']}' alt='img'>";
         echo "<p>{$user['fname']} {$user['lname']}</p>";
         echo $t === 'therapist' ? "<div class='remove-button'>
-                                    <form  method='post' autocomplete='off'>
-                                        <input type='hidden' name='remove' value='{$user['unique_id']}'>
-                                        <button type='submit'>Remove</button>
-                                    </form>
-                                </div>
-                                " :'';
+                                        <button data-id='{$user['unique_id']}'>Remove</button> 
+                                    </div> " : '';
         echo "</div>";
     }
 }
 
+// echo $t === 'therapist' ? "<div class='remove-button'>
+//                             <form  method='post' autocomplete='off'>
+//                                 <input type='hidden' name='remove' value='{$user['unique_id']}'>
+//                                 <button type='submit'>Remove</button>
+//                             </form>
+//                         </div>
+//                         " :'';
 $users = fetchData($conn, "users");
 $therapists = fetchData($conn, "therapist");
 $onlineUsers = fetchData($conn, "users", "WHERE status = 'Active now'");
 $onlineTherapists = fetchData($conn, "therapist", "WHERE status = 'Active now'");
-$schedules = fetchData($conn, "appointment"); 
-?>
+$schedules = fetchData($conn, "appointment");

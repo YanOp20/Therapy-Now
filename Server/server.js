@@ -85,6 +85,10 @@ function fetchData(connection, table, condition = "") {
   });
 }
 
+// <form method="post" autocomplete="off">
+//   <input type="hidden" name="remove" value="${user.unique_id}">
+//   <button type="submit">Remove</button>
+// </form>
 
 function displayUsers(users, t = "") {
   return users.map(user => `
@@ -93,10 +97,7 @@ function displayUsers(users, t = "") {
       <p>${user.fname} ${user.lname}</p>
       ${t === 'therapist' ? `
         <div class="remove-button">
-          <form method="post" autocomplete="off">
-            <input type="hidden" name="remove" value="${user.unique_id}">
-            <button type="submit">Remove</button>
-          </form>
+            <button data-id="${user.unique_id}">Remove</button> 
         </div>
       ` : ''}
     </div>

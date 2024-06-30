@@ -679,6 +679,7 @@ require_once "php/feachToDisplayData.php";
 
     countOnlineTherapist.innerHTML = c.count_online_therapist
     onlineTherapistList.innerHTML = c.online_therapist
+
   })
 
   chatNamespace.on('schedule change', a => {
