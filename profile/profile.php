@@ -141,9 +141,9 @@ if ($_doc and !$user_profile) {
                 }
             ?>
                 <div class="buttons">
-                    <button class="addHis">Add History</button>
-                    <button class="showHis">Show User History</button>
-                    <button style="display: none" class="hideHis">Hide User History</button>
+                    <button class="addHis">Add note</button>
+                    <button class="showHis">Show User notes</button>
+                    <button style="display: none" class="hideHis">Hide User notes</button>
                 </div>
                 <div class="history" style="display: none;">
                     <?= nl2br($o) ?>
@@ -153,7 +153,7 @@ if ($_doc and !$user_profile) {
                     <input type="text" name="therapist_id" value="<?= $_SESSION['unique_id']; ?>" hidden>
                     <input class="user_id" type="text" name="user_id" value="<?= $user_id; ?>" hidden>
                     <textarea class="" name="text" rows="6" cols="40" placeholder="write a text..." required></textarea>
-                    <input class="submit m" type="submit" name="submit" value="ADD to History">
+                    <input class="submit m" type="submit" name="submit" value="Add to note">
                 </form>
 
             </div>

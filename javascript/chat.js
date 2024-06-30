@@ -1,3 +1,6 @@
+// This code manages a chat interface with functionalities for sending text and audio messages, 
+// including recording audio, handling UI state changes, and sending data via XMLHttpRequest and Socket.IO.
+
 const form = document.querySelector(".typing-area"),
   b = form.querySelector(".b").value,
   inputField = form.querySelector(".input-field"),

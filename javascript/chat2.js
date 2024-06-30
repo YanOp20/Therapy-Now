@@ -1,5 +1,7 @@
-
-    const outgoingID = document.querySelector('.outgoing_id').value;
+// This code handles the chat functionality by joining a chat room, loading existing messages,
+//  and dynamically updating the chat interface with new messages, including text, images, and audio.
+   
+const outgoingID = document.querySelector('.outgoing_id').value;
     const incomingID = document.querySelector('.incoming_id').value;
     const roomId = [outgoingID, incomingID].sort().join('-');
 

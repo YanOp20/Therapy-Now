@@ -68,9 +68,8 @@ function countRows(connection, table, condition = "") {
     });
   });
 }
-countRows(connection, 'users', ' WHERE status = \'Active now\'').then( a => console.log(a)).catch((e) => {
-  console.log(e);
-})
+
+// countRows(connection, 'users', ' WHERE status = \'Active now\'').then( a => console.log(a)).catch((e) => {console.log(e);})
 
 
 function fetchData(connection, table, condition = "") {
@@ -104,58 +103,6 @@ function displayUsers(users, t = "") {
   `).join('');
 }
 
-// function displaySchedules(schedules, users, therapists) {
-//   return schedules.map(s => {
-//     const user = users.find(u => u.unique_id === s.user_id);
-//     const therapist = therapists.find(t => t.unique_id === s.therapist_id);
-
-//     return `
-//       <div class='row-schedule'>
-//         <div class='users-img-name'>
-//           <img src='php/images/${user.img}' alt='img'>
-//           <p>${user.fname} ${user.lname}</p>
-//         </div>
-//         <div class='date'><span>${s.date}</span></div>
-//         <div class='time'><span>${s.start_time} - ${s.end_time}</span></div>
-//         <div class='therapist-img-name'>
-//           <img src='php/images/${therapist.img}' alt='img'>
-//           <p>${therapist.fname} ${therapist.lname}</p>
-//         </div>
-//       </div>
-//     `;
-//   }).join(''); 
-// }
-
-// function displaySchedules(schedules, users, therapists) {
-//   return schedules.map(s => {
-//     const user = users.find(u => u.unique_id === s.user_id);
-//     const therapist = therapists.find(t => t.unique_id === s.therapist_id);
-
-//     // Convert times to AM/PM format
-//     const startTime = new Date(`1970-01-01T${s.start_time}`);
-//     const endTime = new Date(`1970-01-01T${s.end_time}`);
-//     const startTimeAMPM = startTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true});
-//     const endTimeAMPM = endTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true});
-
-//     // Format date using toLocaleDateString for better presentation
-//     const formattedDate = new Date(s.date).toLocaleDateString();
-
-//     return `
-//       <div class='row-schedule'>
-//         <div class='users-img-name'>
-//           <img src='php/images/${user.img}' alt='img'>
-//           <p>${user.fname} ${user.lname}</p>
-//         </div>
-//         <div class='date'><span>${formattedDate}</span></div>
-//         <div class='time'><span>${startTimeAMPM} - ${endTimeAMPM}</span></div>
-//         <div class='therapist-img-name'>
-//           <img src='php/images/${therapist.img}' alt='img'>
-//           <p>${therapist.fname} ${therapist.lname}</p>
-//         </div>
-//       </div>
-//     `;
-//   }).join(''); 
-// }
 
 function displaySchedules(schedules, users, therapists) {
   // Sort schedules by date and time
@@ -268,13 +215,13 @@ const connectedSockets = [  //username, socketId
     })
 
     socket.on('answerBtnClicked' ,(c) =>{
-      console.log(c)
+      // console.log(c)
       webRtcNamespace.to(roomId).emit('answerBtnClicked2',c);
     })
 
 
     socket.on('newAnswer',(offerObj,ackFunction)=>{
-        console.log("offerObj: ",offerObj);
+        // console.log("offerObj: ",offerObj);
         //emit this answer (offerObj) back to CLIENT1
         //in order to do that, we need CLIENT1's socketid
         const socketToAnswer = connectedSockets.find(s=>s.userName === offerObj.offererUserName)
@@ -349,13 +296,13 @@ const handleCallEnd = (userName, roomId) => {
 };
 
 socket.on('declineCall', ({ userName, roomId, callerSocketId }) => {
-    console.log("Call declined.");
+    // console.log("Call declined.");
     webRtcNamespace.to(callerSocketId).emit('callDeclined', { reason: 'User declined the call' });
     handleCallEnd(userName, roomId);
 });
 
 socket.on('userDisconnected', (roomId, callerSocketId) => {
-    console.log("User disconnected.");
+    // console.log("User disconnected.");
     handleCallEnd(socket.handshake.auth.userName, roomId); // Use userName from socket
 });
 
@@ -373,7 +320,7 @@ chatNamespace.on("connection", (socket) => {
   socket.on("login logout", r => {
     (async () => {
       try {
-        console.log(r)
+        // console.log(r)
         const countOnlineClients = await countRows(connection, 'users', ' WHERE status = \'Active now\'');
         const countOnlineTherapist = await countRows(connection, 'therapist', ' WHERE status = \'Active now\'');
         const onlineClients = displayUsers(await fetchData(connection, 'users', ' WHERE status = \'Active now\''));
@@ -398,13 +345,13 @@ chatNamespace.on("connection", (socket) => {
   socket.on("schedule", r => {
     (async () => {
       try {
-        console.log(r)
+        // console.log(r)
         const schedules = await fetchData(connection, 'appointment');
         const users = await fetchData(connection, 'users');
         const therapist = await fetchData(connection, 'therapist');
         const scheduleHTML = displaySchedules(schedules, users, therapist);        
         
-        console.log(scheduleHTML)
+        // console.log(scheduleHTML)
         socket.broadcast.emit('schedule change', scheduleHTML);
       } catch (err) {
         console.error('Error:', err);
@@ -415,7 +362,7 @@ chatNamespace.on("connection", (socket) => {
   socket.on("add remove therapist", r => {
     (async () => {
       try {
-        console.log(r)
+        // console.log(r)
         const countAllTherapists = await countRows(connection, 'therapist');
         const therapist = displayUsers( await fetchData(connection, 'therapist'));
         const r_therapist = displayUsers( await fetchData(connection, 'therapist'), 'therapist');
@@ -430,7 +377,7 @@ chatNamespace.on("connection", (socket) => {
           count_online_therapist: countOnlineTherapist,
           online_therapist: onlineTherapist
         }
-        console.log(change);
+        // console.log(change);
         socket.emit('add remove therapist change', change);
       } catch (err) {
         console.error('Error:', err);
@@ -503,5 +450,3 @@ chatNamespace.on("connection", (socket) => {
 
   socket.on("disconnect", () => console.log("user disconnected in chatNamespace"));
 });
-
-

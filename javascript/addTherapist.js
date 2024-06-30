@@ -1,3 +1,7 @@
+// This code handles search functionality for various sections and form submission for adding 
+// a therapist, including toggling search bar visibility, sending search queries via AJAX, and
+// handling form submission with feedback.
+
 // for searching
 const searchBar = document.querySelector(".search input"),
 searchIcon = document.querySelector(".search button"),
@@ -6,6 +10,7 @@ usersList = document.querySelector(".users-list");
 
 
 searchIcon.onclick = ()=>{
+  console.log('ahdf')
   searchBar.classList.toggle("show");
   searchIcon.classList.toggle("active");
   searchBar.focus();
