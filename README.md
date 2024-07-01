@@ -17,7 +17,7 @@ To  run, follow these simple steps:
 
 - Install xampp or other similar php other mysql database tool
 - Create a Database name therapy and import therapy.sql file into database
-- do to terminal and install node.js, npm
+- go to terminal and install node.js, npm
 PS C:\xampp\htdocs\Therapy-Now> cd server
 PS C:\xampp\htdocs\Therapy-Now\server> npm start
 you are get  " server running on - https://localhost:3000 " or " server running on - https://...:3000 "
