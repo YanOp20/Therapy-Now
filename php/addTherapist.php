@@ -34,9 +34,11 @@ if (!empty(trim($fname)) && !empty(trim($lname)) && !empty($gender) && !empty($b
                         if (move_uploaded_file($tmp_name, "images/" . $new_img_name)) {
                             $ran_id = rand(time(), 400000);
                             $status = "Offline now";
-                            // $encrypt_pass = md5($password); 
+
+                            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
                             $insert_query = mysqli_query($conn, "INSERT INTO therapist (unique_id, fname, lname, gender, birthDate, specialization, email, phone, password, img, status) 
-                                VALUES ({$ran_id}, '{$fname}','{$lname}', '{$gender}', '{$birthDate}', '{$specialization}', '{$email}', '{$phone}', '{$password}', '{$new_img_name}', '{$status}')");
+                                VALUES ({$ran_id}, '{$fname}','{$lname}', '{$gender}', '{$birthDate}', '{$specialization}', '{$email}', '{$phone}', '{$hashed_password}', '{$new_img_name}', '{$status}')");
                             
                             if ($insert_query) {
                                 $select_sql2 = mysqli_query($conn, "SELECT * FROM therapist WHERE email = '{$email}'");

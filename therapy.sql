@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 30, 2024 at 10:33 AM
+-- Generation Time: Jul 01, 2024 at 02:50 PM
 -- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- PHP Version: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -137,6 +137,13 @@ CREATE TABLE `history` (
   `time` time DEFAULT curtime()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `history`
+--
+
+INSERT INTO `history` (`id`, `user_id`, `therapist_id`, `his`, `date`, `time`) VALUES
+(45, 3, 40000, 'During the session, we explored the source of her anxiety, which appears to be tied to her fear of not meeting her emDuring the session, we explored the source of her anxiety, which appears to be tied to her fear of not meeting her employer\'s expectations and potentially losing her job. Sarah shared that she has been working long hours and skipping breaks, which has been taking a toll on her mental and physical well-being.ployer\'s expectations and potentially losing her job. Sarah shared that she has been working long hours and skipping breaks, which has been taking a toll on her mental and physical well-being.', '2024-07-01', '15:36:20');
+
 -- --------------------------------------------------------
 
 --
@@ -153,6 +160,15 @@ CREATE TABLE `messages` (
   `r_time` time DEFAULT curtime(),
   `b` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`msg_id`, `incoming_msg_id`, `outgoing_msg_id`, `msg`, `audio`, `r_date`, `r_time`, `b`) VALUES
+(741, 40000, 1224832198, 'you', '', '2024-07-01', '14:08:55', ''),
+(742, 21, 40000, 's', '', '2024-07-01', '14:40:59', ''),
+(743, 20, 40000, 'a', '', '2024-07-01', '15:43:17', '');
 
 -- --------------------------------------------------------
 
@@ -181,11 +197,11 @@ CREATE TABLE `therapist` (
 --
 
 INSERT INTO `therapist` (`unique_id`, `fname`, `lname`, `email`, `password`, `specialization`, `img`, `phone`, `status`, `r_date`, `r_time`, `gender`, `birthDate`) VALUES
-(40000, 'Speak', 'Freely', 's', 's', NULL, 'icon-doctor.png', NULL, 'Offline now', '2023-09-09', '23:30:18', '', 0),
-(365716173, 'Dr. Selam', 'Mulugeta', 'selamm@gmail.com', 'selamm', 'Dialectical behavior therapy', '1719733426girl-doc.jpg', '25191382938', 'Offline now', '2024-06-30', '10:43:46', 'Female', 1990),
-(483652388, 'Dr. Tsegaye', 'Tezera', 'tsegaye@gmail.com', 'tsegaye', 'Psychodynamic therapy', '1719733524therapis2-old.jpg', '09123891384', 'Offline now', '2024-06-30', '10:45:24', 'Male', 1980),
-(1342397891, 'Dr. Zeritu', 'Yilma', 'zeritu@gmail.com', 'zeritu', 'Cognitive-behavioral therapy', '1719733610therapis1.jpg', '0913828472', 'Offline now', '2024-06-30', '10:46:50', 'Female', 1988),
-(1550711788, 'Dr. Tomas', 'Tora', 'tomas@gmail.com', 'tomas', 'Cognitive-behavioral therapy', '1719733301therapist2-men.jpg', '0911928183', 'Offline now', '2024-06-30', '10:41:41', 'Male', 1982);
+(40000, 'Speak', 'Freely', 'speak', '$2y$10$jbDblp3/G5Zohrfos0ocqeW2c2kytTYNJHzvM/lsqNpcpg6kRJFri', NULL, 'icon-doctor.png', NULL, 'Offline now', '2023-09-09', '23:30:18', '', 0),
+(365716173, 'Dr. Seble', 'Mulugeta', 'seble@gmail.com', '$2y$10$eHnHurgqgw0xPLuq2tbo4.uK3BfDiGUY1u5j1GE.NqM3IRDDCt8qe', 'Dialectical behavior therapy', '1719733426girl-doc.jpg', '25191382938', 'Offline now', '2024-06-30', '10:43:46', 'Female', 1990),
+(483652388, 'Dr. Tsegaye', 'Tezera', 'tsegaye@gmail.com', '$2y$10$XRVMDijqPtFe1IRGZnUBLOL8QyO.IVWD2YdsJUJvujoWmAS9GzDiq', 'Psychodynamic therapy', '1719733524therapis2-old.jpg', '09123891384', 'Offline now', '2024-06-30', '10:45:24', 'Male', 1980),
+(1342397891, 'Dr. Zeritu', 'Yilma', 'zeritu@gmail.com', '$2y$10$HZecoucugFDNib8DtfF//OzGelM9KsM9YJIrnW475uOIq3aQOasJS', 'Cognitive-behavioral therapy', '1719733610therapis1.jpg', '0913828472', 'Offline now', '2024-06-30', '10:46:50', 'Female', 1988),
+(1550711788, 'Dr. Tomas', 'Tora', 'tomas@gmail.com', '$2y$10$hqC1m0pjUD6t/CEiqzmvg.LGjkcETdO0jvLD/tsfkvhVP2y2eJd5C', 'Cognitive-behavioral therapy', '1719733301therapist2-men.jpg', '0911928183', 'Offline now', '2024-06-30', '10:41:41', 'Male', 1982);
 
 -- --------------------------------------------------------
 
@@ -214,29 +230,30 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `unique_id`, `fname`, `lname`, `email`, `password`, `img`, `status`, `gender`, `birthdate`, `relationship`, `r_date`, `r_time`) VALUES
-(1, 1, 'Abebe', 'Kebede', 'abebe@gmail.com', 'abebe', 'p1.jpg', 'Offline now', 'Male', '1990-05-12', 'single', '1990-09-10', '10:30:00'),
-(2, 2, 'Helen', 'Bedlu', 'helen@gmail.com', 'helen', 'p2.jpg', 'Offline now', 'Female', '2000-01-02', 'single', '2023-09-09', '23:30:18'),
-(3, 3, 'Tesfaye', 'Alemu', 'tesfaye@gmail.com', 'tesfaye', 'p3.jpg', 'Offline now', 'Male', '1985-10-25', 'married', '2024-01-01', '08:45:00'),
-(4, 4, 'Mulu', 'Gebre', 'mulu@gmail.com', 'mulu', 'p4.jpg', 'Offline now', 'Female', '1995-06-15', 'single', '2022-03-12', '14:20:00'),
-(5, 5, 'Bekele', 'Mengistu', 'bekele@gmail.com', 'bekele', 'p5.jpg', 'Offline now', 'Male', '1992-11-30', 'married', '2021-11-05', '12:00:00'),
-(6, 6, 'Aster', 'Tadesse', 'aster@gmail.com', 'aster', 'p6.jpg', 'Busy', 'Female', '1988-04-22', 'single', '2020-07-08', '17:10:00'),
-(7, 7, 'Kassahun', 'Berhanu', 'kassahun@gmail.com', 'kassahun', 'p7.jpg', 'Offline now', 'Male', '1991-08-19', 'married', '2019-12-25', '09:00:00'),
-(8, 8, 'Selam', 'Tekle', 'selam@gmail.com', 'selam', 'p8.jpg', 'Offline now', 'Female', '1999-03-21', 'single', '2023-02-14', '20:15:00'),
-(9, 9, 'Yared', 'Demissie', 'yared@gmail.com', 'yared', 'p9.jpg', 'Offline now', 'Male', '1994-12-01', 'married', '2018-10-30', '11:45:00'),
-(10, 10, 'Genet', 'Mulugeta', 'genet@gmail.com', 'genet', 'p10.jpg', 'Busy', 'Female', '1987-05-06', 'single', '2022-05-22', '15:30:00'),
-(11, 11, 'Eyob', 'Haile', 'eyob@gmail.com', 'eyob', 'p11.jpg', 'Offline now', 'Male', '1996-07-14', 'married', '2020-09-17', '13:20:00'),
-(12, 12, 'Tigist', 'Tesfaye', 'tigist@gmail.com', 'tigist', 'p12.jpg', 'Offline now', 'Female', '1993-02-28', 'single', '2021-04-13', '16:10:00'),
-(13, 13, 'Melaku', 'Fikre', 'melaku@gmail.com', 'melaku', 'p13.jpg', 'Online', 'Male', '2001-01-10', 'single', '2023-06-25', '18:50:00'),
-(14, 14, 'Hana', 'Abebe', 'hana@gmail.com', 'hana', 'p14.jpg', 'Busy', 'Female', '1989-09-17', 'married', '2019-03-03', '10:40:00'),
-(15, 15, 'Tesfaye', 'Gebremariam', 'tesfaye@gmail.com', 'tesfaye', 'p15.jpg', 'Offline now', 'Male', '1997-04-07', 'single', '2020-11-20', '07:35:00'),
-(16, 16, 'Mulu', 'Abera', 'mulu@gmail.com', 'mulu', 'p16.jpg', 'Online', 'Female', '1986-12-12', 'married', '2018-08-05', '21:25:00'),
-(17, 17, 'Fekadu', 'Bekele', 'fekadu@gmail.com', 'fekadu', 'p17.jpg', 'Busy', 'Male', '1998-02-14', 'single', '2021-02-27', '19:30:00'),
-(18, 18, 'Tigist', 'Yoseph', 'tigist@gmail.com', 'tigist', 'p18.jpg', 'Offline now', 'Female', '1990-07-29', 'married', '2017-01-14', '08:10:00'),
-(19, 19, 'Abiy', 'Samuel', 'abiy@gmail.com', 'abiy', 'p19.jpg', 'Offline now', 'Male', '1983-11-23', 'single', '2016-05-09', '22:45:00'),
-(20, 20, 'Mekdes', 'Fikadu', 'mekdes@gmail.com', 'mekdes', 'p20.jpg', 'Busy', 'Female', '1999-09-05', 'single', '2023-07-18', '14:55:00'),
-(21, 21, 'Dawit', 'Kebede', 'dawit@gmail.com', 'dawit', 'p21.jpg', 'Offline now', 'Male', '1984-03-15', 'married', '2015-04-23', '11:15:00'),
-(22, 22, 'Tsehay', 'Asfaw', 'tsehay@gmail.com', 'tsehay', 'p22.jpg', 'Online', 'Female', '1995-10-10', 'single', '2023-11-11', '17:05:00'),
-(82, 995610053, 'Alemayu', 'Desta', 'alemayu@gmail.com', 'alemayu', '1719670439OIG2.jpg', 'Offline now', 'Male', '1986-02-02', 'In a Relationship', '2024-06-29', '17:13:59');
+(1, 1, 'Abebe', 'Kebede', 'abebe@gmail.com', '$2y$10$YeFM.Z15v47pWxl/XJsNW.LucMhUK06QOJEhvNN/f7UHYrDkJo4PO', 'p1.jpg', 'Offline now', 'Male', '1990-05-12', 'single', '1990-09-10', '10:30:00'),
+(2, 2, 'Helen', 'Bedlu', 'helen@gmail.com', '$2y$10$v22LBsRNSFAXPDv5KGpTxebdu5nGdify7c2zvZ4OyeTJDhiixCHCy', 'p2.jpg', 'Offline now', 'Female', '2000-01-02', 'single', '2023-09-09', '23:30:18'),
+(3, 3, 'Tesfaye', 'Alemu', 'tesfaye@gmail.com', '$2y$10$P5WJTGtpTsPsy/0rRiPEbOuDHEPpfNeF71Oemn51WJk/YGI/9vyCG', 'p3.jpg', 'Offline now', 'Male', '1985-10-25', 'married', '2024-01-01', '08:45:00'),
+(4, 4, 'Mulu', 'Gebre', 'mulu@gmail.com', '$2y$10$2.lhEJT3PsxpTKaeVZKAcOvxE4pyWBYJsodKKB86qhP7bHVZIVkJu', 'p4.jpg', 'Offline now', 'Female', '1995-06-15', 'single', '2022-03-12', '14:20:00'),
+(5, 5, 'Bekele', 'Mengistu', 'bekele@gmail.com', '$2y$10$smlfLgR2k42.MGe1tTr7s.W5hYRUFDIcm2Ovz33mQKWX8GSAYJ5y.', 'p5.jpg', 'Offline now', 'Male', '1992-11-30', 'married', '2021-11-05', '12:00:00'),
+(6, 6, 'Aster', 'Tadesse', 'aster@gmail.com', '$2y$10$geKL2pDz3f4TGvGQzVEQ4eucK7Pw2fsJwVzvky1H.AQm16wdH04Re', 'p6.jpg', 'Busy', 'Female', '1988-04-22', 'single', '2020-07-08', '17:10:00'),
+(7, 7, 'Kassahun', 'Berhanu', 'kassahun@gmail.com', '$2y$10$z/G6Rn4GtwdpbzNx7iyCjOEXKYsXAEp7pMUbA.h6hLMG83FdGnJ1u', 'p7.jpg', 'Offline now', 'Male', '1991-08-19', 'married', '2019-12-25', '09:00:00'),
+(8, 8, 'Selam', 'Tekle', 'selam@gmail.com', '$2y$10$7CMJoZwOpweXUw0trb2xWudYYfD8Un8uGlIq/Jp0dgLjZMnrpZuba', 'p8.jpg', 'Offline now', 'Female', '1999-03-21', 'single', '2023-02-14', '20:15:00'),
+(9, 9, 'Yared', 'Demissie', 'yared@gmail.com', '$2y$10$7nLylN42Hoa0Ub6NMAEn4uBadWOsglcUEymAxMjmKwmC/u8ZWNLhW', 'p9.jpg', 'Offline now', 'Male', '1994-12-01', 'married', '2018-10-30', '11:45:00'),
+(10, 10, 'Genet', 'Mulugeta', 'genet@gmail.com', '$2y$10$2FoARnJPclZqPNY3YJuL9OiKOFgBBI6IMmVV.DotvvHunoFSGbtYO', 'p10.jpg', 'Busy', 'Female', '1987-05-06', 'single', '2022-05-22', '15:30:00'),
+(11, 11, 'Eyob', 'Haile', 'eyob@gmail.com', '$2y$10$AoVsa0WWnt1fMmJGnEMZDek1pKto4fcNUes0u9AtxfMKIEhuvBa5m', 'p11.jpg', 'Offline now', 'Male', '1996-07-14', 'married', '2020-09-17', '13:20:00'),
+(12, 12, 'Tigist', 'Tesfaye', 'tigist@gmail.com', '$2y$10$/FIddPWPaF3.Qg4nsmoI9u91H/d79/BjCChkwdhBf0Z72yICnB00y', 'p12.jpg', 'Offline now', 'Female', '1993-02-28', 'single', '2021-04-13', '16:10:00'),
+(13, 13, 'Melaku', 'Fikre', 'melaku@gmail.com', '$2y$10$nIRxBEZJ.2LNva7Os6MDBOHQuCTek4bGvquvSryigrF5NMIA0W11G', 'p13.jpg', 'Online', 'Male', '2001-01-10', 'single', '2023-06-25', '18:50:00'),
+(14, 14, 'Hana', 'Abebe', 'hana@gmail.com', '$2y$10$UaQUzeto9/UdqVfp5nI6k.m7MYQY.SXYcNW3BDHw6QfMVrB99YgIm', 'p14.jpg', 'Busy', 'Female', '1989-09-17', 'married', '2019-03-03', '10:40:00'),
+(15, 15, 'Tesfaye', 'Gebremariam', 'tesfaye@gmail.com', '$2y$10$3kq8BDLyeJxT99BxFMKQROTJU0xQahJLqvMBU66wRj49oNTczDD6G', 'p15.jpg', 'Offline now', 'Male', '1997-04-07', 'single', '2020-11-20', '07:35:00'),
+(16, 16, 'Mulu', 'Abera', 'mulu@gmail.com', '$2y$10$CQeAwfK5X8FTN/JsNanxe.bKsLIMsBMzyE9jh4HS5i9vuMfLn2YDO', 'p16.jpg', 'Online', 'Female', '1986-12-12', 'married', '2018-08-05', '21:25:00'),
+(17, 17, 'Fekadu', 'Bekele', 'fekadu@gmail.com', '$2y$10$ekZOshUG2ezgK479rxRBy.gsEWFxliaDFlLgweHYmtSQvxZBUmReG', 'p17.jpg', 'Offline now', 'Male', '1998-02-14', 'single', '2021-02-27', '19:30:00'),
+(18, 18, 'Tigist', 'Yoseph', 'tigist@gmail.com', '$2y$10$0FCvAxrYi8OQG6HC81BkheLxCBT5CVH0/BXAHLJVGwDKiAfxRfhFW', 'p18.jpg', 'Offline now', 'Female', '1990-07-29', 'married', '2017-01-14', '08:10:00'),
+(19, 19, 'Abiy', 'Samuel', 'abiy@gmail.com', '$2y$10$X8Y8K9MyxKdCwalHcML.weepej/GIr3L3x0Nab2hHMkcwGfvDagIa', 'p19.jpg', 'Offline now', 'Male', '1983-11-23', 'single', '2016-05-09', '22:45:00'),
+(20, 20, 'Mekdes', 'Fikadu', 'mekdes@gmail.com', '$2y$10$.kdP1tr./CqmOfo3sTo1qeljQ1Aii/S7.1cAB1Wj4CnCHjPCaemnC', 'p20.jpg', 'Busy', 'Female', '1999-09-05', 'single', '2023-07-18', '14:55:00'),
+(21, 21, 'Dawit', 'Kebede', 'dawit@gmail.com', '$2y$10$lvrzRlDGD79Ar95.IgpUv.dr4PMplnvYLsQzKs1j5veSS7m1ImR.i', 'p21.jpg', 'Offline now', 'Male', '1984-03-15', 'married', '2015-04-23', '11:15:00'),
+(22, 22, 'Tsehay', 'Asfaw', 'tsehay@gmail.com', '$2y$10$b9Is29Km6sMMC5UUL8kWOOQl9IQd.OEygE0SdIb/EnOF1uznEKBwW', 'p22.jpg', 'Online', 'Female', '1995-10-10', 'single', '2023-11-11', '17:05:00'),
+(82, 995610053, 'Alemayehu ', 'Desta', 'alemayehu@gmail.com', '$2y$10$qaVBXEb4NkxEmvXMLuYIceHwprPfSyxlCoIDRYvqfp/1ATJEsBjZO', '1719670439OIG2.jpg', 'Offline now', 'Male', '1986-02-02', 'In a Relationship', '2024-06-29', '17:13:59'),
+(83, 1224832198, 'Natnael', 'Mamuye', 'nati@gmail.com', '$2y$10$o3Xhmy6X7PYDJMc4EB3oNOuy4PnrhJQ7BWMBQnbZOo9Ianrwee6KS', '1719817900depositphotos_76840867-stock-illustration-pointing-at-himself-emoticon.jpg', 'Offline now', 'Male', '1998-02-02', 'Single', '2024-07-01', '10:11:40');
 
 --
 -- Indexes for dumped tables
@@ -316,13 +333,13 @@ ALTER TABLE `contactus`
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=726;
+  MODIFY `msg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=744;
 
 --
 -- AUTO_INCREMENT for table `therapist`
@@ -334,7 +351,7 @@ ALTER TABLE `therapist`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- Constraints for dumped tables

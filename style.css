@@ -2327,3 +2327,12 @@ font-size: 2em;
 .right-section .users-list *:hover{
   color: black;
 }
+
+
+.history div.his{
+  /* color: pink;
+  max-width: 50%; */
+}
+.righright{
+  width: 50%;
+}

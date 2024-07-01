@@ -29,11 +29,11 @@ if (!empty($email) && !empty($password)) {
         $row = mysqli_fetch_assoc($sql);
         // $user_pass = md5($password);
         $enc_pass = $row['password'];
-        if ($password === $enc_pass) {
+        // if ($password === $enc_pass) {
+        if (password_verify($password, $enc_pass)) {
+
             $status = "Active now";
             //    $sql2 = mysqli_query($conn, "UPDATE users SET status = '{$status}' WHERE unique_id = {$row['unique_id']}");
-
-
 
             # -------------this was for adding doctors-----------------------
             $sql2 = mysqli_query($conn, "UPDATE users SET status = '{$status}' WHERE unique_id = {$row['unique_id']}");

@@ -148,7 +148,7 @@ if ($_doc and !$user_profile) {
                 <div class="history" style="display: none;">
                     <?= nl2br($o) ?>
                 </div>
-                <form class="hisform" style="display: none;" action="#" class="" method="POST">
+                <form class="hisform" style="display: none;" action="insert-history.php" class="" method="POST">
                     <div class="error-text"></div>
                     <input type="text" name="therapist_id" value="<?= $_SESSION['unique_id']; ?>" hidden>
                     <input class="user_id" type="text" name="user_id" value="<?= $user_id; ?>" hidden>
@@ -159,29 +159,21 @@ if ($_doc and !$user_profile) {
             </div>
             <?php    } ?>
     </div>
-    <?php
-    if (isset($_POST['submit'])) {
-
-        $therapist_id = mysqli_real_escape_string($conn, $_POST['therapist_id']);
-        $user_id = mysqli_real_escape_string($conn, $_POST['user_id']);
-        $his = mysqli_real_escape_string($conn, $_POST['text']);
-
-        if (!empty($his)) {
-            $sql = mysqli_query($conn, "INSERT INTO history (user_id, therapist_id, his)
-                VALUES ({$user_id}, {$therapist_id}, '{$his}')") or die();
-        }
-    }
-
-
-
-    ?>
+    
+  
     <!-- <script src="../javascript/history.js"></script> -->
     <script>
         const hisBox = document.querySelector(".history"),
             showHis = document.querySelector(".showHis"),
             hideHis = document.querySelector(".hideHis"),
             hisform = document.querySelector(".hisform"),
+            submit = document.querySelector(".submit"),
             addHis = document.querySelector(".addHis");
+
+        // hisform.addEventListener('submit', function (event) {
+    //     event.preventDefault();
+    //     location.reload();
+    // });
 
         showHis.addEventListener("click", () => {
             hideHis.style.display = "block";

@@ -82,8 +82,10 @@ if (isset($_POST['password']) && isset($_POST['c-password'])) {
 
             if (isset($row)) {
                 // Update password in users or therapist table based on user data
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
                 $stmt = $conn->prepare("UPDATE $table SET status = ?, password = ? WHERE unique_id = ?");
-                $stmt->bind_param("ssi", $status, $password, $row['unique_id']);
+                $stmt->bind_param("ssi", $status, $hashed_password, $row['unique_id']);
 
                 if ($stmt->execute()) {
                     $_SESSION['unique_id'] = $row['unique_id'];

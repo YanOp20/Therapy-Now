@@ -34,8 +34,10 @@ if (!empty(trim($fname)) && !empty(trim($lname)) && !empty($gender) && !empty($b
                             $ran_id = rand(time(), 100000000);
                             $status = "Active now";
                             // $encrypt_pass = md5($password); 
+                            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
                             $insert_query = mysqli_query($conn, "INSERT INTO users (unique_id, fname, lname, gender, birthDate, relationship, email, password, img, status) 
-                                VALUES ({$ran_id}, '{$fname}','{$lname}', '{$gender}', '{$birthDate}', '{$relationship}', '{$email}', '{$password}', '{$new_img_name}', '{$status}')");
+                                VALUES ({$ran_id}, '{$fname}','{$lname}', '{$gender}', '{$birthDate}', '{$relationship}', '{$email}', '{$hashed_password}', '{$new_img_name}', '{$status}')");
                             
                             if ($insert_query) {
                                 $select_sql2 = mysqli_query($conn, "SELECT * FROM users WHERE email = '{$email}'");
