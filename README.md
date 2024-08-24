@@ -25,17 +25,7 @@ by opeing the url you can use the system
 
 ## priparied by
 
-NAME                                    ID NO
-1.BRHANEMESKEL SEYFU MENGESHA ……….……. ADMKCS/0860/19
-2.AMENSISA KUMI DUGUMA…………………….……. ADMKCS/0495/19
-3.KURABACHEW MENGISTE EREFETO ……… ……. ADMKCS/0970/19
-4.MOHAMMED TEWFIK MOHAMMED ………. ……. ADMKCS/1055/19
-5.WORKINEH MINUYE MEKONNEN……………… ... ADMKCS/1037/19
-6.ZEMETU ASNAKEW MEKONNEN …………………...ADMKCS/1124/19
-7.ZERE NEGASI HAGOS ……………………… …… … ADMKCS/0585/19
+BRHANEMESKEL SEYFU 
 
-Advisor Name: Haftom B.
-Addis Ababa Ethiopia
-February 2024
 
 thank you!!
